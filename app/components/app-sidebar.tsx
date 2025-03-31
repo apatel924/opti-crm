@@ -1,4 +1,3 @@
-// components/app-sidebar.tsx
 "use client"
 
 import Link from "next/link"
@@ -7,6 +6,7 @@ export function AppSidebar() {
   return (
     <nav className="border-r w-48 p-4">
       <ul className="space-y-2">
+        {/* Main Nav */}
         <li>
           <Link href="/">Dashboard</Link>
         </li>
@@ -33,6 +33,18 @@ export function AppSidebar() {
         </li>
         <li>
           <Link href="/portal">Portal & Integrations</Link>
+        </li>
+      </ul>
+
+      <hr className="my-4" />
+
+      {/* System Section */}
+      <ul className="space-y-2">
+        <li>
+          <Link href="/settings">Settings</Link>
+        </li>
+        <li>
+          <Link href="/help">Help & Documentation</Link>
         </li>
       </ul>
     </nav>
