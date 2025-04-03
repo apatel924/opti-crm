@@ -1,4 +1,3 @@
-// components/ui/sidebar/SidebarSeparator.tsx
 "use client";
 
 import * as React from "react";
@@ -6,8 +5,8 @@ import { Separator } from "@/app/components/ui/separator";
 import { cn } from "@/lib/utils";
 
 export const SidebarSeparator = React.forwardRef<
-  React.ElementRef<typeof Separator>,
-  React.ComponentProps<typeof Separator>
+  React.ComponentRef<typeof Separator>,
+  React.ComponentPropsWithoutRef<typeof Separator>
 >(({ className, ...props }, ref) => {
   return (
     <Separator
@@ -18,4 +17,5 @@ export const SidebarSeparator = React.forwardRef<
     />
   );
 });
+
 SidebarSeparator.displayName = "SidebarSeparator";
