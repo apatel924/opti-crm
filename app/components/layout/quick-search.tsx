@@ -100,10 +100,9 @@ export function QuickSearch() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
+          className="w-[240px] justify-between text-muted-foreground"
           role="combobox"
           aria-expanded={open}
-          className="w-[240px] justify-between text-muted-foreground"
         >
           <Search className="mr-2 h-4 w-4" />
           <span>Quick Patient Search</span>
@@ -132,7 +131,7 @@ export function QuickSearch() {
                     </span>
                   </div>
                   <div className="flex items-center">
-                    <Badge variant={patient.status === "Active" ? "outline" : "secondary"} className="ml-2">
+                    <Badge className="ml-2" data-variant={patient.status === "Active" ? "outline" : "secondary"}>
                       {patient.status}
                     </Badge>
                   </div>
@@ -154,4 +153,3 @@ export function QuickSearch() {
     </Popover>
   )
 }
-
