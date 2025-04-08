@@ -58,62 +58,91 @@ const appointments = [
 
 export function AppointmentList() {
   return (
-    <div>
+    <div className="space-y-4">
       {appointments.map((appointment) => (
-        <Card key={appointment.id}>
+        <Card
+          key={appointment.id}
+          className="overflow-hidden transform transition-all duration-300 hover:translate-y-[-4px]"
+        >
           <div className="flex">
-            <div className={`w-1 ${appointment.status === "Checked In" ? "bg-yellow-400" : 
-              appointment.status === "In Progress" ? "bg-blue-500" : 
-              appointment.status === "Completed" ? "bg-green-500" : "bg-gray-200"}`} 
+            <div
+              className={`w-2 ${
+                appointment.status === "Checked In"
+                  ? "bg-ghibli-yellow"
+                  : appointment.status === "In Progress"
+                    ? "bg-ghibli-blue"
+                    : appointment.status === "Completed"
+                      ? "bg-ghibli-green"
+                      : "bg-gray-200"
+              }`}
             />
             <div className="flex-1">
-              <CardHeader>
-                <div className="flex justify-between">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <CardTitle>{appointment.patientName}</CardTitle>
-                      <Badge variant={appointment.status === "Checked In" ? "warning" : 
-                        appointment.status === "In Progress" ? "default" : 
-                        appointment.status === "Completed" ? "success" : "secondary"}>
-                        {appointment.status}
-                      </Badge>
-                    </div>
-                    <CardDescription>
-                      {appointment.patientId} • {appointment.type}
-                    </CardDescription>
+              <CardHeader className="flex flex-row items-start justify-between pb-2">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-lg text-ghibli-blue">{appointment.patientName}</CardTitle>
+                    <Badge
+                      variant={
+                        appointment.status === "Checked In"
+                          ? "warning"
+                          : appointment.status === "In Progress"
+                            ? "default"
+                            : appointment.status === "Completed"
+                              ? "success"
+                              : "secondary"
+                      }
+                      className="ghibli-badge"
+                    >
+                      {appointment.status}
+                    </Badge>
                   </div>
-                  <div>
-                    <div className="flex items-center gap-1">
+                  <CardDescription>
+                    {appointment.patientId} • {appointment.type}
+                  </CardDescription>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="text-right">
+                    <div className="flex items-center gap-1 font-medium text-ghibli-blue">
                       <Clock className="h-3 w-3" />
                       {appointment.time}
                     </div>
-                    <div className="text-xs">{appointment.duration}</div>
+                    <div className="text-xs text-muted-foreground">{appointment.duration}</div>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
-                <div>
-                  <div className="text-sm">
-                    <span>{appointment.doctor}</span>
+              <CardContent className="pb-2">
+                <div className="flex items-center gap-4">
+                  <div>
+                    <div className="text-sm">
+                      <span className="font-medium text-ghibli-blue">{appointment.doctor}</span>
+                    </div>
+                    <div className="text-xs text-muted-foreground">{appointment.notes}</div>
                   </div>
-                  <div className="text-xs">{appointment.notes}</div>
                 </div>
               </CardContent>
-              <CardFooter>
-                <div className="flex justify-between w-full">
-                  <div className="text-xs">
-                    {appointment.status === "Checked In" && <span>Waiting for {appointment.waitTime}</span>}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button className="outline">View Chart</Button>
-                    <Button className={appointment.status === "Scheduled" ? "default" : 
-                      appointment.status === "Checked In" ? "success" : 
-                      appointment.status === "In Progress" ? "secondary" : "default"}>
-                      {appointment.status === "Scheduled" ? "Check In" : 
-                       appointment.status === "Checked In" ? "Start Exam" : 
-                       appointment.status === "In Progress" ? "Complete" : "View Summary"}
-                    </Button>
-                  </div>
+              <CardFooter className="flex justify-between pt-0">
+                <div className="text-xs text-muted-foreground">
+                  {appointment.status === "Checked In" && <span>Waiting for {appointment.waitTime}</span>}
+                </div>
+                <div className="flex gap-2">
+                  <Button className="ghibli-button border border-ghibli-blue-light hover:bg-ghibli-blue-light/10">
+                    View Chart
+                  </Button>
+                  <Button
+                    className={`ghibli-button ${
+                      appointment.status === "Scheduled" ? "bg-primary" :
+                      appointment.status === "Checked In" ? "bg-green-500" :
+                      appointment.status === "In Progress" ? "bg-gray-500" : "bg-primary"
+                    }`}
+                  >
+                    {appointment.status === "Scheduled"
+                      ? "Check In"
+                      : appointment.status === "Checked In"
+                        ? "Start Exam"
+                        : appointment.status === "In Progress"
+                          ? "Complete"
+                          : "View Summary"}
+                  </Button>
                 </div>
               </CardFooter>
             </div>
