@@ -1,8 +1,8 @@
 import type React from "react"
 import { Inter } from "next/font/google"
-import { ThemeProvider } from "@/app/components/theme-provider"
-import { SidebarProvider } from "@/app/components/ui/sidebar"
-import { AppSidebar } from "@/app/components/app-sidebar"
+import { ThemeProvider } from "@/components/theme-provider"
+import { SidebarProvider } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
 // import { TopNavigation } from "@/components/top-navigation"
 import "./styles/globals.css"
 
