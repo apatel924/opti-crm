@@ -3,10 +3,10 @@
 import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { ChevronsUpDown, Search, User } from "lucide-react"
-import { Button } from "@/app/components/ui/button"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/app/components/ui/command"
-import { Popover, PopoverContent, PopoverTrigger } from "@/app/components/ui/popover"
-import { Badge } from "@/app/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Badge } from "@/components/ui/badge"
 
 // Sample patients data for demo
 const patients = [
