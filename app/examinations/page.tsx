@@ -1,3 +1,6 @@
-export default function ExaminationsPage() {
-    return <div>Examinations placeholder</div>
-  }
+import { ExaminationsPage } from "@/components/examinations/examinations-page"
+
+export default function ExaminationsRoute() {
+  return <ExaminationsPage />
+}
+
