@@ -1,7 +1,7 @@
 import type React from "react"
-import { SidebarProvider } from "@/app/components/ui/sidebar/SidebarProvider"
-import { AppSidebar } from "@/app/components/app-sidebar"
-import { TopNavigation } from "@/app/components/top-navigation"
+import { SidebarProvider } from "@/components/ui/sidebar/SidebarProvider"
+import { AppSidebar } from "@/components/app-sidebar"
+import { TopNavigation } from "@/components/top-navigation"
 
 export default function DashboardLayout({
   children,
