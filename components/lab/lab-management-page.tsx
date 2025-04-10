@@ -1,77 +1,166 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react"
+import Link from "next/link"
+import { Search, Filter, Plus, Download, ListFilter } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
+import { LabOrderPriorityDialog } from "@/components/lab/lab-order-priority-dialog"
 
 const labOrders = [
   {
     id: "L-10042",
     patientName: "Sarah Johnson",
     patientId: "P-10042",
-    type: "Single Vision",
+    orderDate: "05/01/2023",
     dueDate: "05/05/2023",
+    type: "Single Vision",
     status: "In Progress",
+    progress: 60,
+    priority: "Normal",
+    assignedTo: "John Miller",
+    frame: "Ray-Ban RB5154",
+    lens: "Essilor Crizal",
+    notes: "Patient has astigmatism",
     deadline: 4,
   },
   {
     id: "L-10043",
     patientName: "Michael Chen",
     patientId: "P-10043",
-    type: "Progressive",
+    orderDate: "05/01/2023",
     dueDate: "05/03/2023",
+    type: "Progressive",
     status: "Ready for Pickup",
+    progress: 100,
+    priority: "High",
+    assignedTo: "Sarah Williams",
+    frame: "Oakley OX8046",
+    lens: "Varilux Comfort",
+    notes: "First time progressive wearer",
     deadline: 2,
   },
   {
     id: "L-10044",
     patientName: "Robert Garcia",
     patientId: "P-10044",
-    type: "Bifocal",
+    orderDate: "04/30/2023",
     dueDate: "05/04/2023",
+    type: "Bifocal",
     status: "Waiting for Materials",
+    progress: 20,
+    priority: "Normal",
+    assignedTo: "Unassigned",
+    frame: "Persol PO3007V",
+    lens: "Zeiss",
+    notes: "",
     deadline: 3,
   },
   {
     id: "L-10045",
     patientName: "Emily Wilson",
     patientId: "P-10045",
-    type: "Contact Lenses",
+    orderDate: "04/29/2023",
     dueDate: "05/06/2023",
+    type: "Contact Lenses",
     status: "Ordered",
+    progress: 10,
+    priority: "Low",
+    assignedTo: "John Miller",
+    frame: "N/A",
+    lens: "Acuvue Oasys",
+    notes: "Annual supply",
     deadline: 5,
   },
-];
+  {
+    id: "L-10046",
+    patientName: "Jessica Martinez",
+    patientId: "P-10046",
+    orderDate: "04/28/2023",
+    dueDate: "05/02/2023",
+    type: "Single Vision",
+    status: "Quality Check",
+    progress: 80,
+    priority: "High",
+    assignedTo: "Sarah Williams",
+    frame: "Gucci GG0027O",
+    lens: "Essilor Transitions",
+    notes: "Photochromic lenses",
+    deadline: 1,
+  },
+  {
+    id: "L-10047",
+    patientName: "David Thompson",
+    patientId: "P-10047",
+    orderDate: "04/27/2023",
+    dueDate: "05/01/2023",
+    type: "Progressive",
+    status: "In Progress",
+    progress: 70,
+    priority: "Rush",
+    assignedTo: "John Miller",
+    frame: "Tom Ford FT5634-B",
+    lens: "Varilux X",
+    notes: "Past deadline",
+    deadline: -1,
+  },
+]
 
 export function LabManagementPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("")
+  const [showFilters, setShowFilters] = useState(false)
+  const [selectedOrder, setSelectedOrder] = useState<string | null>(null)
 
   const filteredOrders = labOrders.filter(
     (order) =>
       order.patientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       order.patientId.toLowerCase().includes(searchQuery.toLowerCase()) ||
       order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.type.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+      order.type.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
 
-  // Summary counts (as before)
   const orderCounts = {
     toPlace: filteredOrders.filter((o) => o.status === "Ordered").length,
     waitingMaterials: filteredOrders.filter((o) => o.status === "Waiting for Materials").length,
+    inProgress: filteredOrders.filter((o) => o.status === "In Progress").length,
+    qualityCheck: filteredOrders.filter((o) => o.status === "Quality Check").length,
+    readyForPickup: filteredOrders.filter((o) => o.status === "Ready for Pickup").length,
     pastDeadline: filteredOrders.filter((o) => o.deadline < 0).length,
     approaching: filteredOrders.filter((o) => o.deadline > 0 && o.deadline <= 2).length,
-  };
+  }
 
   return (
-    <div className="space-y-6 p-4">
-      <h1 className="text-3xl font-bold">Lab Management</h1>
+    <div className="space-y-6">
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Lab Management</h1>
+          <p className="text-muted-foreground">Track and manage lab orders, production, and quality control</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <PatientSearchDialog
+            trigger={
+              <Button variant="outline">
+                <Search className="mr-2 h-4 w-4" />
+                Find Patient
+              </Button>
+            }
+          />
+          <Button asChild>
+            <Link href="/lab/orders/new">
+              <Plus className="mr-1 h-4 w-4" />
+              New Order
+            </Link>
+          </Button>
+        </div>
+      </div>
 
-      {/* Summary Cards */}
       <div className="grid gap-6 md:grid-cols-4">
         <Card className={orderCounts.toPlace > 0 ? "border-yellow-400" : ""}>
           <CardHeader className="pb-2">
-            <CardTitle>Orders to Place</CardTitle>
+            <CardTitle className="text-lg">Orders to Place</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{orderCounts.toPlace}</div>
@@ -80,7 +169,7 @@ export function LabManagementPage() {
         </Card>
         <Card className={orderCounts.waitingMaterials > 0 ? "border-yellow-400" : ""}>
           <CardHeader className="pb-2">
-            <CardTitle>Waiting for Materials</CardTitle>
+            <CardTitle className="text-lg">Waiting for Materials</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">{orderCounts.waitingMaterials}</div>
@@ -89,7 +178,7 @@ export function LabManagementPage() {
         </Card>
         <Card className={orderCounts.pastDeadline > 0 ? "border-red-400" : ""}>
           <CardHeader className="pb-2">
-            <CardTitle>Past Deadline</CardTitle>
+            <CardTitle className="text-lg">Past Deadline</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-red-500">{orderCounts.pastDeadline}</div>
@@ -98,7 +187,7 @@ export function LabManagementPage() {
         </Card>
         <Card className={orderCounts.approaching > 0 ? "border-orange-400" : ""}>
           <CardHeader className="pb-2">
-            <CardTitle>Approaching Deadline</CardTitle>
+            <CardTitle className="text-lg">Approaching Deadline</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-orange-500">{orderCounts.approaching}</div>
@@ -107,41 +196,23 @@ export function LabManagementPage() {
         </Card>
       </div>
 
-      <Input
-        type="search"
-        placeholder="Search orders..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full md:w-[300px]"
-      />
+      <div className="flex justify-between">
+        <LabOrderPriorityDialog />
+        <Button variant="outline">
+          <ListFilter className="mr-2 h-4 w-4" />
+          Optician Work Queue
+        </Button>
+      </div>
 
-      {/* Tabs */}
+      {/* ✅ NEW SECTION ADDED THIS COMMIT */}
       <Tabs defaultValue="all" className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center">
-          <TabsList>
-            <TabsTrigger value="all">All Orders</TabsTrigger>
-            <TabsTrigger value="toPlace">To Place</TabsTrigger>
-            <TabsTrigger value="inProgress">In Progress</TabsTrigger>
-            <TabsTrigger value="ready">Ready for Pickup</TabsTrigger>
-          </TabsList>
-        </div>
-
-        <TabsContent value="all">
-          <div className="mt-4">
-            {/* All Orders view will be implemented in next commits */}
-            All Orders view placeholder.
-          </div>
-        </TabsContent>
-        <TabsContent value="toPlace">
-          <div className="mt-4">To Place view placeholder.</div>
-        </TabsContent>
-        <TabsContent value="inProgress">
-          <div className="mt-4">In Progress view placeholder.</div>
-        </TabsContent>
-        <TabsContent value="ready">
-          <div className="mt-4">Ready for Pickup view placeholder.</div>
-        </TabsContent>
+        <TabsList>
+          <TabsTrigger value="all">All Orders</TabsTrigger>
+          <TabsTrigger value="toPlace">To Place</TabsTrigger>
+          <TabsTrigger value="inProgress">In Progress</TabsTrigger>
+          <TabsTrigger value="ready">Ready for Pickup</TabsTrigger>
+        </TabsList>
       </Tabs>
     </div>
-  );
+  )
 }
