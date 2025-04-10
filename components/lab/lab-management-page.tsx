@@ -12,7 +12,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
@@ -267,7 +267,13 @@ export function LabManagementPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredOrders.map((order) => (
-                    <TableRow key={order.id}>
+                    <TableRow
+                      key={order.id}
+                      className={selectedOrder === order.id ? "bg-muted/50" : ""}
+                      onClick={() =>
+                        setSelectedOrder((prev) => (prev === order.id ? null : order.id))
+                      }
+                    >
                       <TableCell className="font-medium">{order.id}</TableCell>
                       <TableCell>
                         <div className="flex flex-col">
@@ -276,13 +282,15 @@ export function LabManagementPage() {
                         </div>
                       </TableCell>
                       <TableCell>{order.type}</TableCell>
-                      <TableCell className={
-                        order.deadline < 0
-                          ? "text-red-500 font-medium"
-                          : order.deadline <= 2
-                            ? "text-orange-500 font-medium"
-                            : ""
-                      }>
+                      <TableCell
+                        className={
+                          order.deadline < 0
+                            ? "text-red-500 font-medium"
+                            : order.deadline <= 2
+                              ? "text-orange-500 font-medium"
+                              : ""
+                        }
+                      >
                         {order.dueDate}
                         {order.deadline < 0 && <span className="block text-xs">Overdue</span>}
                         {order.deadline > 0 && order.deadline <= 2 && <span className="block text-xs">Soon</span>}
