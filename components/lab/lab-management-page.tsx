@@ -1,4 +1,5 @@
 "use client";
+import { Input } from "@/components/ui/input"; // assume you have this component
 
 const labOrders = [
   {
