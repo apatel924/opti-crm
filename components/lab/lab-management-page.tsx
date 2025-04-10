@@ -9,10 +9,12 @@ import {
   Download,
   ListFilter,
   ArrowUpDown,
+  Eye,
+  CheckCircle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
@@ -244,87 +246,57 @@ export function LabManagementPage() {
             </Button>
           </div>
         </div>
-        <TabsContent value="all" className="space-y-4">
-          <Card>
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>
-                      <Button variant="ghost" className="p-0 font-medium">
-                        Order ID
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </TableHead>
-                    <TableHead>Patient</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Due Date</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Progress</TableHead>
-                    <TableHead>Priority</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredOrders.map((order) => (
-                    <TableRow
-                      key={order.id}
-                      className={selectedOrder === order.id ? "bg-muted/50" : ""}
-                      onClick={() =>
-                        setSelectedOrder((prev) => (prev === order.id ? null : order.id))
-                      }
-                    >
-                      <TableCell className="font-medium">{order.id}</TableCell>
-                      <TableCell>
-                        <div className="flex flex-col">
-                          <span className="font-medium">{order.patientName}</span>
-                          <span className="text-xs text-muted-foreground">{order.patientId}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>{order.type}</TableCell>
-                      <TableCell
-                        className={
-                          order.deadline < 0
-                            ? "text-red-500 font-medium"
-                            : order.deadline <= 2
-                              ? "text-orange-500 font-medium"
-                              : ""
-                        }
-                      >
-                        {order.dueDate}
-                        {order.deadline < 0 && <span className="block text-xs">Overdue</span>}
-                        {order.deadline > 0 && order.deadline <= 2 && <span className="block text-xs">Soon</span>}
-                      </TableCell>
-                      <TableCell>
-                        <Badge>{order.status}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex w-full max-w-xs items-center gap-2">
-                          <Progress value={order.progress} className="h-2" />
-                          <span className="text-xs text-muted-foreground">{order.progress}%</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            order.priority === "Rush"
-                              ? "destructive"
-                              : order.priority === "High"
-                                ? "default"
-                                : "secondary"
-                          }
-                        >
-                          {order.priority}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right text-muted-foreground text-sm">—</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
+        <TabsContent value="toPlace" className="space-y-4">
+  <Card>
+    <CardHeader>
+      <CardTitle>Orders to Place</CardTitle>
+      <CardDescription>New orders that need to be placed with vendors</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <div className="space-y-4">
+        {filteredOrders
+          .filter((order) => order.status === "Ordered")
+          .map((order) => (
+            <div
+              key={order.id}
+              className="flex flex-col gap-4 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">{order.id}</span>
+                  <Badge variant="secondary">{order.status}</Badge>
+                  {order.priority === "Rush" && <Badge variant="destructive">Rush</Badge>}
+                </div>
+                <div className="mt-1 text-sm">
+                  {order.patientName} • {order.type}
+                </div>
+                <div className="mt-2 text-sm">
+                  <span className="font-medium">Frame:</span> {order.frame}
+                </div>
+                <div className="text-sm">
+                  <span className="font-medium">Lens:</span> {order.lens}
+                </div>
+                <div className="mt-2 text-sm text-muted-foreground">
+                  Due: {order.dueDate} • Assigned to: {order.assignedTo}
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline">
+                  <Eye className="mr-2 h-4 w-4" />
+                  View Details
+                </Button>
+                <Button size="sm">
+                  <CheckCircle className="mr-2 h-4 w-4" />
+                  Place Order
+                </Button>
+              </div>
+            </div>
+          ))}
+      </div>
+    </CardContent>
+  </Card>
+</TabsContent>
+
       </Tabs>
     </div>
   )
