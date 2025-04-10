@@ -1,4 +1,6 @@
-export default function LabPage() {
-    return <div>Lab placeholder</div>
-  }
+import { LabManagementPage } from "@/components/lab/lab-management-page"
+
+export default function LabManagementRoute() {
+  return <LabManagementPage />
+}
 
