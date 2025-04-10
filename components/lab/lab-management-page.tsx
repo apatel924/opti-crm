@@ -2,11 +2,21 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Search, Filter, Plus, Download, ListFilter } from "lucide-react"
+import {
+  Search,
+  Filter,
+  Plus,
+  Download,
+  ListFilter,
+  ArrowUpDown,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
 import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 import { LabOrderPriorityDialog } from "@/components/lab/lab-order-priority-dialog"
 
@@ -204,7 +214,6 @@ export function LabManagementPage() {
         </Button>
       </div>
 
-      {/* ✅ New section for tab navigation and tools */}
       <Tabs defaultValue="all" className="space-y-4">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <TabsList>
@@ -235,6 +244,79 @@ export function LabManagementPage() {
             </Button>
           </div>
         </div>
+        <TabsContent value="all" className="space-y-4">
+          <Card>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>
+                      <Button variant="ghost" className="p-0 font-medium">
+                        Order ID
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                      </Button>
+                    </TableHead>
+                    <TableHead>Patient</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Due Date</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Progress</TableHead>
+                    <TableHead>Priority</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredOrders.map((order) => (
+                    <TableRow key={order.id}>
+                      <TableCell className="font-medium">{order.id}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-col">
+                          <span className="font-medium">{order.patientName}</span>
+                          <span className="text-xs text-muted-foreground">{order.patientId}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>{order.type}</TableCell>
+                      <TableCell className={
+                        order.deadline < 0
+                          ? "text-red-500 font-medium"
+                          : order.deadline <= 2
+                            ? "text-orange-500 font-medium"
+                            : ""
+                      }>
+                        {order.dueDate}
+                        {order.deadline < 0 && <span className="block text-xs">Overdue</span>}
+                        {order.deadline > 0 && order.deadline <= 2 && <span className="block text-xs">Soon</span>}
+                      </TableCell>
+                      <TableCell>
+                        <Badge>{order.status}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex w-full max-w-xs items-center gap-2">
+                          <Progress value={order.progress} className="h-2" />
+                          <span className="text-xs text-muted-foreground">{order.progress}%</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            order.priority === "Rush"
+                              ? "destructive"
+                              : order.priority === "High"
+                                ? "default"
+                                : "secondary"
+                          }
+                        >
+                          {order.priority}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right text-muted-foreground text-sm">—</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
   )
