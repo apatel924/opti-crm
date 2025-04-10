@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const labOrders = [
   {
@@ -32,11 +33,20 @@ const labOrders = [
     status: "Waiting for Materials",
     deadline: 3,
   },
+  {
+    id: "L-10045",
+    patientName: "Emily Wilson",
+    patientId: "P-10045",
+    type: "Contact Lenses",
+    dueDate: "05/06/2023",
+    status: "Ordered",
+    deadline: 5,
+  },
 ];
 
 export function LabManagementPage() {
   const [searchQuery, setSearchQuery] = useState("");
-
+  
   const filteredOrders = labOrders.filter(
     (order) =>
       order.patientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -45,6 +55,7 @@ export function LabManagementPage() {
       order.type.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Compute summary counts (same as before)
   const orderCounts = {
     toPlace: filteredOrders.filter((o) => o.status === "Ordered").length,
     waitingMaterials: filteredOrders.filter((o) => o.status === "Waiting for Materials").length,
@@ -55,6 +66,8 @@ export function LabManagementPage() {
   return (
     <div className="space-y-6 p-4">
       <h1 className="text-3xl font-bold">Lab Management</h1>
+
+      {/* Summary Cards */}
       <div className="grid gap-6 md:grid-cols-4">
         <Card className={orderCounts.toPlace > 0 ? "border-yellow-400" : ""}>
           <CardHeader className="pb-2">
@@ -94,40 +107,48 @@ export function LabManagementPage() {
         </Card>
       </div>
 
-      <Input
-        type="search"
-        placeholder="Search orders..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full md:w-[300px]"
-      />
+      <div className="flex justify-between items-center">
+        <Input
+          type="search"
+          placeholder="Search orders..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full md:w-[300px]"
+        />
+      </div>
 
-      <table className="min-w-full mt-4 border">
-        <thead>
-          <tr>
-            <th className="px-4 py-2">Order ID</th>
-            <th className="px-4 py-2">Patient</th>
-            <th className="px-4 py-2">Type</th>
-            <th className="px-4 py-2">Due Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredOrders.map((order) => (
-            <tr key={order.id} className="border-t">
-              <td className="px-4 py-2">{order.id}</td>
-              <td className="px-4 py-2">
-                {order.patientName}
-                <br />
-                <span className="text-xs text-muted-foreground">
-                  {order.patientId}
-                </span>
-              </td>
-              <td className="px-4 py-2">{order.type}</td>
-              <td className="px-4 py-2">{order.dueDate}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Tabs for Order Categories */}
+      <Tabs defaultValue="all" className="space-y-4">
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <TabsList>
+            <TabsTrigger value="all">All Orders</TabsTrigger>
+            <TabsTrigger value="toPlace">To Place</TabsTrigger>
+            <TabsTrigger value="inProgress">In Progress</TabsTrigger>
+            <TabsTrigger value="ready">Ready for Pickup</TabsTrigger>
+          </TabsList>
+        </div>
+
+        <TabsContent value="all">
+          <div className="mt-4">
+            All orders view (table to be added in next commit)
+          </div>
+        </TabsContent>
+        <TabsContent value="toPlace">
+          <div className="mt-4">
+            Orders to Place view (table to be added in next commit)
+          </div>
+        </TabsContent>
+        <TabsContent value="inProgress">
+          <div className="mt-4">
+            In Progress orders view (table to be added in next commit)
+          </div>
+        </TabsContent>
+        <TabsContent value="ready">
+          <div className="mt-4">
+            Ready for Pickup view (table to be added in next commit)
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
