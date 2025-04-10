@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const labOrders = [
   {
@@ -32,6 +33,15 @@ const labOrders = [
     status: "Waiting for Materials",
     deadline: 3,
   },
+  {
+    id: "L-10045",
+    patientName: "Emily Wilson",
+    patientId: "P-10045",
+    type: "Contact Lenses",
+    dueDate: "05/06/2023",
+    status: "Ordered",
+    deadline: 5,
+  },
 ];
 
 export function LabManagementPage() {
@@ -45,7 +55,7 @@ export function LabManagementPage() {
       order.type.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Compute counts for summary cards
+  // Summary counts (as before)
   const orderCounts = {
     toPlace: filteredOrders.filter((o) => o.status === "Ordered").length,
     waitingMaterials: filteredOrders.filter((o) => o.status === "Waiting for Materials").length,
@@ -105,30 +115,33 @@ export function LabManagementPage() {
         className="w-full md:w-[300px]"
       />
 
-      <table className="min-w-full mt-4 border">
-        <thead>
-          <tr>
-            <th className="px-4 py-2">Order ID</th>
-            <th className="px-4 py-2">Patient</th>
-            <th className="px-4 py-2">Type</th>
-            <th className="px-4 py-2">Due Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredOrders.map((order) => (
-            <tr key={order.id} className="border-t">
-              <td className="px-4 py-2">{order.id}</td>
-              <td className="px-4 py-2">
-                {order.patientName}
-                <br />
-                <span className="text-xs text-muted-foreground">{order.patientId}</span>
-              </td>
-              <td className="px-4 py-2">{order.type}</td>
-              <td className="px-4 py-2">{order.dueDate}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Tabs */}
+      <Tabs defaultValue="all" className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center">
+          <TabsList>
+            <TabsTrigger value="all">All Orders</TabsTrigger>
+            <TabsTrigger value="toPlace">To Place</TabsTrigger>
+            <TabsTrigger value="inProgress">In Progress</TabsTrigger>
+            <TabsTrigger value="ready">Ready for Pickup</TabsTrigger>
+          </TabsList>
+        </div>
+
+        <TabsContent value="all">
+          <div className="mt-4">
+            {/* All Orders view will be implemented in next commits */}
+            All Orders view placeholder.
+          </div>
+        </TabsContent>
+        <TabsContent value="toPlace">
+          <div className="mt-4">To Place view placeholder.</div>
+        </TabsContent>
+        <TabsContent value="inProgress">
+          <div className="mt-4">In Progress view placeholder.</div>
+        </TabsContent>
+        <TabsContent value="ready">
+          <div className="mt-4">Ready for Pickup view placeholder.</div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
