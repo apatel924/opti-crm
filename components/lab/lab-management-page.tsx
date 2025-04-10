@@ -204,14 +204,37 @@ export function LabManagementPage() {
         </Button>
       </div>
 
-      {/* ✅ NEW SECTION ADDED THIS COMMIT */}
+      {/* ✅ New section for tab navigation and tools */}
       <Tabs defaultValue="all" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="all">All Orders</TabsTrigger>
-          <TabsTrigger value="toPlace">To Place</TabsTrigger>
-          <TabsTrigger value="inProgress">In Progress</TabsTrigger>
-          <TabsTrigger value="ready">Ready for Pickup</TabsTrigger>
-        </TabsList>
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <TabsList>
+            <TabsTrigger value="all">All Orders</TabsTrigger>
+            <TabsTrigger value="toPlace">To Place</TabsTrigger>
+            <TabsTrigger value="inProgress">In Progress</TabsTrigger>
+            <TabsTrigger value="ready">Ready for Pickup</TabsTrigger>
+          </TabsList>
+
+          <div className="flex items-center gap-2">
+            <form className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search orders..."
+                className="w-full pl-8 md:w-[300px]"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </form>
+            <Button variant="outline" size="icon" onClick={() => setShowFilters(!showFilters)}>
+              <Filter className="h-4 w-4" />
+              <span className="sr-only">Filter</span>
+            </Button>
+            <Button variant="outline" size="icon">
+              <Download className="h-4 w-4" />
+              <span className="sr-only">Download</span>
+            </Button>
+          </div>
+        </div>
       </Tabs>
     </div>
   )
