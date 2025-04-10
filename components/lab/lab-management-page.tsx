@@ -1,56 +1,76 @@
 "use client";
-import { Input } from "@/components/ui/input"; // assume you have this component
+
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
 
 const labOrders = [
   {
     id: "L-10042",
     patientName: "Sarah Johnson",
     patientId: "P-10042",
-    orderDate: "05/01/2023",
-    dueDate: "05/05/2023",
     type: "Single Vision",
-    status: "In Progress",
-    progress: 60,
-    priority: "Normal",
-    assignedTo: "John Miller",
-    frame: "Ray-Ban RB5154",
-    lens: "Essilor Crizal",
-    notes: "Patient has astigmatism",
-    deadline: 4,
+    dueDate: "05/05/2023",
+  },
+  {
+    id: "L-10043",
+    patientName: "Michael Chen",
+    patientId: "P-10043",
+    type: "Progressive",
+    dueDate: "05/03/2023",
+  },
+  {
+    id: "L-10044",
+    patientName: "Robert Garcia",
+    patientId: "P-10044",
+    type: "Bifocal",
+    dueDate: "05/04/2023",
   },
 ];
 
 export function LabManagementPage() {
-  return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight">Lab Management</h1>
-      <p className="text-muted-foreground">
-        Track and manage lab orders
-      </p>
+  const [searchQuery, setSearchQuery] = useState("");
 
-      <table className="min-w-full border">
+  const filteredOrders = labOrders.filter(
+    (order) =>
+      order.patientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.patientId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.type.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <div className="space-y-6 p-4">
+      <h1 className="text-3xl font-bold">Lab Management</h1>
+      <Input
+        type="search"
+        placeholder="Search orders..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="w-full md:w-[300px]"
+      />
+
+      <table className="min-w-full mt-4 border">
         <thead>
           <tr>
-            <th>Order ID</th>
-            <th>Patient</th>
-            <th>Type</th>
-            <th>Due Date</th>
+            <th className="px-4 py-2">Order ID</th>
+            <th className="px-4 py-2">Patient</th>
+            <th className="px-4 py-2">Type</th>
+            <th className="px-4 py-2">Due Date</th>
           </tr>
         </thead>
         <tbody>
-          {labOrders.map((order) => (
-            <tr key={order.id}>
-              <td>{order.id}</td>
-              <td>
-                <div>
-                  <div>{order.patientName}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {order.patientId}
-                  </div>
-                </div>
+          {filteredOrders.map((order) => (
+            <tr key={order.id} className="border-t">
+              <td className="px-4 py-2">{order.id}</td>
+              <td className="px-4 py-2">
+                {order.patientName}
+                <br />
+                <span className="text-xs text-muted-foreground">
+                  {order.patientId}
+                </span>
               </td>
-              <td>{order.type}</td>
-              <td>{order.dueDate}</td>
+              <td className="px-4 py-2">{order.type}</td>
+              <td className="px-4 py-2">{order.dueDate}</td>
             </tr>
           ))}
         </tbody>
