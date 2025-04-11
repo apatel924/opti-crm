@@ -93,203 +93,134 @@ export function LabOrderForm() {
         </CardContent>
       </Card>
 
-      {orderType === "glasses" && (
+      {orderType === "contacts" && (
         <Card>
           <CardHeader>
-            <CardTitle>Prescription Details</CardTitle>
+            <CardTitle>Contact Lens Details</CardTitle>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="lens" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="lens">Lens Details</TabsTrigger>
-                <TabsTrigger value="frame">Frame Details</TabsTrigger>
-                <TabsTrigger value="pricing">Pricing</TabsTrigger>
-              </TabsList>
-              <TabsContent value="lens" className="space-y-4 pt-4">
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="contact-brand">Brand</Label>
+                <Select defaultValue="acuvue">
+                  <SelectTrigger id="contact-brand">
+                    <SelectValue placeholder="Select brand" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="acuvue">Acuvue</SelectItem>
+                    <SelectItem value="air-optix">Air Optix</SelectItem>
+                    <SelectItem value="biofinity">Biofinity</SelectItem>
+                    <SelectItem value="dailies">Dailies</SelectItem>
+                    <SelectItem value="proclear">Proclear</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="contact-type">Type</Label>
+                <Select defaultValue="daily">
+                  <SelectTrigger id="contact-type">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="daily">Daily Disposable</SelectItem>
+                    <SelectItem value="biweekly">Bi-weekly</SelectItem>
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                    <SelectItem value="quarterly">Quarterly</SelectItem>
+                    <SelectItem value="yearly">Yearly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* Right Eye */}
                 <div className="grid gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="lens-type">Lens Type</Label>
-                    <Select value={lensType} onValueChange={setLensType}>
-                      <SelectTrigger id="lens-type">
-                        <SelectValue placeholder="Select lens type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="single">Single Vision</SelectItem>
-                        <SelectItem value="bifocal">Bifocal</SelectItem>
-                        <SelectItem value="progressive">Progressive</SelectItem>
-                        <SelectItem value="reading">Reading</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="lens-material">Lens Material</Label>
-                    <Select defaultValue="plastic">
-                      <SelectTrigger id="lens-material">
-                        <SelectValue placeholder="Select lens material" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="plastic">Plastic CR-39</SelectItem>
-                        <SelectItem value="polycarbonate">Polycarbonate</SelectItem>
-                        <SelectItem value="trivex">Trivex</SelectItem>
-                        <SelectItem value="high-index">High-Index 1.67</SelectItem>
-                        <SelectItem value="ultra-high-index">Ultra High-Index 1.74</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="grid gap-4">
-                    <Label>Right Eye (OD)</Label>
-                    <div className="grid grid-cols-4 gap-2">
-                      <div className="grid gap-1">
-                        <Label htmlFor="od-sphere" className="text-xs">Sphere</Label>
-                        <Input id="od-sphere" placeholder="0.00" />
-                      </div>
-                      <div className="grid gap-1">
-                        <Label htmlFor="od-cylinder" className="text-xs">Cylinder</Label>
-                        <Input id="od-cylinder" placeholder="0.00" />
-                      </div>
-                      <div className="grid gap-1">
-                        <Label htmlFor="od-axis" className="text-xs">Axis</Label>
-                        <Input id="od-axis" placeholder="0" />
-                      </div>
-                      <div className="grid gap-1">
-                        <Label htmlFor="od-add" className="text-xs">Add</Label>
-                        <Input id="od-add" placeholder="0.00" />
-                      </div>
+                  <Label>Right Eye (OD)</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="grid gap-1">
+                      <Label htmlFor="od-power" className="text-xs">Power</Label>
+                      <Input id="od-power" placeholder="-0.00" />
+                    </div>
+                    <div className="grid gap-1">
+                      <Label htmlFor="od-bc" className="text-xs">Base Curve</Label>
+                      <Input id="od-bc" placeholder="8.6" />
                     </div>
                   </div>
-
-                  <div className="grid gap-4">
-                    <Label>Left Eye (OS)</Label>
-                    <div className="grid grid-cols-4 gap-2">
-                      <div className="grid gap-1">
-                        <Label htmlFor="os-sphere" className="text-xs">Sphere</Label>
-                        <Input id="os-sphere" placeholder="0.00" />
-                      </div>
-                      <div className="grid gap-1">
-                        <Label htmlFor="os-cylinder" className="text-xs">Cylinder</Label>
-                        <Input id="os-cylinder" placeholder="0.00" />
-                      </div>
-                      <div className="grid gap-1">
-                        <Label htmlFor="os-axis" className="text-xs">Axis</Label>
-                        <Input id="os-axis" placeholder="0" />
-                      </div>
-                      <div className="grid gap-1">
-                        <Label htmlFor="os-add" className="text-xs">Add</Label>
-                        <Input id="os-add" placeholder="0.00" />
-                      </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="grid gap-1">
+                      <Label htmlFor="od-dia" className="text-xs">Diameter</Label>
+                      <Input id="od-dia" placeholder="14.2" />
+                    </div>
+                    <div className="grid gap-1">
+                      <Label htmlFor="od-cyl" className="text-xs">Cylinder</Label>
+                      <Input id="od-cyl" placeholder="-0.00" />
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="pd">PD (mm)</Label>
-                      <Input id="pd" placeholder="63" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="seg-height">Seg Height (mm)</Label>
-                      <Input id="seg-height" placeholder="0" />
-                    </div>
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="lens-treatments">Lens Treatments</Label>
-                    <Select defaultValue="ar">
-                      <SelectTrigger id="lens-treatments">
-                        <SelectValue placeholder="Select lens treatments" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="ar">Anti-Reflective</SelectItem>
-                        <SelectItem value="blue">Blue Light Filter</SelectItem>
-                        <SelectItem value="photochromic">Photochromic</SelectItem>
-                        <SelectItem value="polarized">Polarized</SelectItem>
-                        <SelectItem value="scratch">Scratch Resistant</SelectItem>
-                        <SelectItem value="uv">UV Protection</SelectItem>
-                      </SelectContent>
-                    </Select>
+                  <div className="grid gap-1">
+                    <Label htmlFor="od-axis" className="text-xs">Axis</Label>
+                    <Input id="od-axis" placeholder="0" />
                   </div>
                 </div>
-              </TabsContent>
-              <TabsContent value="frame" className="space-y-4 pt-4">
+
+                {/* Left Eye */}
                 <div className="grid gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="frame-brand">Frame Brand</Label>
-                    <Input id="frame-brand" placeholder="e.g. Ray-Ban, Oakley" />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="frame-model">Frame Model</Label>
-                    <Input id="frame-model" placeholder="e.g. RB5154, OX8046" />
-                  </div>
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="frame-color">Color</Label>
-                      <Input id="frame-color" placeholder="e.g. Black, Tortoise" />
+                  <Label>Left Eye (OS)</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="grid gap-1">
+                      <Label htmlFor="os-power" className="text-xs">Power</Label>
+                      <Input id="os-power" placeholder="-0.00" />
                     </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="frame-size">Size</Label>
-                      <Input id="frame-size" placeholder="e.g. 52-18-140" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="frame-shape">Shape</Label>
-                      <Select defaultValue="rectangle">
-                        <SelectTrigger id="frame-shape">
-                          <SelectValue placeholder="Select shape" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="rectangle">Rectangle</SelectItem>
-                          <SelectItem value="round">Round</SelectItem>
-                          <SelectItem value="square">Square</SelectItem>
-                          <SelectItem value="oval">Oval</SelectItem>
-                          <SelectItem value="cat-eye">Cat Eye</SelectItem>
-                          <SelectItem value="aviator">Aviator</SelectItem>
-                        </SelectContent>
-                      </Select>
+                    <div className="grid gap-1">
+                      <Label htmlFor="os-bc" className="text-xs">Base Curve</Label>
+                      <Input id="os-bc" placeholder="8.6" />
                     </div>
                   </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="frame-notes">Frame Notes</Label>
-                    <Textarea id="frame-notes" placeholder="Additional notes about the frame" />
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="grid gap-1">
+                      <Label htmlFor="os-dia" className="text-xs">Diameter</Label>
+                      <Input id="os-dia" placeholder="14.2" />
+                    </div>
+                    <div className="grid gap-1">
+                      <Label htmlFor="os-cyl" className="text-xs">Cylinder</Label>
+                      <Input id="os-cyl" placeholder="-0.00" />
+                    </div>
+                  </div>
+                  <div className="grid gap-1">
+                    <Label htmlFor="os-axis" className="text-xs">Axis</Label>
+                    <Input id="os-axis" placeholder="0" />
                   </div>
                 </div>
-              </TabsContent>
-                <TabsContent value="pricing" className="space-y-4 pt-4">
-                <div className="grid gap-4">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="grid gap-2">
-                        <Label htmlFor="frame-cost">Frame Cost</Label>
-                        <Input id="frame-cost" type="number" placeholder="0.00" />
-                        </div>
-                        <div className="grid gap-2">
-                        <Label htmlFor="lens-cost">Lens Cost</Label>
-                        <Input id="lens-cost" type="number" placeholder="0.00" />
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="grid gap-2">
-                        <Label htmlFor="treatments-cost">Treatments Cost</Label>
-                        <Input id="treatments-cost" type="number" placeholder="0.00" />
-                        </div>
-                        <div className="grid gap-2">
-                        <Label htmlFor="other-cost">Other Costs</Label>
-                        <Input id="other-cost" type="number" placeholder="0.00" />
-                        </div>
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="total-cost">Total Cost</Label>
-                        <Input id="total-cost" type="number" placeholder="0.00" />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="insurance-coverage">Insurance Coverage</Label>
-                        <Input id="insurance-coverage" type="number" placeholder="0.00" />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="patient-responsibility">Patient Responsibility</Label>
-                        <Input id="patient-responsibility" type="number" placeholder="0.00" />
-                    </div>
-                </div>
-              </TabsContent>
-            </Tabs>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="contact-quantity">Quantity</Label>
+                <Select defaultValue="annual">
+                  <SelectTrigger id="contact-quantity">
+                    <SelectValue placeholder="Select quantity" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="trial">Trial Pair</SelectItem>
+                    <SelectItem value="box">1 Box</SelectItem>
+                    <SelectItem value="quarterly">3 Month Supply</SelectItem>
+                    <SelectItem value="biannual">6 Month Supply</SelectItem>
+                    <SelectItem value="annual">Annual Supply</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="contact-cost">Total Cost</Label>
+                <Input id="contact-cost" type="number" placeholder="0.00" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="contact-insurance">Insurance Coverage</Label>
+                <Input id="contact-insurance" type="number" placeholder="0.00" />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="contact-patient">Patient Responsibility</Label>
+                <Input id="contact-patient" type="number" placeholder="0.00" />
+              </div>
+            </div>
           </CardContent>
         </Card>
       )}
