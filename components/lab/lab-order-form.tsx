@@ -253,8 +253,41 @@ export function LabOrderForm() {
                   </div>
                 </div>
               </TabsContent>
-              <TabsContent value="pricing" className="space-y-4 pt-4">
-                {/* Pricing tab content will go here later */}
+                <TabsContent value="pricing" className="space-y-4 pt-4">
+                <div className="grid gap-4">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="grid gap-2">
+                        <Label htmlFor="frame-cost">Frame Cost</Label>
+                        <Input id="frame-cost" type="number" placeholder="0.00" />
+                        </div>
+                        <div className="grid gap-2">
+                        <Label htmlFor="lens-cost">Lens Cost</Label>
+                        <Input id="lens-cost" type="number" placeholder="0.00" />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="grid gap-2">
+                        <Label htmlFor="treatments-cost">Treatments Cost</Label>
+                        <Input id="treatments-cost" type="number" placeholder="0.00" />
+                        </div>
+                        <div className="grid gap-2">
+                        <Label htmlFor="other-cost">Other Costs</Label>
+                        <Input id="other-cost" type="number" placeholder="0.00" />
+                        </div>
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="total-cost">Total Cost</Label>
+                        <Input id="total-cost" type="number" placeholder="0.00" />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="insurance-coverage">Insurance Coverage</Label>
+                        <Input id="insurance-coverage" type="number" placeholder="0.00" />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="patient-responsibility">Patient Responsibility</Label>
+                        <Input id="patient-responsibility" type="number" placeholder="0.00" />
+                    </div>
+                </div>
               </TabsContent>
             </Tabs>
           </CardContent>
