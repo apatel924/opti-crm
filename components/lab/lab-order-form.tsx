@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 import { User } from "lucide-react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
@@ -211,7 +212,46 @@ export function LabOrderForm() {
                 </div>
               </TabsContent>
               <TabsContent value="frame" className="space-y-4 pt-4">
-                {/* Frame tab content will go here later */}
+                <div className="grid gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="frame-brand">Frame Brand</Label>
+                    <Input id="frame-brand" placeholder="e.g. Ray-Ban, Oakley" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="frame-model">Frame Model</Label>
+                    <Input id="frame-model" placeholder="e.g. RB5154, OX8046" />
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="frame-color">Color</Label>
+                      <Input id="frame-color" placeholder="e.g. Black, Tortoise" />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="frame-size">Size</Label>
+                      <Input id="frame-size" placeholder="e.g. 52-18-140" />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="frame-shape">Shape</Label>
+                      <Select defaultValue="rectangle">
+                        <SelectTrigger id="frame-shape">
+                          <SelectValue placeholder="Select shape" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="rectangle">Rectangle</SelectItem>
+                          <SelectItem value="round">Round</SelectItem>
+                          <SelectItem value="square">Square</SelectItem>
+                          <SelectItem value="oval">Oval</SelectItem>
+                          <SelectItem value="cat-eye">Cat Eye</SelectItem>
+                          <SelectItem value="aviator">Aviator</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="frame-notes">Frame Notes</Label>
+                    <Textarea id="frame-notes" placeholder="Additional notes about the frame" />
+                  </div>
+                </div>
               </TabsContent>
               <TabsContent value="pricing" className="space-y-4 pt-4">
                 {/* Pricing tab content will go here later */}
