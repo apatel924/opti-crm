@@ -14,6 +14,7 @@ export function LabOrderForm() {
   const [selectedPatient, setSelectedPatient] = useState<{ id: string; name: string } | null>(null)
   const [orderType, setOrderType] = useState("glasses")
   const [priority, setPriority] = useState("normal")
+  const [lensType, setLensType] = useState("single")
 
   return (
     <div className="space-y-6">
@@ -104,6 +105,110 @@ export function LabOrderForm() {
                 <TabsTrigger value="pricing">Pricing</TabsTrigger>
               </TabsList>
               <TabsContent value="lens" className="space-y-4 pt-4">
+                <div className="grid gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="lens-type">Lens Type</Label>
+                    <Select value={lensType} onValueChange={setLensType}>
+                      <SelectTrigger id="lens-type">
+                        <SelectValue placeholder="Select lens type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="single">Single Vision</SelectItem>
+                        <SelectItem value="bifocal">Bifocal</SelectItem>
+                        <SelectItem value="progressive">Progressive</SelectItem>
+                        <SelectItem value="reading">Reading</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="lens-material">Lens Material</Label>
+                    <Select defaultValue="plastic">
+                      <SelectTrigger id="lens-material">
+                        <SelectValue placeholder="Select lens material" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="plastic">Plastic CR-39</SelectItem>
+                        <SelectItem value="polycarbonate">Polycarbonate</SelectItem>
+                        <SelectItem value="trivex">Trivex</SelectItem>
+                        <SelectItem value="high-index">High-Index 1.67</SelectItem>
+                        <SelectItem value="ultra-high-index">Ultra High-Index 1.74</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="grid gap-4">
+                    <Label>Right Eye (OD)</Label>
+                    <div className="grid grid-cols-4 gap-2">
+                      <div className="grid gap-1">
+                        <Label htmlFor="od-sphere" className="text-xs">Sphere</Label>
+                        <Input id="od-sphere" placeholder="0.00" />
+                      </div>
+                      <div className="grid gap-1">
+                        <Label htmlFor="od-cylinder" className="text-xs">Cylinder</Label>
+                        <Input id="od-cylinder" placeholder="0.00" />
+                      </div>
+                      <div className="grid gap-1">
+                        <Label htmlFor="od-axis" className="text-xs">Axis</Label>
+                        <Input id="od-axis" placeholder="0" />
+                      </div>
+                      <div className="grid gap-1">
+                        <Label htmlFor="od-add" className="text-xs">Add</Label>
+                        <Input id="od-add" placeholder="0.00" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4">
+                    <Label>Left Eye (OS)</Label>
+                    <div className="grid grid-cols-4 gap-2">
+                      <div className="grid gap-1">
+                        <Label htmlFor="os-sphere" className="text-xs">Sphere</Label>
+                        <Input id="os-sphere" placeholder="0.00" />
+                      </div>
+                      <div className="grid gap-1">
+                        <Label htmlFor="os-cylinder" className="text-xs">Cylinder</Label>
+                        <Input id="os-cylinder" placeholder="0.00" />
+                      </div>
+                      <div className="grid gap-1">
+                        <Label htmlFor="os-axis" className="text-xs">Axis</Label>
+                        <Input id="os-axis" placeholder="0" />
+                      </div>
+                      <div className="grid gap-1">
+                        <Label htmlFor="os-add" className="text-xs">Add</Label>
+                        <Input id="os-add" placeholder="0.00" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="pd">PD (mm)</Label>
+                      <Input id="pd" placeholder="63" />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="seg-height">Seg Height (mm)</Label>
+                      <Input id="seg-height" placeholder="0" />
+                    </div>
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="lens-treatments">Lens Treatments</Label>
+                    <Select defaultValue="ar">
+                      <SelectTrigger id="lens-treatments">
+                        <SelectValue placeholder="Select lens treatments" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ar">Anti-Reflective</SelectItem>
+                        <SelectItem value="blue">Blue Light Filter</SelectItem>
+                        <SelectItem value="photochromic">Photochromic</SelectItem>
+                        <SelectItem value="polarized">Polarized</SelectItem>
+                        <SelectItem value="scratch">Scratch Resistant</SelectItem>
+                        <SelectItem value="uv">UV Protection</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
               </TabsContent>
               <TabsContent value="frame" className="space-y-4 pt-4">
                 {/* Frame tab content will go here later */}
