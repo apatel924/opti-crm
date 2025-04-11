@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 import { User } from "lucide-react"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 export function LabOrderForm() {
   const [selectedPatient, setSelectedPatient] = useState<{ id: string; name: string } | null>(null)
@@ -89,6 +90,31 @@ export function LabOrderForm() {
           </div>
         </CardContent>
       </Card>
+
+      {orderType === "glasses" && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Prescription Details</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue="lens" className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="lens">Lens Details</TabsTrigger>
+                <TabsTrigger value="frame">Frame Details</TabsTrigger>
+                <TabsTrigger value="pricing">Pricing</TabsTrigger>
+              </TabsList>
+              <TabsContent value="lens" className="space-y-4 pt-4">
+              </TabsContent>
+              <TabsContent value="frame" className="space-y-4 pt-4">
+                {/* Frame tab content will go here later */}
+              </TabsContent>
+              <TabsContent value="pricing" className="space-y-4 pt-4">
+                {/* Pricing tab content will go here later */}
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
