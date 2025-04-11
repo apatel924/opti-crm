@@ -2,14 +2,14 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 import { User } from "lucide-react"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Save, Package } from "lucide-react"
 
 export function LabOrderForm() {
   const [selectedPatient, setSelectedPatient] = useState<{ id: string; name: string } | null>(null)
@@ -224,6 +224,47 @@ export function LabOrderForm() {
           </CardContent>
         </Card>
       )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Additional Information</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4">
+            <div className="grid gap-2">
+              <Label htmlFor="comments">Comments/Instructions</Label>
+              <Textarea id="comments" placeholder="Enter any special instructions or comments for the lab" rows={4} />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="assigned-to">Assigned To</Label>
+              <Select defaultValue="unassigned">
+                <SelectTrigger id="assigned-to">
+                  <SelectValue placeholder="Select staff member" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="unassigned">Unassigned</SelectItem>
+                  <SelectItem value="john">John Miller</SelectItem>
+                  <SelectItem value="sarah">Sarah Williams</SelectItem>
+                  <SelectItem value="michael">Michael Johnson</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button variant="outline">Cancel</Button>
+          <div className="flex gap-2">
+            <Button variant="outline">
+              <Save className="mr-2 h-4 w-4" />
+              Save as Draft
+            </Button>
+            <Button>
+              <Package className="mr-2 h-4 w-4" />
+              Submit Order
+            </Button>
+          </div>
+        </CardFooter>
+      </Card>
     </div>
   )
 }
