@@ -106,7 +106,49 @@ export function PatientBilling({ patient }: PatientBillingProps) {
         </TabsContent>
 
         <TabsContent value="due">
-          {/* Outstanding balances content goes here */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Outstanding Balances</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {patient.billing
+                  .filter((bill: any) => bill.status === "Due")
+                  .map((bill: any) => (
+                    <div
+                      key={bill.id}
+                      className="flex flex-col gap-4 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{bill.id}</span>
+                          <Badge variant="destructive">Due</Badge>
+                        </div>
+                        <div className="mt-1 text-sm">{bill.description}</div>
+                        <div className="mt-2 text-sm">
+                          <span className="font-medium">Date:</span> {bill.date}
+                        </div>
+                        <div className="text-sm">
+                          <span className="font-medium">Total:</span> {bill.total} |{" "}
+                          <span className="font-medium">Insurance:</span> {bill.insurance} |{" "}
+                          <span className="font-medium text-red-500">Patient: {bill.patient}</span>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="outline">
+                          <Eye className="mr-2 h-4 w-4" />
+                          View Details
+                        </Button>
+                        <Button size="sm" onClick={() => handlePayment(bill)}>
+                          <DollarSign className="mr-2 h-4 w-4" />
+                          Pay Now
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="paid">
