@@ -5,6 +5,9 @@ import { CreditCard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { Eye, DollarSign, CheckCircle, AlertCircle } from "lucide-react"
 
 interface PatientBillingProps {
   patient: any
@@ -40,7 +43,66 @@ export function PatientBilling({ patient }: PatientBillingProps) {
         </TabsList>
 
         <TabsContent value="all">
-          {/* All Transactions table will go here in the next commit */}
+          <Card>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Total</TableHead>
+                    <TableHead>Insurance</TableHead>
+                    <TableHead>Patient</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {patient.billing.map((bill: any) => (
+                    <TableRow key={bill.id}>
+                      <TableCell>{bill.date}</TableCell>
+                      <TableCell>{bill.description}</TableCell>
+                      <TableCell>{bill.total}</TableCell>
+                      <TableCell>{bill.insurance}</TableCell>
+                      <TableCell>{bill.patient}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={bill.status === "Paid" ? "success" : "destructive"}
+                          className="flex w-16 items-center justify-center gap-1"
+                        >
+                          {bill.status === "Paid" ? (
+                            <>
+                              <CheckCircle className="h-3 w-3" />
+                              Paid
+                            </>
+                          ) : (
+                            <>
+                              <AlertCircle className="h-3 w-3" />
+                              Due
+                            </>
+                          )}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button variant="outline" size="sm">
+                            <Eye className="mr-2 h-4 w-4" />
+                            View
+                          </Button>
+                          {bill.status !== "Paid" && (
+                            <Button size="sm" onClick={() => handlePayment(bill)}>
+                              <DollarSign className="mr-2 h-4 w-4" />
+                              Pay
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="due">
