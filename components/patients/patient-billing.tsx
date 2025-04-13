@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { CreditCard } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 
 interface PatientBillingProps {
   patient: any
@@ -30,6 +31,32 @@ export function PatientBilling({ patient }: PatientBillingProps) {
           Make Payment
         </Button>
       </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Account Summary</CardTitle>
+          <CardDescription>Current billing status and payment history</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-md border p-4">
+              <div className="text-sm font-medium text-muted-foreground">Total Balance</div>
+              <div className={`text-2xl font-bold ${totalBalance > 0 ? "text-red-500" : "text-green-500"}`}>
+                ${totalBalance.toFixed(2)}
+              </div>
+            </div>
+            <div className="rounded-md border p-4">
+              <div className="text-sm font-medium text-muted-foreground">Last Payment</div>
+              <div className="text-2xl font-bold">$30.00</div>
+              <div className="text-xs text-muted-foreground">05/01/2023</div>
+            </div>
+            <div className="rounded-md border p-4">
+              <div className="text-sm font-medium text-muted-foreground">Payment Method</div>
+              <div className="text-lg font-medium">Visa •••• 4242</div>
+              <div className="text-xs text-muted-foreground">Expires 12/25</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
