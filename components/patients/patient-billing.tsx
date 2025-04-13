@@ -4,6 +4,7 @@ import { useState } from "react"
 import { CreditCard } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 interface PatientBillingProps {
   patient: any
@@ -31,6 +32,25 @@ export function PatientBilling({ patient }: PatientBillingProps) {
           Make Payment
         </Button>
       </div>
+      <Tabs defaultValue="all" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="all">All Transactions</TabsTrigger>
+          <TabsTrigger value="due">Due</TabsTrigger>
+          <TabsTrigger value="paid">Paid</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="all">
+          {/* All Transactions table will go here in the next commit */}
+        </TabsContent>
+
+        <TabsContent value="due">
+          {/* Outstanding balances content goes here */}
+        </TabsContent>
+
+        <TabsContent value="paid">
+          {/* Payment history content goes here */}
+        </TabsContent>
+      </Tabs>
       <Card>
         <CardHeader>
           <CardTitle>Account Summary</CardTitle>
