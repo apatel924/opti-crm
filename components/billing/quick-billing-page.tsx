@@ -12,6 +12,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog"
 
 export function QuickBillingPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -99,6 +107,20 @@ export function QuickBillingPage() {
           </CardFooter>
         </Card>
       </div>
+      <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Process Payment</DialogTitle>
+            <DialogDescription>
+              {selectedPatient
+                ? `Enter payment details for ${selectedPatient}`
+                : "Enter payment details for the selected patient"}
+            </DialogDescription>
+          </DialogHeader>
+
+          {/* Form fields will go here next commit */}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
