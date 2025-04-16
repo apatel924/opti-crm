@@ -5,6 +5,7 @@ import { Search, Filter, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 const billingData = [
   {
@@ -105,6 +106,39 @@ export function BillingPage() {
           </CardContent>
         </Card>
       </div>
+      <Tabs defaultValue="all" className="space-y-4">
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <TabsList>
+            <TabsTrigger value="all">All Transactions</TabsTrigger>
+            <TabsTrigger value="due">Due</TabsTrigger>
+            <TabsTrigger value="paid">Paid</TabsTrigger>
+            <TabsTrigger value="insurance">Insurance Claims</TabsTrigger>
+          </TabsList>
+
+          <div className="flex items-center gap-2">
+            <form className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search billing..."
+                className="w-full pl-8 md:w-[300px]"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </form>
+            <Button variant="outline" size="icon" onClick={() => setShowFilters(!showFilters)}>
+              <Filter className="h-4 w-4" />
+              <span className="sr-only">Filter</span>
+            </Button>
+            <Button variant="outline" size="icon">
+              <Download className="h-4 w-4" />
+              <span className="sr-only">Download</span>
+            </Button>
+          </div>
+        </div>
+
+        {/* TabsContent for each section will be added in later commits */}
+      </Tabs>
     </div>
   )
 }
