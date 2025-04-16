@@ -1,8 +1,17 @@
 "use client"
 
 import { useState } from "react"
-import { Filter, Receipt } from "lucide-react"
+import { Filter, Receipt, Search, CreditCard } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 export function QuickBillingPage() {
   return (
@@ -22,6 +31,32 @@ export function QuickBillingPage() {
             New Invoice
           </Button>
         </div>
+      </div>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle>Quick Payment</CardTitle>
+            <CardDescription>Process a payment for a patient</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Search patients..."
+                  className="pl-8"
+                />
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button className="w-full">
+              <CreditCard className="mr-2 h-4 w-4" />
+              Process Payment
+            </Button>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   )
