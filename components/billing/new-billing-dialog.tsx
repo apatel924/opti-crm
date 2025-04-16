@@ -11,6 +11,12 @@ import { Search } from "lucide-react"
 import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
+const exams = [
+  { id: "E-10042", type: "Annual Exam", date: "05/01/2023", cost: "$150.00" },
+  { id: "E-10043", type: "Contact Lens Fitting", date: "05/01/2023", cost: "$75.00" },
+  { id: "E-10044", type: "Follow-up", date: "04/30/2023", cost: "$75.00" },
+]
+
 export function NewBillingDialog() {
     const [open, setOpen] = useState(false)
   
@@ -60,7 +66,37 @@ export function NewBillingDialog() {
                 </TabsList>
 
                 <TabsContent value="exam" className="space-y-4 pt-4">
-                  {/* Exam fields will go here */}
+                  <div className="grid gap-2">
+                    <Label>Select Exam</Label>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select exam" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {exams.map((exam) => (
+                          <SelectItem key={exam.id} value={exam.id}>
+                            {exam.id} - {exam.type} ({exam.date}) - {exam.cost}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="examTotal">Total Amount</Label>
+                      <Input id="examTotal" defaultValue="$150.00" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="examInsurance">Insurance Coverage</Label>
+                      <Input id="examInsurance" defaultValue="$120.00" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="examPatient">Patient Responsibility</Label>
+                    <Input id="examPatient" defaultValue="$30.00" />
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="lab" className="space-y-4 pt-4">
