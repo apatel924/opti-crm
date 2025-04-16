@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 export function QuickBillingPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -159,6 +160,20 @@ export function QuickBillingPage() {
           </CardContent>
         </Card>
       </div>
+      <Tabs defaultValue="recent">
+        <TabsList>
+          <TabsTrigger value="recent">Recent Transactions</TabsTrigger>
+          <TabsTrigger value="pending">Pending Payments</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="recent" className="mt-4">
+          {/* Recent transactions table will go here */}
+        </TabsContent>
+
+        <TabsContent value="pending" className="mt-4">
+          {/* Pending payments table will go here */}
+        </TabsContent>
+      </Tabs>
       <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
