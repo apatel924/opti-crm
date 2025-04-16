@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
+import { NewBillingDialog } from "@/components/billing/new-billing-dialog"
 
 const billingData = [
   {
@@ -141,6 +142,7 @@ export function BillingPage() {
               </Button>
             }
           />
+          <NewBillingDialog />
         </div>
       </div>
 
