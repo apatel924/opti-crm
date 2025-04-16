@@ -16,6 +16,7 @@ import {
 export function QuickBillingPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedPatient, setSelectedPatient] = useState<string | null>(null)
+  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false)
 
   const patients = [
     { id: "P10042", name: "Sarah Johnson" },
@@ -74,7 +75,10 @@ export function QuickBillingPage() {
                       <button
                         key={patient.id}
                         className="flex w-full items-center justify-between px-4 py-2 text-left hover:bg-accent"
-                        onClick={() => setSelectedPatient(patient.name)}
+                        onClick={() => {
+                          setSelectedPatient(patient.name)
+                          setIsPaymentDialogOpen(true)
+                        }}
                       >
                         <span className="font-medium">{patient.name}</span>
                         <span className="text-sm text-muted-foreground">{patient.id}</span>
@@ -88,7 +92,7 @@ export function QuickBillingPage() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full">
+            <Button className="w-full" onClick={() => setIsPaymentDialogOpen(true)}>
               <CreditCard className="mr-2 h-4 w-4" />
               Process Payment
             </Button>
