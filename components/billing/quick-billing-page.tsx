@@ -136,6 +136,28 @@ export function QuickBillingPage() {
             </div>
           </CardContent>
         </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle>Quick Actions</CardTitle>
+            <CardDescription>Common billing tasks</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-2">
+              <Button variant="outline" className="justify-start">
+                <Receipt className="mr-2 h-4 w-4" />
+                Create New Invoice
+              </Button>
+              <Button variant="outline" className="justify-start">
+                <DollarSign className="mr-2 h-4 w-4" />
+                Record Insurance Payment
+              </Button>
+              <Button variant="outline" className="justify-start">
+                <CreditCard className="mr-2 h-4 w-4" />
+                Process Refund
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
       <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
