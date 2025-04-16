@@ -67,6 +67,44 @@ export function BillingPage() {
           <p className="text-muted-foreground">Manage patient billing, payments, and insurance claims</p>
         </div>
       </div>
+      <div className="grid gap-6 md:grid-cols-3">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">Total Due</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-red-500">${totalDue.toFixed(2)}</div>
+            <p className="text-sm text-muted-foreground">
+              {filteredBilling.filter((b) => b.status === "Due").length} outstanding invoices
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">Collected Today</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-green-500">${totalCollected.toFixed(2)}</div>
+            <p className="text-sm text-muted-foreground">
+              {filteredBilling.filter((b) => b.status === "Paid").length} paid invoices
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">Insurance Claims</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">{filteredBilling.length}</div>
+            <p className="text-sm text-muted-foreground">
+              {filteredBilling.filter((b) => b.status === "Paid").length} processed,{" "}
+              {filteredBilling.filter((b) => b.status === "Due").length} pending
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }
