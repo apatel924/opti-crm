@@ -148,6 +148,14 @@ export function QuickBillingPage() {
               <Input id="description" placeholder="Enter payment description" />
             </div>
           </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsPaymentDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={() => setIsPaymentDialogOpen(false)}>
+              Process Payment
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
