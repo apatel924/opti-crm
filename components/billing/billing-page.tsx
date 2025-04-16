@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Search, Filter, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card"
 
 const billingData = [
   {
@@ -49,6 +50,14 @@ export function BillingPage() {
       bill.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       bill.description.toLowerCase().includes(searchQuery.toLowerCase()),
   )
+
+  const totalDue = filteredBilling
+    .filter((bill) => bill.status === "Due")
+    .reduce((sum, bill) => sum + Number(bill.patient.replace("$", "")), 0)
+
+  const totalCollected = filteredBilling
+    .filter((bill) => bill.status === "Paid")
+    .reduce((sum, bill) => sum + Number(bill.patient.replace("$", "")), 0)
 
   return (
     <div className="space-y-6">
