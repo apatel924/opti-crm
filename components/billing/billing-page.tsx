@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { Eye, DollarSign, CheckCircle, AlertCircle } from "lucide-react"
+import Link from "next/link"
 
 const billingData = [
   {
@@ -137,7 +141,84 @@ export function BillingPage() {
           </div>
         </div>
 
-        {/* TabsContent for each section will be added in later commits */}
+        <TabsContent value="all" className="space-y-4">
+          <Card>
+            <CardContent className="p-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Invoice #</TableHead>
+                    <TableHead>Patient</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Total</TableHead>
+                    <TableHead>Insurance</TableHead>
+                    <TableHead>Patient</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredBilling.map((bill) => (
+                    <TableRow key={bill.id}>
+                      <TableCell className="font-medium">{bill.id}</TableCell>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{bill.patientName}</div>
+                          <div className="text-xs text-muted-foreground">{bill.patientId}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div>{bill.description}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {bill.type} • {bill.relatedId}
+                        </div>
+                      </TableCell>
+                      <TableCell>{bill.date}</TableCell>
+                      <TableCell>{bill.total}</TableCell>
+                      <TableCell>{bill.insurance}</TableCell>
+                      <TableCell>{bill.patient}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={bill.status === "Paid" ? "success" : "destructive"}
+                          className="flex w-16 items-center justify-center gap-1"
+                        >
+                          {bill.status === "Paid" ? (
+                            <>
+                              <CheckCircle className="h-3 w-3" />
+                              Paid
+                            </>
+                          ) : (
+                            <>
+                              <AlertCircle className="h-3 w-3" />
+                              Due
+                            </>
+                          )}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button variant="outline" size="sm" asChild>
+                            <Link href={`/billing/${bill.id}`}>
+                              <Eye className="mr-2 h-4 w-4" />
+                              View
+                            </Link>
+                          </Button>
+                          {bill.status !== "Paid" && (
+                            <Button size="sm">
+                              <DollarSign className="mr-2 h-4 w-4" />
+                              Collect
+                            </Button>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
   )
