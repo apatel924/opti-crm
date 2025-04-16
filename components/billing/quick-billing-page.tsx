@@ -108,6 +108,34 @@ export function QuickBillingPage() {
             </Button>
           </CardFooter>
         </Card>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle>Today's Summary</CardTitle>
+            <CardDescription>Financial overview for today</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Total Payments</span>
+                <span className="font-medium text-green-600">$475.50</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Total Invoices</span>
+                <span className="font-medium">$250.00</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Total Refunds</span>
+                <span className="font-medium text-red-600">$95.00</span>
+              </div>
+              <div className="mt-2 border-t pt-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Net Total</span>
+                  <span className="font-bold">$630.50</span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
       <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
