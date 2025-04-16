@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Filter, Receipt, Search, CreditCard } from "lucide-react"
+import { Filter, Receipt, Search, CreditCard, DollarSign } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -20,6 +20,8 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
 
 export function QuickBillingPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -117,8 +119,35 @@ export function QuickBillingPage() {
                 : "Enter payment details for the selected patient"}
             </DialogDescription>
           </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="payment-method">Payment Method</Label>
+              <Select defaultValue="credit-card">
+                <SelectTrigger id="payment-method">
+                  <SelectValue placeholder="Select payment method" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="credit-card">Credit Card</SelectItem>
+                  <SelectItem value="cash">Cash</SelectItem>
+                  <SelectItem value="insurance">Insurance</SelectItem>
+                  <SelectItem value="check">Check</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-          {/* Form fields will go here next commit */}
+            <div className="grid gap-2">
+              <Label htmlFor="amount">Amount</Label>
+              <div className="relative">
+                <DollarSign className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input id="amount" type="number" step="0.01" min="0" className="pl-8" defaultValue="0.00" />
+              </div>
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="description">Description (Optional)</Label>
+              <Input id="description" placeholder="Enter payment description" />
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
