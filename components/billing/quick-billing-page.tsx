@@ -23,6 +23,56 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+
+const recentTransactions = [
+  {
+    id: "T12345",
+    patient: "Sarah Johnson",
+    date: "2023-04-01",
+    amount: 125.0,
+    type: "Payment",
+    method: "Credit Card",
+    status: "Completed",
+  },
+  {
+    id: "T12346",
+    patient: "Michael Smith",
+    date: "2023-04-01",
+    amount: 75.5,
+    type: "Payment",
+    method: "Cash",
+    status: "Completed",
+  },
+  {
+    id: "T12347",
+    patient: "Emma Davis",
+    date: "2023-04-01",
+    amount: 250.0,
+    type: "Invoice",
+    method: "-",
+    status: "Pending",
+  },
+  {
+    id: "T12348",
+    patient: "James Wilson",
+    date: "2023-03-31",
+    amount: 180.0,
+    type: "Payment",
+    method: "Insurance",
+    status: "Processing",
+  },
+  {
+    id: "T12349",
+    patient: "Olivia Brown",
+    date: "2023-03-31",
+    amount: 95.0,
+    type: "Refund",
+    method: "Credit Card",
+    status: "Completed",
+  },
+]
 
 export function QuickBillingPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -167,7 +217,48 @@ export function QuickBillingPage() {
         </TabsList>
 
         <TabsContent value="recent" className="mt-4">
-          {/* Recent transactions table will go here */}
+          <Card>
+            <CardContent className="pt-6">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Transaction ID</TableHead>
+                    <TableHead>Patient</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Method</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {recentTransactions.map((transaction) => (
+                    <TableRow key={transaction.id}>
+                      <TableCell className="font-medium">{transaction.id}</TableCell>
+                      <TableCell>{transaction.patient}</TableCell>
+                      <TableCell>{transaction.date}</TableCell>
+                      <TableCell>{transaction.type}</TableCell>
+                      <TableCell>{transaction.method}</TableCell>
+                      <TableCell>${transaction.amount.toFixed(2)}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            transaction.status === "Completed"
+                              ? "success"
+                              : transaction.status === "Processing"
+                                ? "warning"
+                                : "outline"
+                          }
+                        >
+                          {transaction.status}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="pending" className="mt-4">
