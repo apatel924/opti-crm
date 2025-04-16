@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Plus } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Search } from "lucide-react"
 import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
 
 const exams = [
   { id: "E-10042", type: "Annual Exam", date: "05/01/2023", cost: "$150.00" },
@@ -25,6 +26,12 @@ const labOrders = [
 
 export function NewBillingDialog() {
     const [open, setOpen] = useState(false)
+
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault()
+      // Handle form submission here (e.g., POST to backend or log values)
+      setOpen(false)
+    }
   
     return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -39,7 +46,7 @@ export function NewBillingDialog() {
           <DialogHeader>
             <DialogTitle>Create New Billing</DialogTitle>
           </DialogHeader>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="patient">Patient</Label>
@@ -162,7 +169,18 @@ export function NewBillingDialog() {
                   </div>
                 </TabsContent>
               </Tabs>
+
+              <div className="space-y-2">
+                <Label htmlFor="notes">Notes</Label>
+                <Textarea id="notes" placeholder="Enter any additional notes" />
+              </div>
             </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit">Create Billing</Button>
+            </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
