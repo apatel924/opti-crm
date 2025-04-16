@@ -17,6 +17,12 @@ const exams = [
   { id: "E-10044", type: "Follow-up", date: "04/30/2023", cost: "$75.00" },
 ]
 
+const labOrders = [
+  { id: "L-10042", type: "Progressive Glasses", date: "05/01/2023", cost: "$450.00" },
+  { id: "L-10043", type: "Contact Lenses", date: "05/01/2023", cost: "$320.00" },
+  { id: "L-10044", type: "Bifocal Glasses", date: "04/30/2023", cost: "$380.00" },
+]
+
 export function NewBillingDialog() {
     const [open, setOpen] = useState(false)
   
@@ -100,7 +106,37 @@ export function NewBillingDialog() {
                 </TabsContent>
 
                 <TabsContent value="lab" className="space-y-4 pt-4">
-                  {/* Lab order fields will go here */}
+                  <div className="grid gap-2">
+                    <Label>Select Lab Order</Label>
+                    <Select>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select lab order" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {labOrders.map((order) => (
+                          <SelectItem key={order.id} value={order.id}>
+                            {order.id} - {order.type} ({order.date}) - {order.cost}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="labTotal">Total Amount</Label>
+                      <Input id="labTotal" defaultValue="$450.00" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="labInsurance">Insurance Coverage</Label>
+                      <Input id="labInsurance" defaultValue="$360.00" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="labPatient">Patient Responsibility</Label>
+                    <Input id="labPatient" defaultValue="$90.00" />
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="custom" className="space-y-4 pt-4">
