@@ -4,6 +4,11 @@ import { useState } from "react"
 import { Plus } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Search } from "lucide-react"
+import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 
 export function NewBillingDialog() {
     const [open, setOpen] = useState(false)
@@ -21,8 +26,34 @@ export function NewBillingDialog() {
           <DialogHeader>
             <DialogTitle>Create New Billing</DialogTitle>
           </DialogHeader>
+          <form>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="patient">Patient</Label>
+                <div className="flex gap-2">
+                  <Select>
+                    <SelectTrigger id="patient">
+                      <SelectValue placeholder="Select patient" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="P-10042">Sarah Johnson (P-10042)</SelectItem>
+                      <SelectItem value="P-10043">Michael Chen (P-10043)</SelectItem>
+                      <SelectItem value="P-10044">Robert Garcia (P-10044)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <PatientSearchDialog
+                    trigger={
+                      <Button variant="outline" type="button">
+                        <Search className="mr-2 h-4 w-4" />
+                        Find
+                      </Button>
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          </form>
         </DialogContent>
       </Dialog>
     )
-  }
-  
+}
