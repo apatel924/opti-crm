@@ -219,6 +219,53 @@ export function BillingPage() {
             </CardContent>
           </Card>
         </TabsContent>
+
+        <TabsContent value="due" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Outstanding Balances</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {filteredBilling
+                  .filter((bill) => bill.status === "Due")
+                  .map((bill) => (
+                    <div
+                      key={bill.id}
+                      className="flex flex-col gap-4 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{bill.id}</span>
+                          <Badge variant="destructive">Due</Badge>
+                        </div>
+                        <div className="mt-1 text-sm">
+                          {bill.patientName} • {bill.description}
+                        </div>
+                        <div className="mt-2 text-sm">
+                          <span className="font-medium">Total:</span> {bill.total} |{" "}
+                          <span className="font-medium">Insurance:</span> {bill.insurance} |{" "}
+                          <span className="font-medium text-red-500">Patient: {bill.patient}</span>
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" asChild>
+                          <Link href={`/billing/${bill.id}`}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            View Details
+                          </Link>
+                        </Button>
+                        <Button size="sm">
+                          <DollarSign className="mr-2 h-4 w-4" />
+                          Collect Payment
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
   )
