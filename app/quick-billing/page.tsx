@@ -1,4 +1,4 @@
-import { QuickBillingPage } from "@/app/quick-billing/quick-billing-page"
+import { QuickBillingPage } from "@/components/billing/quick-billing-page"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
