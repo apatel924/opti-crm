@@ -140,7 +140,26 @@ export function NewBillingDialog() {
                 </TabsContent>
 
                 <TabsContent value="custom" className="space-y-4 pt-4">
-                  {/* Custom billing fields will go here */}
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Input id="description" placeholder="Enter description" />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="customTotal">Total Amount</Label>
+                      <Input id="customTotal" placeholder="Enter total amount" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="customInsurance">Insurance Coverage</Label>
+                      <Input id="customInsurance" placeholder="Enter insurance coverage" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="customPatient">Patient Responsibility</Label>
+                    <Input id="customPatient" placeholder="Enter patient responsibility" />
+                  </div>
                 </TabsContent>
               </Tabs>
             </div>
