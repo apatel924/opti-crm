@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Search } from "lucide-react"
 import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 export function NewBillingDialog() {
     const [open, setOpen] = useState(false)
@@ -51,6 +52,25 @@ export function NewBillingDialog() {
                   />
                 </div>
               </div>
+              <Tabs defaultValue="exam">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="exam">Eye Exam</TabsTrigger>
+                  <TabsTrigger value="lab">Lab Order</TabsTrigger>
+                  <TabsTrigger value="custom">Custom</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="exam" className="space-y-4 pt-4">
+                  {/* Exam fields will go here */}
+                </TabsContent>
+
+                <TabsContent value="lab" className="space-y-4 pt-4">
+                  {/* Lab order fields will go here */}
+                </TabsContent>
+
+                <TabsContent value="custom" className="space-y-4 pt-4">
+                  {/* Custom billing fields will go here */}
+                </TabsContent>
+              </Tabs>
             </div>
           </form>
         </DialogContent>
