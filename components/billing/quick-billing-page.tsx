@@ -1,83 +1,76 @@
 "use client"
 
 import { useState } from "react"
-import { Filter, Receipt, Search, CreditCard, DollarSign } from "lucide-react"
+import { Search, CreditCard, DollarSign, Receipt, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 
-const recentTransactions = [
-  {
-    id: "T12345",
-    patient: "Sarah Johnson",
-    date: "2023-04-01",
-    amount: 125.0,
-    type: "Payment",
-    method: "Credit Card",
-    status: "Completed",
-  },
-  {
-    id: "T12346",
-    patient: "Michael Smith",
-    date: "2023-04-01",
-    amount: 75.5,
-    type: "Payment",
-    method: "Cash",
-    status: "Completed",
-  },
-  {
-    id: "T12347",
-    patient: "Emma Davis",
-    date: "2023-04-01",
-    amount: 250.0,
-    type: "Invoice",
-    method: "-",
-    status: "Pending",
-  },
-  {
-    id: "T12348",
-    patient: "James Wilson",
-    date: "2023-03-31",
-    amount: 180.0,
-    type: "Payment",
-    method: "Insurance",
-    status: "Processing",
-  },
-  {
-    id: "T12349",
-    patient: "Olivia Brown",
-    date: "2023-03-31",
-    amount: 95.0,
-    type: "Refund",
-    method: "Credit Card",
-    status: "Completed",
-  },
-]
-
 export function QuickBillingPage() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedPatient, setSelectedPatient] = useState<string | null>(null)
   const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false)
+  const [selectedPatient, setSelectedPatient] = useState<string | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const recentTransactions = [
+    {
+      id: "T12345",
+      patient: "Sarah Johnson",
+      date: "2023-04-01",
+      amount: 125.0,
+      type: "Payment",
+      method: "Credit Card",
+      status: "Completed",
+    },
+    {
+      id: "T12346",
+      patient: "Michael Smith",
+      date: "2023-04-01",
+      amount: 75.5,
+      type: "Payment",
+      method: "Cash",
+      status: "Completed",
+    },
+    {
+      id: "T12347",
+      patient: "Emma Davis",
+      date: "2023-04-01",
+      amount: 250.0,
+      type: "Invoice",
+      method: "-",
+      status: "Pending",
+    },
+    {
+      id: "T12348",
+      patient: "James Wilson",
+      date: "2023-03-31",
+      amount: 180.0,
+      type: "Payment",
+      method: "Insurance",
+      status: "Processing",
+    },
+    {
+      id: "T12349",
+      patient: "Olivia Brown",
+      date: "2023-03-31",
+      amount: 95.0,
+      type: "Refund",
+      method: "Credit Card",
+      status: "Completed",
+    },
+  ]
 
   const patients = [
     { id: "P10042", name: "Sarah Johnson" },
@@ -90,9 +83,13 @@ export function QuickBillingPage() {
   const filteredPatients = patients.filter(
     (patient) =>
       patient.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      patient.id.toLowerCase().includes(searchQuery.toLowerCase())
+      patient.id.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
+  const handlePatientSelect = (patientName: string) => {
+    setSelectedPatient(patientName)
+    setIsPaymentDialogOpen(true)
+  }
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -136,10 +133,7 @@ export function QuickBillingPage() {
                       <button
                         key={patient.id}
                         className="flex w-full items-center justify-between px-4 py-2 text-left hover:bg-accent"
-                        onClick={() => {
-                          setSelectedPatient(patient.name)
-                          setIsPaymentDialogOpen(true)
-                        }}
+                        onClick={() => handlePatientSelect(patient.name)}
                       >
                         <span className="font-medium">{patient.name}</span>
                         <span className="text-sm text-muted-foreground">{patient.id}</span>
@@ -215,7 +209,6 @@ export function QuickBillingPage() {
           <TabsTrigger value="recent">Recent Transactions</TabsTrigger>
           <TabsTrigger value="pending">Pending Payments</TabsTrigger>
         </TabsList>
-
         <TabsContent value="recent" className="mt-4">
           <Card>
             <CardContent className="pt-6">
@@ -260,7 +253,6 @@ export function QuickBillingPage() {
             </CardContent>
           </Card>
         </TabsContent>
-
         <TabsContent value="pending" className="mt-4">
           <Card>
             <CardContent className="pt-6">
@@ -319,7 +311,6 @@ export function QuickBillingPage() {
                 </SelectContent>
               </Select>
             </div>
-
             <div className="grid gap-2">
               <Label htmlFor="amount">Amount</Label>
               <div className="relative">
@@ -327,7 +318,6 @@ export function QuickBillingPage() {
                 <Input id="amount" type="number" step="0.01" min="0" className="pl-8" defaultValue="0.00" />
               </div>
             </div>
-
             <div className="grid gap-2">
               <Label htmlFor="description">Description (Optional)</Label>
               <Input id="description" placeholder="Enter payment description" />
@@ -337,9 +327,7 @@ export function QuickBillingPage() {
             <Button variant="outline" onClick={() => setIsPaymentDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={() => setIsPaymentDialogOpen(false)}>
-              Process Payment
-            </Button>
+            <Button onClick={() => setIsPaymentDialogOpen(false)}>Process Payment</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
