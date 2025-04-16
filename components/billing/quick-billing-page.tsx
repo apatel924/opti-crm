@@ -262,7 +262,36 @@ export function QuickBillingPage() {
         </TabsContent>
 
         <TabsContent value="pending" className="mt-4">
-          {/* Pending payments table will go here */}
+          <Card>
+            <CardContent className="pt-6">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Invoice ID</TableHead>
+                    <TableHead>Patient</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Due Date</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-medium">INV-12347</TableCell>
+                    <TableCell>Emma Davis</TableCell>
+                    <TableCell>2023-04-01</TableCell>
+                    <TableCell>$250.00</TableCell>
+                    <TableCell>2023-05-01</TableCell>
+                    <TableCell>
+                      <Button size="sm" variant="outline">
+                        Process
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
       <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
