@@ -14,6 +14,23 @@ import {
 } from "@/components/ui/card"
 
 export function QuickBillingPage() {
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedPatient, setSelectedPatient] = useState<string | null>(null)
+
+  const patients = [
+    { id: "P10042", name: "Sarah Johnson" },
+    { id: "P10043", name: "Michael Smith" },
+    { id: "P10044", name: "Emma Davis" },
+    { id: "P10045", name: "James Wilson" },
+    { id: "P10046", name: "Olivia Brown" },
+  ]
+
+  const filteredPatients = patients.filter(
+    (patient) =>
+      patient.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      patient.id.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -46,8 +63,28 @@ export function QuickBillingPage() {
                   type="search"
                   placeholder="Search patients..."
                   className="pl-8"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
+              {searchQuery && (
+                <div className="max-h-[200px] overflow-y-auto rounded-md border">
+                  {filteredPatients.length > 0 ? (
+                    filteredPatients.map((patient) => (
+                      <button
+                        key={patient.id}
+                        className="flex w-full items-center justify-between px-4 py-2 text-left hover:bg-accent"
+                        onClick={() => setSelectedPatient(patient.name)}
+                      >
+                        <span className="font-medium">{patient.name}</span>
+                        <span className="text-sm text-muted-foreground">{patient.id}</span>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="px-4 py-2 text-sm text-muted-foreground">No patients found</div>
+                  )}
+                </div>
+              )}
             </div>
           </CardContent>
           <CardFooter>
