@@ -8,7 +8,7 @@ import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Eye, DollarSign, CheckCircle, AlertCircle } from "lucide-react"
+import { Eye, DollarSign, CheckCircle, AlertCircle, FileText } from "lucide-react"
 import Link from "next/link"
 
 const billingData = [
@@ -258,6 +258,53 @@ export function BillingPage() {
                         <Button size="sm">
                           <DollarSign className="mr-2 h-4 w-4" />
                           Collect Payment
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="paid" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Paid Invoices</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {filteredBilling
+                  .filter((bill) => bill.status === "Paid")
+                  .map((bill) => (
+                    <div
+                      key={bill.id}
+                      className="flex flex-col gap-4 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium">{bill.id}</span>
+                          <Badge variant="success">Paid</Badge>
+                        </div>
+                        <div className="mt-1 text-sm">
+                          {bill.patientName} • {bill.description}
+                        </div>
+                        <div className="mt-2 text-sm">
+                          <span className="font-medium">Total:</span> {bill.total} |{" "}
+                          <span className="font-medium">Paid on:</span> {bill.paymentDate} |{" "}
+                          <span className="font-medium">Method:</span> {bill.paymentMethod}
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" asChild>
+                          <Link href={`/billing/${bill.id}`}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            View Details
+                          </Link>
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          <FileText className="mr-2 h-4 w-4" />
+                          Receipt
                         </Button>
                       </div>
                     </div>
