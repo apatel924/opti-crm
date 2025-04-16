@@ -1,15 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Filter, Download } from "lucide-react"
+import Link from "next/link"
+import { Search, Filter, Download, DollarSign, FileText, CheckCircle, AlertCircle, Calendar, Eye } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Eye, DollarSign, CheckCircle, AlertCircle, FileText } from "lucide-react"
-import Link from "next/link"
+import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 
 const billingData = [
   {
@@ -42,6 +42,66 @@ const billingData = [
     paymentDate: "",
     paymentMethod: "",
   },
+  {
+    id: "B-10044",
+    date: "04/30/2023",
+    patientName: "Robert Garcia",
+    patientId: "P-10044",
+    description: "Follow-up Examination",
+    type: "Exam",
+    relatedId: "E-10044",
+    total: "$75.00",
+    insurance: "$60.00",
+    patient: "$15.00",
+    status: "Paid",
+    paymentDate: "04/30/2023",
+    paymentMethod: "Cash",
+  },
+  {
+    id: "B-10045",
+    date: "04/28/2023",
+    patientName: "Emily Wilson",
+    patientId: "P-10045",
+    description: "Contact Lens Annual Supply",
+    type: "Lab Order",
+    relatedId: "L-10045",
+    total: "$320.00",
+    insurance: "$250.00",
+    patient: "$70.00",
+    status: "Due",
+    paymentDate: "",
+    paymentMethod: "",
+  },
+  {
+    id: "B-10046",
+    date: "04/25/2023",
+    patientName: "Jessica Martinez",
+    patientId: "P-10046",
+    description: "Comprehensive Exam",
+    type: "Exam",
+    relatedId: "E-10046",
+    total: "$200.00",
+    insurance: "$160.00",
+    patient: "$40.00",
+    status: "Paid",
+    paymentDate: "04/25/2023",
+    paymentMethod: "Credit Card",
+  },
+  {
+    id: "B-10047",
+    date: "04/20/2023",
+    patientName: "David Thompson",
+    patientId: "P-10047",
+    description: "Bifocal Glasses",
+    type: "Lab Order",
+    relatedId: "L-10047",
+    total: "$380.00",
+    insurance: "$230.00",
+    patient: "$150.00",
+    status: "Due",
+    paymentDate: "",
+    paymentMethod: "",
+  },
 ]
 
 export function BillingPage() {
@@ -56,6 +116,7 @@ export function BillingPage() {
       bill.description.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
+  // Calculate totals
   const totalDue = filteredBilling
     .filter((bill) => bill.status === "Due")
     .reduce((sum, bill) => sum + Number(bill.patient.replace("$", "")), 0)
@@ -71,7 +132,18 @@ export function BillingPage() {
           <h1 className="text-3xl font-bold tracking-tight">Billing</h1>
           <p className="text-muted-foreground">Manage patient billing, payments, and insurance claims</p>
         </div>
+        <div className="flex items-center gap-2">
+          <PatientSearchDialog
+            trigger={
+              <Button variant="outline">
+                <Search className="mr-2 h-4 w-4" />
+                Find Patient
+              </Button>
+            }
+          />
+        </div>
       </div>
+
       <div className="grid gap-6 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-2">
@@ -84,7 +156,6 @@ export function BillingPage() {
             </p>
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Collected Today</CardTitle>
@@ -96,7 +167,6 @@ export function BillingPage() {
             </p>
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">Insurance Claims</CardTitle>
@@ -110,6 +180,7 @@ export function BillingPage() {
           </CardContent>
         </Card>
       </div>
+
       <Tabs defaultValue="all" className="space-y-4">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <TabsList>
@@ -118,7 +189,6 @@ export function BillingPage() {
             <TabsTrigger value="paid">Paid</TabsTrigger>
             <TabsTrigger value="insurance">Insurance Claims</TabsTrigger>
           </TabsList>
-
           <div className="flex items-center gap-2">
             <form className="relative">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -309,6 +379,51 @@ export function BillingPage() {
                       </div>
                     </div>
                   ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="insurance" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Insurance Claims</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {filteredBilling.map((bill) => (
+                  <div
+                    key={bill.id}
+                    className="flex flex-col gap-4 rounded-lg border p-4 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">{bill.id}</span>
+                        <Badge variant={bill.status === "Paid" ? "success" : "secondary"}>
+                          {bill.status === "Paid" ? "Processed" : "Pending"}
+                        </Badge>
+                      </div>
+                      <div className="mt-1 text-sm">
+                        {bill.patientName} • {bill.description}
+                      </div>
+                      <div className="mt-2 text-sm">
+                        <span className="font-medium">Total:</span> {bill.total} |{" "}
+                        <span className="font-medium">Insurance:</span> {bill.insurance} |{" "}
+                        <span className="font-medium">Patient:</span> {bill.patient}
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm">
+                        <Calendar className="mr-2 h-4 w-4" />
+                        Claim Status
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        <FileText className="mr-2 h-4 w-4" />
+                        EOB
+                      </Button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
