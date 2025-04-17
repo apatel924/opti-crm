@@ -9,9 +9,16 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { createPatient } from "@/lib/patient-actions"
+import { useEffect } from "react"
+
+interface FormState {
+  message: string
+  errors: Record<string, string[]>
+  success: boolean
+}
 
 // Initial state for the form
-const initialState = {
+const initialState: FormState = {
   message: "",
   errors: {},
   success: false,
@@ -19,7 +26,16 @@ const initialState = {
 
 export function PatientForm() {
   const router = useRouter()
-  const [state, formAction] = useActionState(createPatient, initialState)
+  const [state, formAction] = useActionState<FormState, FormData>(createPatient, initialState)
+
+  useEffect(() => {
+    if (state.success) {
+      const timer = setTimeout(() => {
+        router.push("/patients")
+      }, 1500)
+      return () => clearTimeout(timer)
+    }
+  }, [state.success, router])
 
   return (
     <form action={formAction}>
@@ -33,17 +49,17 @@ export function PatientForm() {
             <div className="space-y-2">
               <Label htmlFor="firstName">First Name</Label>
               <Input id="firstName" name="firstName" required />
-              {state.errors?.firstName && <p className="text-sm text-red-500">{state.errors.firstName}</p>}
+              {state.errors?.firstName?.[0] && <p className="text-sm text-red-500">{state.errors.firstName[0]}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="lastName">Last Name</Label>
               <Input id="lastName" name="lastName" required />
-              {state.errors?.lastName && <p className="text-sm text-red-500">{state.errors.lastName}</p>}
+              {state.errors?.lastName?.[0] && <p className="text-sm text-red-500">{state.errors.lastName[0]}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="dob">Date of Birth</Label>
               <Input id="dob" name="dob" type="date" required />
-              {state.errors?.dob && <p className="text-sm text-red-500">{state.errors.dob}</p>}
+              {state.errors?.dob?.[0] && <p className="text-sm text-red-500">{state.errors.dob[0]}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="gender">Gender</Label>
@@ -57,21 +73,22 @@ export function PatientForm() {
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
+              {state.errors?.gender?.[0] && <p className="text-sm text-red-500">{state.errors.gender[0]}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input id="email" name="email" type="email" required />
-              {state.errors?.email && <p className="text-sm text-red-500">{state.errors.email}</p>}
+              {state.errors?.email?.[0] && <p className="text-sm text-red-500">{state.errors.email[0]}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Phone</Label>
               <Input id="phone" name="phone" required />
-              {state.errors?.phone && <p className="text-sm text-red-500">{state.errors.phone}</p>}
+              {state.errors?.phone?.[0] && <p className="text-sm text-red-500">{state.errors.phone[0]}</p>}
             </div>
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="address">Address</Label>
               <Textarea id="address" name="address" required />
-              {state.errors?.address && <p className="text-sm text-red-500">{state.errors.address}</p>}
+              {state.errors?.address?.[0] && <p className="text-sm text-red-500">{state.errors.address[0]}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="insurance">Primary Insurance</Label>
@@ -87,6 +104,7 @@ export function PatientForm() {
                   <SelectItem value="cigna">Cigna</SelectItem>
                 </SelectContent>
               </Select>
+              {state.errors?.insurance?.[0] && <p className="text-sm text-red-500">{state.errors.insurance[0]}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="policyNumber">Policy Number</Label>
