@@ -64,6 +64,36 @@ export function PatientForm() {
               <Label htmlFor="address">Address</Label>
               <Textarea id="address" name="address" required />
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="insurance">Primary Insurance</Label>
+              <Select name="insurance" defaultValue="blueCross">
+                <SelectTrigger id="insurance">
+                  <SelectValue placeholder="Select insurance" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="blueCross">Blue Cross</SelectItem>
+                  <SelectItem value="aetna">Aetna</SelectItem>
+                  <SelectItem value="medicare">Medicare</SelectItem>
+                  <SelectItem value="unitedHealthcare">United Healthcare</SelectItem>
+                  <SelectItem value="cigna">Cigna</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="policyNumber">Policy Number</Label>
+              <Input id="policyNumber" name="policyNumber" />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="medicalNotes">Medical Notes</Label>
+            <Textarea
+              id="medicalNotes"
+              name="medicalNotes"
+              placeholder="Enter any relevant medical history or conditions"
+            />
           </div>
         </CardContent>
 
