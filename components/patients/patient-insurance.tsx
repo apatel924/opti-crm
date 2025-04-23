@@ -41,6 +41,53 @@ export function PatientInsurance({ patient }: PatientInsuranceProps) {
             )}
           </div>
         </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <h4 className="mb-2 text-sm font-medium">Policy Information</h4>
+              <div className="space-y-2 rounded-md border p-3">
+                <div className="grid grid-cols-2">
+                  <div className="text-sm font-medium">Policy Number:</div>
+                  <div className="text-sm">{insurance.policyNumber}</div>
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="text-sm font-medium">Group Number:</div>
+                  <div className="text-sm">{insurance.groupNumber}</div>
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="text-sm font-medium">Effective Date:</div>
+                  <div className="text-sm">{insurance.effectiveDate}</div>
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="text-sm font-medium">Expiration Date:</div>
+                  <div className="text-sm">{insurance.expirationDate}</div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="mb-2 text-sm font-medium">Coverage Details</h4>
+              <div className="space-y-2 rounded-md border p-3">
+                <div className="grid grid-cols-2">
+                  <div className="text-sm font-medium">Copay:</div>
+                  <div className="text-sm">{insurance.copay}</div>
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="text-sm font-medium">Coverage:</div>
+                  <div className="text-sm">{insurance.coverage}</div>
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="text-sm font-medium">Vision Exam:</div>
+                  <div className="text-sm">Covered once per year</div>
+                </div>
+                <div className="grid grid-cols-2">
+                  <div className="text-sm font-medium">Materials:</div>
+                  <div className="text-sm">$150 allowance</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
       </Card>
     </div>
   )
