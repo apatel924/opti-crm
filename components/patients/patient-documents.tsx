@@ -4,14 +4,27 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Upload } from "lucide-react"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
   Image,
   File,
   FileSpreadsheet,
   FileIcon as FilePdf,
+  FileText,
+  MoreHorizontal,
+  Download,
+  Share,
+  Trash,
 } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface PatientDocumentsProps {
   patient: any
@@ -68,6 +81,30 @@ export function PatientDocuments({ patient }: PatientDocumentsProps) {
                       <CardDescription>{document.date}</CardDescription>
                     </div>
                   </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <MoreHorizontal className="h-4 w-4" />
+                        <span className="sr-only">More</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuItem>
+                        <Download className="mr-2 h-4 w-4" />
+                        Download
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Share className="mr-2 h-4 w-4" />
+                        Share
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem className="text-red-500">
+                        <Trash className="mr-2 h-4 w-4" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </CardHeader>
               <CardContent className="pb-2">
@@ -78,6 +115,12 @@ export function PatientDocuments({ patient }: PatientDocumentsProps) {
                   </Badge>
                 </div>
               </CardContent>
+              <CardFooter>
+                <Button variant="outline" size="sm" className="w-full">
+                  <FileText className="mr-2 h-4 w-4" />
+                  View Document
+                </Button>
+              </CardFooter>
             </Card>
           )
         })}
