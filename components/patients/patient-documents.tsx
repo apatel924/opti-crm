@@ -4,9 +4,24 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Upload } from "lucide-react"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import {
+  Image,
+  File,
+  FileSpreadsheet,
+  FileIcon as FilePdf,
+} from "lucide-react"
 
 interface PatientDocumentsProps {
   patient: any
+}
+
+const getDocumentIcon = (type: string) => {
+  if (type.includes("image")) return Image
+  if (type.includes("pdf")) return FilePdf
+  if (type.includes("spreadsheet") || type.includes("excel")) return FileSpreadsheet
+  return File
 }
 
 export function PatientDocuments({ patient }: PatientDocumentsProps) {
@@ -35,6 +50,37 @@ export function PatientDocuments({ patient }: PatientDocumentsProps) {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {filteredDocuments.map((document: any) => {
+          const DocIcon = getDocumentIcon(document.type)
+
+          return (
+            <Card key={document.id}>
+              <CardHeader className="pb-2">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="rounded-md bg-primary/10 p-2">
+                      <DocIcon className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-base">{document.name}</CardTitle>
+                      <CardDescription>{document.date}</CardDescription>
+                    </div>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pb-2">
+                <div className="text-xs text-muted-foreground">Uploaded by: {document.uploadedBy}</div>
+                <div className="mt-2 flex items-center gap-2">
+                  <Badge variant="outline" className="text-xs">
+                    {document.type.split("/")[1]?.toUpperCase()}
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+          )
+        })}
       </div>
     </div>
   )
