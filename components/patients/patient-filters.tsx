@@ -1,13 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { X } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
+import { Badge } from "@/components/ui/badge"
 
 export function PatientFilters() {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([])
@@ -30,24 +30,14 @@ export function PatientFilters() {
             {selectedFilters.map((filter) => (
               <Badge key={filter} variant="secondary" className="gap-1">
                 {filter}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-4 w-4 p-0"
-                  onClick={() => removeFilter(filter)}
-                >
+                <Button variant="ghost" size="icon" className="h-4 w-4 p-0" onClick={() => removeFilter(filter)}>
                   <X className="h-3 w-3" />
                   <span className="sr-only">Remove {filter} filter</span>
                 </Button>
               </Badge>
             ))}
             {selectedFilters.length > 0 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 text-xs"
-                onClick={() => setSelectedFilters([])}
-              >
+              <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => setSelectedFilters([])}>
                 Clear all
               </Button>
             )}
@@ -127,7 +117,6 @@ export function PatientFilters() {
                   Diabetes
                 </label>
               </div>
-
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="glaucoma"
@@ -143,7 +132,6 @@ export function PatientFilters() {
                   Glaucoma
                 </label>
               </div>
-
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="cataracts"
@@ -159,7 +147,6 @@ export function PatientFilters() {
                   Cataracts
                 </label>
               </div>
-
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="hypertension"
