@@ -5,6 +5,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { X } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
 
 export function PatientFilters() {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([])
@@ -48,6 +50,23 @@ export function PatientFilters() {
                 Clear all
               </Button>
             )}
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div className="space-y-2">
+              <Label htmlFor="insurance">Insurance</Label>
+              <Select onValueChange={(value) => addFilter(`Insurance: ${value}`)}>
+                <SelectTrigger id="insurance">
+                  <SelectValue placeholder="Select insurance" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Blue Cross">Blue Cross</SelectItem>
+                  <SelectItem value="Aetna">Aetna</SelectItem>
+                  <SelectItem value="Medicare">Medicare</SelectItem>
+                  <SelectItem value="United Healthcare">United Healthcare</SelectItem>
+                  <SelectItem value="Cigna">Cigna</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       </CardContent>
