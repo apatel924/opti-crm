@@ -64,7 +64,6 @@ export function PatientInsurance({ patient }: PatientInsuranceProps) {
                 </div>
               </div>
             </div>
-
             <div>
               <h4 className="mb-2 text-sm font-medium">Coverage Details</h4>
               <div className="space-y-2 rounded-md border p-3">
@@ -88,6 +87,16 @@ export function PatientInsurance({ patient }: PatientInsuranceProps) {
             </div>
           </div>
         </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button variant="outline">
+            <Calendar className="mr-2 h-4 w-4" />
+            Check Eligibility
+          </Button>
+          <Button>
+            <FileText className="mr-2 h-4 w-4" />
+            View Insurance Card
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   )
