@@ -93,6 +93,20 @@ export function PatientFilters() {
                 </SelectContent>
               </Select>
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="lastVisit">Last Visit</Label>
+              <Select onValueChange={(value) => addFilter(`Last Visit: ${value}`)}>
+                <SelectTrigger id="lastVisit">
+                  <SelectValue placeholder="Select timeframe" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Last 30 Days">Last 30 Days</SelectItem>
+                  <SelectItem value="Last 90 Days">Last 90 Days</SelectItem>
+                  <SelectItem value="Last Year">Last Year</SelectItem>
+                  <SelectItem value="Over a Year">Over a Year</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       </CardContent>
