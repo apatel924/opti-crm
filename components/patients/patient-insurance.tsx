@@ -11,6 +11,9 @@ interface PatientInsuranceProps {
 
 export function PatientInsurance({ patient }: PatientInsuranceProps) {
   const insurance = patient.insurance
+  const today = new Date()
+  const expirationDate = new Date(insurance.expirationDate)
+  const daysUntilExpiration = Math.ceil((expirationDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
 
   return (
     <div className="space-y-6">
@@ -21,7 +24,6 @@ export function PatientInsurance({ patient }: PatientInsuranceProps) {
           Update Insurance
         </Button>
       </div>
-
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -29,6 +31,14 @@ export function PatientInsurance({ patient }: PatientInsuranceProps) {
               <CardTitle>{insurance.primary}</CardTitle>
               <CardDescription>Primary Insurance</CardDescription>
             </div>
+            {daysUntilExpiration <= 30 ? (
+              <Badge variant="destructive" className="flex items-center gap-1">
+                <AlertTriangle className="h-3 w-3" />
+                Expires in {daysUntilExpiration} days
+              </Badge>
+            ) : (
+              <Badge variant="outline">Active</Badge>
+            )}
           </div>
         </CardHeader>
       </Card>
