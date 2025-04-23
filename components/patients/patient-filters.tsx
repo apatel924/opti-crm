@@ -67,6 +67,32 @@ export function PatientFilters() {
                 </SelectContent>
               </Select>
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="doctor">Doctor</Label>
+              <Select onValueChange={(value) => addFilter(`Doctor: ${value}`)}>
+                <SelectTrigger id="doctor">
+                  <SelectValue placeholder="Select doctor" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Dr. Williams">Dr. Williams</SelectItem>
+                  <SelectItem value="Dr. Smith">Dr. Smith</SelectItem>
+                  <SelectItem value="Dr. Johnson">Dr. Johnson</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="balance">Balance</Label>
+              <Select onValueChange={(value) => addFilter(`Balance: ${value}`)}>
+                <SelectTrigger id="balance">
+                  <SelectValue placeholder="Select balance" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Any Balance">Any Balance</SelectItem>
+                  <SelectItem value="No Balance">No Balance</SelectItem>
+                  <SelectItem value="Balance Due">Balance Due</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       </CardContent>
