@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Phone, Mail, MessageSquare } from "lucide-react"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 
 export function PatientCommunication({ patient }: { patient: any }) {
   return (
@@ -21,6 +22,17 @@ export function PatientCommunication({ patient }: { patient: any }) {
           </Button>
         </div>
       </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>New Message</CardTitle>
+          <CardDescription>Send a message to the patient</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4"></div>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+        </CardFooter>
+      </Card>
     </div>
   )
 }
