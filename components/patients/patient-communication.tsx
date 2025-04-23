@@ -1,11 +1,17 @@
-import { Button } from "@/components/ui/button"
-import { Phone, Mail, MessageSquare, Clock, Send } from "lucide-react"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
+"use client"
 
-export function PatientCommunication({ patient }: { patient: any }) {
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { MessageSquare, Mail, Phone, Send, Clock } from "lucide-react"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
+interface PatientCommunicationProps {
+  patient: any
+}
+
+export function PatientCommunication({ patient }: PatientCommunicationProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -65,7 +71,6 @@ export function PatientCommunication({ patient }: { patient: any }) {
                 </Select>
               </div>
             </div>
-
             <div className="space-y-2">
               <label htmlFor="message" className="text-sm font-medium">
                 Message
@@ -102,12 +107,11 @@ export function PatientCommunication({ patient }: { patient: any }) {
             <CardContent>
               <p className="text-sm">{communication.content}</p>
             </CardContent>
-            <CardFooter className="text-xs text-muted-foreground">
-              Sent by: {communication.sentBy}
-            </CardFooter>
+            <CardFooter className="text-xs text-muted-foreground">Sent by: {communication.sentBy}</CardFooter>
           </Card>
         ))}
       </div>
     </div>
   )
 }
+
