@@ -2,20 +2,19 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Upload } from "lucide-react"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
+  FileText,
+  Upload,
+  Download,
   Image,
   File,
   FileSpreadsheet,
   FileIcon as FilePdf,
-  FileText,
   MoreHorizontal,
-  Download,
-  Share,
   Trash,
+  Share,
 } from "lucide-react"
 import {
   DropdownMenu,
@@ -25,16 +24,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
 
 interface PatientDocumentsProps {
   patient: any
-}
-
-const getDocumentIcon = (type: string) => {
-  if (type.includes("image")) return Image
-  if (type.includes("pdf")) return FilePdf
-  if (type.includes("spreadsheet") || type.includes("excel")) return FileSpreadsheet
-  return File
 }
 
 export function PatientDocuments({ patient }: PatientDocumentsProps) {
@@ -46,6 +39,13 @@ export function PatientDocuments({ patient }: PatientDocumentsProps) {
       doc.type.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
+  const getDocumentIcon = (type: string) => {
+    if (type.includes("image")) return Image
+    if (type.includes("pdf")) return FilePdf
+    if (type.includes("spreadsheet") || type.includes("excel")) return FileSpreadsheet
+    return File
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -55,6 +55,7 @@ export function PatientDocuments({ patient }: PatientDocumentsProps) {
           Upload Document
         </Button>
       </div>
+
       <div className="flex items-center gap-2">
         <Input
           type="search"
@@ -111,7 +112,7 @@ export function PatientDocuments({ patient }: PatientDocumentsProps) {
                 <div className="text-xs text-muted-foreground">Uploaded by: {document.uploadedBy}</div>
                 <div className="mt-2 flex items-center gap-2">
                   <Badge variant="outline" className="text-xs">
-                    {document.type.split("/")[1]?.toUpperCase()}
+                    {document.type.split("/")[1].toUpperCase()}
                   </Badge>
                 </div>
               </CardContent>
