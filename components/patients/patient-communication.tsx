@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Phone, Mail, MessageSquare } from "lucide-react"
+import { Phone, Mail, MessageSquare, Clock, Send } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
@@ -74,6 +74,14 @@ export function PatientCommunication({ patient }: { patient: any }) {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
+          <Button variant="outline">
+            <Clock className="mr-2 h-4 w-4" />
+            Schedule
+          </Button>
+          <Button>
+            <Send className="mr-2 h-4 w-4" />
+            Send Message
+          </Button>
         </CardFooter>
       </Card>
     </div>
