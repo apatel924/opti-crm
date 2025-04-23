@@ -3,6 +3,7 @@ import { Phone, Mail, MessageSquare, Clock, Send } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { Badge } from "@/components/ui/badge"
 
 export function PatientCommunication({ patient }: { patient: any }) {
   return (
@@ -84,6 +85,29 @@ export function PatientCommunication({ patient }: { patient: any }) {
           </Button>
         </CardFooter>
       </Card>
+
+      <div className="space-y-4">
+        <h4 className="font-medium">Communication History</h4>
+        {patient.communications.map((communication: any) => (
+          <Card key={communication.id}>
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-base">{communication.subject}</CardTitle>
+                  <CardDescription>{communication.date}</CardDescription>
+                </div>
+                <Badge variant="outline">{communication.type}</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm">{communication.content}</p>
+            </CardContent>
+            <CardFooter className="text-xs text-muted-foreground">
+              Sent by: {communication.sentBy}
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
     </div>
   )
 }
