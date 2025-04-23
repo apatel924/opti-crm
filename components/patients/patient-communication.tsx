@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button"
 import { Phone, Mail, MessageSquare } from "lucide-react"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 
 export function PatientCommunication({ patient }: { patient: any }) {
   return (
@@ -28,7 +30,48 @@ export function PatientCommunication({ patient }: { patient: any }) {
           <CardDescription>Send a message to the patient</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4"></div>
+          <div className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <label htmlFor="channel" className="text-sm font-medium">
+                  Communication Channel
+                </label>
+                <Select defaultValue="sms">
+                  <SelectTrigger id="channel">
+                    <SelectValue placeholder="Select channel" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sms">SMS</SelectItem>
+                    <SelectItem value="email">Email</SelectItem>
+                    <SelectItem value="portal">Patient Portal</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="template" className="text-sm font-medium">
+                  Template
+                </label>
+                <Select>
+                  <SelectTrigger id="template">
+                    <SelectValue placeholder="Select template" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="appointment">Appointment Reminder</SelectItem>
+                    <SelectItem value="order">Order Status Update</SelectItem>
+                    <SelectItem value="prescription">Prescription Ready</SelectItem>
+                    <SelectItem value="custom">Custom Message</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="message" className="text-sm font-medium">
+                Message
+              </label>
+              <Textarea id="message" placeholder="Type your message here..." className="min-h-[100px]" />
+            </div>
+          </div>
         </CardContent>
         <CardFooter className="flex justify-between">
         </CardFooter>
