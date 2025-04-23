@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { X } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 
 export function PatientFilters() {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([])
@@ -106,6 +107,74 @@ export function PatientFilters() {
                   <SelectItem value="Over a Year">Over a Year</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label>Medical Conditions</Label>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="diabetes"
+                  onCheckedChange={(checked) => {
+                    if (checked) addFilter("Condition: Diabetes")
+                    else removeFilter("Condition: Diabetes")
+                  }}
+                />
+                <label
+                  htmlFor="diabetes"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Diabetes
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="glaucoma"
+                  onCheckedChange={(checked) => {
+                    if (checked) addFilter("Condition: Glaucoma")
+                    else removeFilter("Condition: Glaucoma")
+                  }}
+                />
+                <label
+                  htmlFor="glaucoma"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Glaucoma
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="cataracts"
+                  onCheckedChange={(checked) => {
+                    if (checked) addFilter("Condition: Cataracts")
+                    else removeFilter("Condition: Cataracts")
+                  }}
+                />
+                <label
+                  htmlFor="cataracts"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Cataracts
+                </label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="hypertension"
+                  onCheckedChange={(checked) => {
+                    if (checked) addFilter("Condition: Hypertension")
+                    else removeFilter("Condition: Hypertension")
+                  }}
+                />
+                <label
+                  htmlFor="hypertension"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Hypertension
+                </label>
+              </div>
             </div>
           </div>
         </div>
