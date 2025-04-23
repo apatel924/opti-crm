@@ -177,6 +177,12 @@ export function PatientFilters() {
               </div>
             </div>
           </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setSelectedFilters([])}>
+              Reset
+            </Button>
+            <Button>Apply Filters</Button>
+          </div>
         </div>
       </CardContent>
     </Card>
