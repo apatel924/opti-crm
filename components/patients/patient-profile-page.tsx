@@ -2,12 +2,8 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Calendar, Eye, Package, DollarSign, FileUp, MessageSquare, Edit, Plus, Phone, Mail, AlertTriangle, ShieldAlert } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 
 const patients = {
   "P-10042": {
@@ -34,70 +30,22 @@ const patients = {
       copay: "$20",
       coverage: "80%",
     },
-    medicalAlerts: ["Diabetes", "Allergies to penicillin"],
+    medicalAlerts: [],
     visionHistory: {
       currentRx: {
-        rightEye: {
-          sphere: "-2.00",
-          cylinder: "-0.75",
-          axis: "180",
-          add: "+2.00",
-        },
-        leftEye: {
-          sphere: "-1.75",
-          cylinder: "-0.50",
-          axis: "175",
-          add: "+2.00",
-        },
+        rightEye: { sphere: "-2.00", cylinder: "-0.75", axis: "180", add: "+2.00" },
+        leftEye: { sphere: "-1.75", cylinder: "-0.50", axis: "175", add: "+2.00" },
         pd: "63",
         notes: "Progressive lenses",
       },
-      previousRx: [
-        {
-          date: "05/01/2022",
-          rightEye: {
-            sphere: "-1.75",
-            cylinder: "-0.75",
-            axis: "180",
-            add: "+1.75",
-          },
-          leftEye: {
-            sphere: "-1.50",
-            cylinder: "-0.50",
-            axis: "175",
-            add: "+1.75",
-          },
-        },
-      ],
+      previousRx: [],
     },
-    medicalHistory: {
-      conditions: ["Type 2 Diabetes (diagnosed 2015)", "Hypertension"],
-      medications: ["Metformin 500mg twice daily", "Lisinopril 10mg daily"],
-      allergies: ["Penicillin", "Sulfa drugs"],
-      familyHistory: ["Father: Glaucoma", "Mother: Cataracts"],
-    },
-    visits: [
-      {
-        id: "V-10042",
-        date: "05/01/2023",
-        type: "Annual Exam",
-        doctor: "Dr. Williams",
-        reason: "Routine eye examination",
-        notes: "Patient reports occasional blurry vision when reading. Recommended progressive lenses.",
-        diagnosis: "Presbyopia, Mild Astigmatism",
-        followUp: "1 year",
-      },
-      {
-        id: "V-10041",
-        date: "05/01/2022",
-        type: "Annual Exam",
-        doctor: "Dr. Williams",
-        reason: "Routine eye examination",
-        notes: "No significant changes from previous exam.",
-        diagnosis: "Presbyopia, Mild Astigmatism",
-        followUp: "1 year",
-      },
-    ],
+    visits: [],
+    orders: [],
+    billing: [],
+    documents: [],
+    communications: [],
+    notes: [],
   },
 }
 
@@ -125,191 +73,5 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
     )
   }
 
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" asChild>
-            <Link href="/patients">
-              <ArrowLeft className="h-4 w-4" />
-              <span className="sr-only">Back</span>
-            </Link>
-          </Button>
-          <h1 className="text-3xl font-bold tracking-tight">{patient.name}</h1>
-          <Badge variant="outline">{patient.id}</Badge>
-          {patient.status === "Active" ? (
-            <Badge variant="outline" className="bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300">
-              Active
-            </Badge>
-          ) : (
-            <Badge variant="outline" className="bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-              Inactive
-            </Badge>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" asChild>
-            <Link href={`/appointments/new?patient=${patient.id}`}>
-              <Calendar className="mr-2 h-4 w-4" />
-              Schedule Appointment
-            </Link>
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                Actions
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Patient Actions</DropdownMenuLabel>
-              <DropdownMenuItem>
-                <Eye className="mr-2 h-4 w-4" />
-                New Examination
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Package className="mr-2 h-4 w-4" />
-                New Lab Order
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <DollarSign className="mr-2 h-4 w-4" />
-                New Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <FileUp className="mr-2 h-4 w-4" />
-                Upload Document
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Send Message
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Edit className="mr-2 h-4 w-4" />
-                Edit Patient
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-500">Deactivate Patient</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-      <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="w-full justify-start border-b pb-px">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="medical">Medical</TabsTrigger>
-          <TabsTrigger value="visits">Visits</TabsTrigger>
-          <TabsTrigger value="orders">Lab Orders</TabsTrigger>
-          <TabsTrigger value="insurance">Insurance</TabsTrigger>
-          <TabsTrigger value="documents">Documents</TabsTrigger>
-          <TabsTrigger value="billing">Billing</TabsTrigger>
-          <TabsTrigger value="communication">Communication</TabsTrigger>
-          <TabsTrigger value="notes">Notes</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="overview" className="mt-6 space-y-6">
-          <div className="grid gap-6 md:grid-cols-3">
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle>Patient Information</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-col gap-4 sm:flex-row">
-                  <div className="flex flex-col items-center gap-2 sm:w-1/3">
-                    <div className="text-center">
-                      <div className="font-medium">{patient.name}</div>
-                      <div className="text-sm text-muted-foreground">{patient.id}</div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button size="icon" variant="outline">
-                        <Phone className="h-4 w-4" />
-                        <span className="sr-only">Call</span>
-                      </Button>
-                      <Button size="icon" variant="outline">
-                        <Mail className="h-4 w-4" />
-                        <span className="sr-only">Email</span>
-                      </Button>
-                      <Button size="icon" variant="outline">
-                        <MessageSquare className="h-4 w-4" />
-                        <span className="sr-only">Message</span>
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="grid flex-1 gap-4 sm:grid-cols-2">
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground">Date of Birth</div>
-                      <div>{patient.dob} ({patient.age} years)</div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground">Gender</div>
-                      <div>{patient.gender}</div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground">Phone</div>
-                      <div>{patient.phone}</div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground">Email</div>
-                      <div>{patient.email}</div>
-                    </div>
-                    <div className="sm:col-span-2">
-                      <div className="text-sm font-medium text-muted-foreground">Address</div>
-                      <div>{patient.address}</div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground">Occupation</div>
-                      <div>{patient.occupation}</div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-muted-foreground">Primary Insurance</div>
-                      <div>{patient.insurance.primary}</div>
-                    </div>
-                    <div className="sm:col-span-2">
-                      <div className="text-sm font-medium text-muted-foreground">Emergency Contact</div>
-                      <div>{patient.emergencyContact}</div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Medical Alerts</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {patient.medicalAlerts.map((alert, index) => (
-                    <div key={index} className="flex items-start gap-2 rounded-md bg-red-50 p-3 dark:bg-red-900/20">
-                      <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
-                      <div>
-                        <div className="font-medium text-red-800 dark:text-red-300">{alert}</div>
-                      </div>
-                    </div>
-                  ))}
-                  <div className="rounded-md bg-yellow-50 p-3 dark:bg-yellow-900/20">
-                    <div className="flex items-start gap-2">
-                      <ShieldAlert className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-                      <div>
-                        <div className="font-medium text-yellow-800 dark:text-yellow-300">Allergies</div>
-                        <div className="text-sm text-yellow-700 dark:text-yellow-400">
-                          {patient.medicalHistory.allergies.join(", ")}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  <Edit className="mr-2 h-4 w-4" />
-                  Update Alerts
-                </Button>
-              </CardFooter>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
-  )
+  return <div className="space-y-6">{/* Content coming in future commits */}</div>
 }
