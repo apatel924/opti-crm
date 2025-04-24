@@ -9,6 +9,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "@/components/ui/card"
 import { PatientMedicalHistory } from "@/components/patients/patient-medical-history"
 import { PatientVisitHistory } from "@/components/patients/patient-visit-history"
+import { PatientOrdersTab } from "@/components/patients/patient-orders-tab"
+import { PatientInsurance } from "@/components/patients/patient-insurance"
+import { PatientDocuments } from "@/components/patients/patient-documents"
+import { PatientBilling } from "@/components/patients/patient-billing"
+import { PatientCommunication } from "@/components/patients/patient-communication"
 
 import {
   DropdownMenu,
@@ -366,6 +371,21 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
         </TabsContent>
         <TabsContent value="visits" className="mt-6">
             <PatientVisitHistory patient={patient} />
+        </TabsContent>
+        <TabsContent value="orders" className="mt-6">
+            <PatientOrdersTab patient={patient} />
+        </TabsContent>
+        <TabsContent value="insurance" className="mt-6">
+            <PatientInsurance patient={patient} />
+        </TabsContent>
+        <TabsContent value="documents" className="mt-6">
+            <PatientDocuments patient={patient} />
+        </TabsContent>
+        <TabsContent value="billing" className="mt-6">
+            <PatientBilling patient={patient} />
+        </TabsContent>
+        <TabsContent value="communication" className="mt-6">
+            <PatientCommunication patient={patient} />
         </TabsContent>
       </Tabs>
     </div>
