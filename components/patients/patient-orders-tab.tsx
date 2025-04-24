@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal, Eye, FileText, Clipboard } from "lucide-react"
+import { MoreHorizontal, Eye, FileText, Clipboard, DollarSign } from "lucide-react"
 
 interface PatientOrdersTabProps {
   patient: any
@@ -156,9 +156,26 @@ function OrderCard({ order }: { order: any }) {
           </div>
         </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex justify-between">
         <div className="text-sm">
           <span className="font-medium">Order ID:</span> {order.id}
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm">
+            <Eye className="mr-2 h-4 w-4" />
+            View Details
+          </Button>
+          {Number(order.balance.replace("$", "")) > 0 ? (
+            <Button size="sm">
+              <DollarSign className="mr-2 h-4 w-4" />
+              Pay Balance
+            </Button>
+          ) : (
+            <Button size="sm">
+              <FileText className="mr-2 h-4 w-4" />
+              View Receipt
+            </Button>
+          )}
         </div>
       </CardFooter>
     </Card>
