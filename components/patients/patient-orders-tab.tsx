@@ -133,7 +133,28 @@ function OrderCard({ order }: { order: any }) {
         </div>
       </CardHeader>
       <CardContent>
-        <p className="text-sm">{order.details}</p>
+        <div className="space-y-4">
+          <div>
+            <h4 className="mb-2 text-sm font-medium">Order Details</h4>
+            <p className="text-sm">{order.details}</p>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <h4 className="text-sm font-medium">Price</h4>
+              <p className="text-sm">{order.price}</p>
+            </div>
+            <div>
+              <h4 className="text-sm font-medium">Insurance</h4>
+              <p className="text-sm">{order.insurance}</p>
+            </div>
+            <div>
+              <h4 className="text-sm font-medium">Balance</h4>
+              <p className={`text-sm ${Number(order.balance.replace("$", "")) > 0 ? "text-red-500 font-medium" : ""}`}>
+                {order.balance}
+              </p>
+            </div>
+          </div>
+        </div>
       </CardContent>
       <CardFooter>
         <div className="text-sm">
