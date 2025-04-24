@@ -29,6 +29,10 @@ export function PatientSearchPage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
 
+  const handlePatientClick = (patientId: string) => {
+    router.push(`/patients/${patientId}`)
+  }
+
   const filteredPatients = patients.filter(
     (patient) =>
       patient.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -64,10 +68,16 @@ export function PatientSearchPage() {
         </p>
         <ul className="mt-4 space-y-2">
           {filteredPatients.map((patient) => (
-            <li key={patient.id} className="border rounded p-4">
+            <li
+              key={patient.id}
+              onClick={() => handlePatientClick(patient.id)}
+              className="cursor-pointer border rounded p-4 hover:bg-muted"
+            >
               <p className="font-medium">{patient.name}</p>
               <p className="text-sm text-muted-foreground">{patient.id}</p>
-              <p className="text-sm">{patient.email} • {patient.phone}</p>
+              <p className="text-sm">
+                {patient.email} • {patient.phone}
+              </p>
             </li>
           ))}
         </ul>
