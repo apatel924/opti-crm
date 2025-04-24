@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -76,6 +77,45 @@ function NewGlassesOrderDialog({ patient }: { patient: any }) {
                   <SelectItem value="high">High Priority</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+
+          <div className="rounded-md border p-4">
+            <h4 className="mb-4 font-medium">Frame Information</h4>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <Label htmlFor="frameManufacturer">Manufacturer</Label>
+                <Input id="frameManufacturer" placeholder="e.g., Ray-Ban, Oakley" />
+              </div>
+              <div>
+                <Label htmlFor="frameModel">Model</Label>
+                <Input id="frameModel" placeholder="e.g., RB5154, OX8046" />
+              </div>
+              <div>
+                <Label htmlFor="frameColor">Color</Label>
+                <Input id="frameColor" placeholder="e.g., Black, Tortoise" />
+              </div>
+              <div>
+                <Label htmlFor="frameSize">Size</Label>
+                <Input id="frameSize" placeholder="e.g., 52-18-140" />
+              </div>
+              <div>
+                <Label htmlFor="frameSource">Frame Source</Label>
+                <Select defaultValue="stock">
+                  <SelectTrigger id="frameSource">
+                    <SelectValue placeholder="Select source" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="stock">Stock</SelectItem>
+                    <SelectItem value="order">Order from Manufacturer</SelectItem>
+                    <SelectItem value="patient">Patient's Own Frame</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="frameCost">Frame Cost</Label>
+                <Input id="frameCost" placeholder="Enter cost" type="number" step="0.01" />
+              </div>
             </div>
           </div>
         </div>
