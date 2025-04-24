@@ -28,14 +28,43 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
           <TabsTrigger value="accessories">Accessories</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all">
+        <TabsContent value="all" className="space-y-4">
           <div className="space-y-4">
-            {/* Orders will be rendered here */}
+            {patient.orders.map((order: any) => (
+              <div key={order.id}>{order.type}</div>
+            ))}
           </div>
         </TabsContent>
-        <TabsContent value="glasses"><div className="space-y-4" /></TabsContent>
-        <TabsContent value="contacts"><div className="space-y-4" /></TabsContent>
-        <TabsContent value="accessories"><div className="space-y-4" /></TabsContent>
+
+        <TabsContent value="glasses" className="space-y-4">
+          <div className="space-y-4">
+            {patient.orders
+              .filter((order: any) => order.type.includes("Glasses"))
+              .map((order: any) => (
+                <div key={order.id}>{order.type}</div>
+              ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="contacts" className="space-y-4">
+          <div className="space-y-4">
+            {patient.orders
+              .filter((order: any) => order.type.includes("Contact"))
+              .map((order: any) => (
+                <div key={order.id}>{order.type}</div>
+              ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="accessories" className="space-y-4">
+          <div className="space-y-4">
+            {patient.orders
+              .filter((order: any) => order.type.includes("Accessory"))
+              .map((order: any) => (
+                <div key={order.id}>{order.type}</div>
+              ))}
+          </div>
+        </TabsContent>
       </Tabs>
     </div>
   )
