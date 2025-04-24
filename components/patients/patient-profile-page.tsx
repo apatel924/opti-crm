@@ -6,7 +6,7 @@ import { ArrowLeft, Calendar, Plus, Edit, Phone, Mail, MessageSquare, AlertTrian
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "@/components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -54,7 +54,7 @@ const patients = {
       },
       previousRx: [],
     },
-    visits: [],
+    visits: [] as Array<{ date: string, type: string }>,
     orders: [],
     billing: [],
     documents: [],
@@ -254,6 +254,51 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
             </Card>
             {/* Right: Medical Alerts Card (next commit) */}
           </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Current Prescription</CardTitle>
+              <CardDescription>Last updated on {patient.visits[0]?.date || "N/A"}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-6 md:grid-cols-2">
+                <div>
+                  <h3 className="mb-2 text-sm font-medium">Right Eye (OD)</h3>
+                  <div className="rounded-md border">
+                    <div className="grid grid-cols-4 border-b">
+                      <div className="border-r p-2 text-center font-medium">SPH</div>
+                      <div className="border-r p-2 text-center font-medium">CYL</div>
+                      <div className="border-r p-2 text-center font-medium">AXIS</div>
+                      <div className="p-2 text-center font-medium">ADD</div>
+                    </div>
+                    <div className="grid grid-cols-4">
+                      <div className="border-r p-2 text-center">{patient.visionHistory.currentRx.rightEye.sphere}</div>
+                      <div className="border-r p-2 text-center">{patient.visionHistory.currentRx.rightEye.cylinder}</div>
+                      <div className="border-r p-2 text-center">{patient.visionHistory.currentRx.rightEye.axis}</div>
+                      <div className="p-2 text-center">{patient.visionHistory.currentRx.rightEye.add}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="mb-2 text-sm font-medium">Left Eye (OS)</h3>
+                  <div className="rounded-md border">
+                    <div className="grid grid-cols-4 border-b">
+                      <div className="border-r p-2 text-center font-medium">SPH</div>
+                      <div className="border-r p-2 text-center font-medium">CYL</div>
+                      <div className="border-r p-2 text-center font-medium">AXIS</div>
+                      <div className="p-2 text-center font-medium">ADD</div>
+                    </div>
+                    <div className="grid grid-cols-4">
+                      <div className="border-r p-2 text-center">{patient.visionHistory.currentRx.leftEye.sphere}</div>
+                      <div className="border-r p-2 text-center">{patient.visionHistory.currentRx.leftEye.cylinder}</div>
+                      <div className="border-r p-2 text-center">{patient.visionHistory.currentRx.leftEye.axis}</div>
+                      <div className="p-2 text-center">{patient.visionHistory.currentRx.leftEye.add}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
