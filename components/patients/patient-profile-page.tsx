@@ -146,7 +146,12 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
           <TabsTrigger value="notes">Notes</TabsTrigger>
         </TabsList>
 
-        {/* TabContent will be added in future commits */}
+        <TabsContent value="overview" className="mt-6 space-y-6">
+          <div className="grid gap-6 md:grid-cols-3">
+            {/* Left: Patient Info Card (next commit) */}
+            {/* Right: Medical Alerts Card (next commit) */}
+          </div>
+        </TabsContent>
       </Tabs>
     </div>
   )
