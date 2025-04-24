@@ -2,15 +2,10 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Search, Filter, Plus, Download, Eye, MoreHorizontal, Calendar, MessageSquare, FileText } from "lucide-react"
+import { Search, Filter, Plus, Download, MoreHorizontal, Eye, Calendar, MessageSquare, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { PatientFilters } from "@/components/patients/patient-filters"
-import { usePatients } from "@/lib/hooks//use-patients"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +14,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { PatientFilters } from "@/components/patients/patient-filters"
+import { usePatients } from "@/lib/hooks/use-patients"
 
 export function PatientListPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -110,18 +110,10 @@ export function PatientListPage() {
                     {filteredPatients.map((patient) => (
                       <TableRow key={patient.id}>
                         <TableCell>
-                          <div className="flex items-center gap-3">
-                            <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center">
-                              {patient.name
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </div>
-                            <div>
-                              <div className="font-medium">{patient.name}</div>
-                              <div className="text-xs text-muted-foreground">
-                                {patient.id} • {patient.age} yrs
-                              </div>
+                          <div>
+                            <div className="font-medium">{patient.name}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {patient.id} • {patient.age} yrs
                             </div>
                           </div>
                         </TableCell>
@@ -138,9 +130,7 @@ export function PatientListPage() {
                         </TableCell>
                         <TableCell>
                           <div
-                            className={`text-sm ${
-                              Number(patient.balance.replace("$", "")) > 0 ? "text-red-500 font-medium" : ""
-                            }`}
+                            className={`text-sm ${Number(patient.balance.replace("$", "")) > 0 ? "text-red-500 font-medium" : ""}`}
                           >
                             {patient.balance}
                           </div>
