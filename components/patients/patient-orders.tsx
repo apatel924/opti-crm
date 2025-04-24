@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Package, Eye, FileText, DollarSign } from "lucide-react"
 
@@ -23,11 +23,11 @@ export function PatientOrders({ patient }: PatientOrdersProps) {
       <div className="space-y-4">
         {patient.orders.map((order: any) => (
           <Card key={order.id}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
+            <CardHeader>
+              <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-medium">{order.type}</h3>
-                  <p className="text-sm text-muted-foreground">{order.date}</p>
+                  <CardTitle>{order.type}</CardTitle>
+                  <CardDescription>{order.date}</CardDescription>
                 </div>
                 <Badge
                   variant={
@@ -43,6 +43,8 @@ export function PatientOrders({ patient }: PatientOrdersProps) {
                   {order.status}
                 </Badge>
               </div>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-4">
                 <div>
                   <h4 className="mb-2 text-sm font-medium">Order Details</h4>
@@ -66,30 +68,30 @@ export function PatientOrders({ patient }: PatientOrdersProps) {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center justify-between pt-4">
-                  <div className="text-sm">
-                    <span className="font-medium">Order ID:</span> {order.id}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
-                      <Eye className="mr-2 h-4 w-4" />
-                      View Details
-                    </Button>
-                    {Number(order.balance.replace("$", "")) > 0 ? (
-                      <Button size="sm">
-                        <DollarSign className="mr-2 h-4 w-4" />
-                        Pay Balance
-                      </Button>
-                    ) : (
-                      <Button size="sm">
-                        <FileText className="mr-2 h-4 w-4" />
-                        View Receipt
-                      </Button>
-                    )}
-                  </div>
-                </div>
               </div>
             </CardContent>
+            <CardFooter className="flex justify-between">
+              <div className="text-sm">
+                <span className="font-medium">Order ID:</span> {order.id}
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <Eye className="mr-2 h-4 w-4" />
+                  View Details
+                </Button>
+                {Number(order.balance.replace("$", "")) > 0 ? (
+                  <Button size="sm">
+                    <DollarSign className="mr-2 h-4 w-4" />
+                    Pay Balance
+                  </Button>
+                ) : (
+                  <Button size="sm">
+                    <FileText className="mr-2 h-4 w-4" />
+                    View Receipt
+                  </Button>
+                )}
+              </div>
+            </CardFooter>
           </Card>
         ))}
       </div>
