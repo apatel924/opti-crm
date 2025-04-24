@@ -4,6 +4,16 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { MoreHorizontal, Eye, FileText, Clipboard } from "lucide-react"
 
 interface PatientOrdersTabProps {
   patient: any
@@ -75,8 +85,52 @@ function OrderCard({ order }: { order: any }) {
   return (
     <Card key={order.id}>
       <CardHeader>
-        <CardTitle>{order.type}</CardTitle>
-        <CardDescription>{order.date}</CardDescription>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>{order.type}</CardTitle>
+            <CardDescription>{order.date}</CardDescription>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge
+              variant={
+                order.status === "Dispensed"
+                  ? "success"
+                  : order.status === "Ready for Pickup"
+                  ? "success"
+                  : order.status === "In Progress"
+                  ? "default"
+                  : "secondary"
+              }
+            >
+              {order.status}
+            </Badge>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreHorizontal className="h-4 w-4" />
+                  <span className="sr-only">More options</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem>
+                  <Eye className="mr-2 h-4 w-4" />
+                  View Details
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <FileText className="mr-2 h-4 w-4" />
+                  Print Receipt
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Clipboard className="mr-2 h-4 w-4" />
+                  Copy Order Info
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="text-red-500">Cancel Order</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         <p className="text-sm">{order.details}</p>
