@@ -2,8 +2,10 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Calendar, Eye, Package, DollarSign, FileUp, MessageSquare, Edit, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 
 const patients = {
   "P-10042": {
@@ -124,6 +126,73 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
 
   return (
     <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="icon" asChild>
+            <Link href="/patients">
+              <ArrowLeft className="h-4 w-4" />
+              <span className="sr-only">Back</span>
+            </Link>
+          </Button>
+          <h1 className="text-3xl font-bold tracking-tight">{patient.name}</h1>
+          <Badge variant="outline">{patient.id}</Badge>
+          {patient.status === "Active" ? (
+            <Badge variant="outline" className="bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300">
+              Active
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+              Inactive
+            </Badge>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" asChild>
+            <Link href={`/appointments/new?patient=${patient.id}`}>
+              <Calendar className="mr-2 h-4 w-4" />
+              Schedule Appointment
+            </Link>
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Actions
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Patient Actions</DropdownMenuLabel>
+              <DropdownMenuItem>
+                <Eye className="mr-2 h-4 w-4" />
+                New Examination
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Package className="mr-2 h-4 w-4" />
+                New Lab Order
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <DollarSign className="mr-2 h-4 w-4" />
+                New Billing
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <FileUp className="mr-2 h-4 w-4" />
+                Upload Document
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <MessageSquare className="mr-2 h-4 w-4" />
+                Send Message
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Edit className="mr-2 h-4 w-4" />
+                Edit Patient
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-red-500">Deactivate Patient</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
     </div>
   )
 }
