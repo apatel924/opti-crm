@@ -118,6 +118,66 @@ function NewGlassesOrderDialog({ patient }: { patient: any }) {
               </div>
             </div>
           </div>
+
+          <div className="rounded-md border p-4">
+            <h4 className="mb-4 font-medium">Prescription Information</h4>
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label>Right Eye (OD)</Label>
+                <div className="grid grid-cols-4 gap-2">
+                  <div>
+                    <Label htmlFor="odSphere" className="text-xs">Sphere</Label>
+                    <Input id="odSphere" defaultValue={patient.visionHistory?.currentRx?.rightEye?.sphere || ""} />
+                  </div>
+                  <div>
+                    <Label htmlFor="odCylinder" className="text-xs">Cylinder</Label>
+                    <Input id="odCylinder" defaultValue={patient.visionHistory?.currentRx?.rightEye?.cylinder || ""} />
+                  </div>
+                  <div>
+                    <Label htmlFor="odAxis" className="text-xs">Axis</Label>
+                    <Input id="odAxis" defaultValue={patient.visionHistory?.currentRx?.rightEye?.axis || ""} />
+                  </div>
+                  <div>
+                    <Label htmlFor="odAdd" className="text-xs">Add</Label>
+                    <Input id="odAdd" defaultValue={patient.visionHistory?.currentRx?.rightEye?.add || ""} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <Label>Left Eye (OS)</Label>
+                <div className="grid grid-cols-4 gap-2">
+                  <div>
+                    <Label htmlFor="osSphere" className="text-xs">Sphere</Label>
+                    <Input id="osSphere" defaultValue={patient.visionHistory?.currentRx?.leftEye?.sphere || ""} />
+                  </div>
+                  <div>
+                    <Label htmlFor="osCylinder" className="text-xs">Cylinder</Label>
+                    <Input id="osCylinder" defaultValue={patient.visionHistory?.currentRx?.leftEye?.cylinder || ""} />
+                  </div>
+                  <div>
+                    <Label htmlFor="osAxis" className="text-xs">Axis</Label>
+                    <Input id="osAxis" defaultValue={patient.visionHistory?.currentRx?.leftEye?.axis || ""} />
+                  </div>
+                  <div>
+                    <Label htmlFor="osAdd" className="text-xs">Add</Label>
+                    <Input id="osAdd" defaultValue={patient.visionHistory?.currentRx?.leftEye?.add || ""} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="pd">PD (mm)</Label>
+                  <Input id="pd" defaultValue={patient.visionHistory?.currentRx?.pd || ""} />
+                </div>
+                <div>
+                  <Label htmlFor="segHeight">Seg Height (mm)</Label>
+                  <Input id="segHeight" placeholder="Enter seg height" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <DialogFooter>
