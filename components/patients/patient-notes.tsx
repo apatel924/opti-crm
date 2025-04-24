@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Plus, Save } from "lucide-react"
+import { Plus, Save, Edit, Trash } from "lucide-react"
 
 interface PatientNotesProps {
   patient: any
@@ -15,6 +15,7 @@ interface PatientNotesProps {
 export function PatientNotes({ patient }: PatientNotesProps) {
   const [notes, setNotes] = useState(patient.notes || [])
   const [isAddingNote, setIsAddingNote] = useState(false)
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null)
   const [newNoteTitle, setNewNoteTitle] = useState("")
   const [newNoteContent, setNewNoteContent] = useState("")
 
@@ -35,9 +36,24 @@ export function PatientNotes({ patient }: PatientNotesProps) {
     setIsAddingNote(false)
   }
 
+  const handleEditNote = (noteId: string) => {
+    const noteToEdit = notes.find((note: any) => note.id === noteId)
+    if (!noteToEdit) return
+
+    setNewNoteTitle(noteToEdit.title)
+    setNewNoteContent(noteToEdit.content)
+    setEditingNoteId(noteId)
+  }
+
+  const handleDeleteNote = (noteId: string) => {
+    const updatedNotes = notes.filter((note: any) => note.id !== noteId)
+    setNotes(updatedNotes)
+  }
+
   const handleCancel = () => {
     setNewNoteTitle("")
     setNewNoteContent("")
+    setEditingNoteId(null)
     setIsAddingNote(false)
   }
 
@@ -45,7 +61,7 @@ export function PatientNotes({ patient }: PatientNotesProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-medium">Patient Notes</h3>
-        {!isAddingNote && (
+        {!isAddingNote && !editingNoteId && (
           <Button onClick={() => setIsAddingNote(true)}>
             <Plus className="mr-2 h-4 w-4" />
             Add Note
@@ -53,10 +69,10 @@ export function PatientNotes({ patient }: PatientNotesProps) {
         )}
       </div>
 
-      {isAddingNote && (
+      {(isAddingNote || editingNoteId) && (
         <Card>
           <CardHeader>
-            <CardTitle>New Note</CardTitle>
+            <CardTitle>{editingNoteId ? "Edit Note" : "New Note"}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -102,7 +118,19 @@ export function PatientNotes({ patient }: PatientNotesProps) {
           notes.map((note: any) => (
             <Card key={note.id}>
               <CardContent className="p-4">
-                <h4 className="font-medium">{note.title}</h4>
+                <div className="mb-2 flex items-center justify-between">
+                  <h4 className="font-medium">{note.title}</h4>
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="icon" onClick={() => handleEditNote(note.id)}>
+                      <Edit className="h-4 w-4" />
+                      <span className="sr-only">Edit</span>
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => handleDeleteNote(note.id)}>
+                      <Trash className="h-4 w-4" />
+                      <span className="sr-only">Delete</span>
+                    </Button>
+                  </div>
+                </div>
                 <div className="whitespace-pre-wrap text-sm">{note.content}</div>
                 <div className="mt-2 text-xs text-muted-foreground">
                   Added by {note.author} on {note.date}
