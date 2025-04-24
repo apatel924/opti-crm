@@ -118,7 +118,6 @@ function NewGlassesOrderDialog({ patient }: { patient: any }) {
               </div>
             </div>
           </div>
-
           <div className="rounded-md border p-4">
             <h4 className="mb-4 font-medium">Prescription Information</h4>
             <div className="grid gap-4">
@@ -143,7 +142,6 @@ function NewGlassesOrderDialog({ patient }: { patient: any }) {
                   </div>
                 </div>
               </div>
-
               <div className="grid gap-2">
                 <Label>Left Eye (OS)</Label>
                 <div className="grid grid-cols-4 gap-2">
@@ -208,8 +206,24 @@ function NewGlassesOrderDialog({ patient }: { patient: any }) {
               </div>
             </div>
           </div>
+          <div className="rounded-md border p-4">
+            <h4 className="mb-4 font-medium">Pricing & Insurance</h4>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div>
+                <Label htmlFor="retailPrice">Retail Price</Label>
+                <Input id="retailPrice" placeholder="Enter retail price" type="number" step="0.01" />
+              </div>
+              <div>
+                <Label htmlFor="insuranceCoverage">Insurance Coverage</Label>
+                <Input id="insuranceCoverage" placeholder="Enter coverage amount" type="number" step="0.01" />
+              </div>
+              <div>
+                <Label htmlFor="patientResponsibility">Patient Responsibility</Label>
+                <Input id="patientResponsibility" placeholder="Enter amount" type="number" step="0.01" />
+              </div>
+            </div>
+          </div>
         </div>
-
         <DialogFooter>
           <Button variant="outline">Cancel</Button>
           <Button>Create Order</Button>
@@ -218,10 +232,8 @@ function NewGlassesOrderDialog({ patient }: { patient: any }) {
     </Dialog>
   )
 }
-
 export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
   const [activeTab, setActiveTab] = useState("all")
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -234,7 +246,6 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
           </Button>
         </div>
       </div>
-
       <Tabs defaultValue="all" onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="all">All Orders</TabsTrigger>
@@ -250,7 +261,6 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
             ))}
           </div>
         </TabsContent>
-
         <TabsContent value="glasses" className="space-y-4">
           <div className="space-y-4">
             {patient.orders
@@ -260,7 +270,6 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
               ))}
           </div>
         </TabsContent>
-
         <TabsContent value="contacts" className="space-y-4">
           <div className="space-y-4">
             {patient.orders
@@ -270,7 +279,6 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
               ))}
           </div>
         </TabsContent>
-
         <TabsContent value="accessories" className="space-y-4">
           <div className="space-y-4">
             {patient.orders
@@ -284,7 +292,6 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
     </div>
   )
 }
-
 function OrderCard({ order }: { order: any }) {
   return (
     <Card key={order.id}>
