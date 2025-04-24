@@ -341,6 +341,22 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
               </div>
             </CardFooter>
           </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Upcoming Appointments</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="rounded-md border p-4 text-center">
+                <p className="text-muted-foreground">Next appointment scheduled for {patient.nextVisit}</p>
+                <Button className="mt-2" variant="outline" asChild>
+                  <Link href={`/appointments/new?patient=${patient.id}`}>
+                    <Calendar className="mr-2 h-4 w-4" />
+                    Schedule New Appointment
+                  </Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
