@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 // import { TopNavigation } from "@/components/top-navigation"
-import "./styles/globals.css"
+import "@/styles/globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
 
