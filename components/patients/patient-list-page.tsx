@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Search, Filter, Plus, Download } from "lucide-react"
+import { Search, Filter, Plus, Download, Eye, MoreHorizontal, Calendar, MessageSquare, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -11,6 +11,14 @@ import { PatientFilters } from "@/components/patients/patient-filters"
 import { usePatients } from "@/lib/hooks//use-patients"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export function PatientListPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -142,7 +150,41 @@ export function PatientListPage() {
                             {patient.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-right">{/* Actions will be added in next commit */}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button size="icon" variant="ghost" asChild>
+                              <Link href={`/patients/${patient.id}`}>
+                                <Eye className="h-4 w-4" />
+                                <span className="sr-only">View</span>
+                              </Link>
+                            </Button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button size="icon" variant="ghost">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                  <span className="sr-only">More</span>
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem>
+                                  <Calendar className="mr-2 h-4 w-4" />
+                                  Schedule Appointment
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                  <MessageSquare className="mr-2 h-4 w-4" />
+                                  Send Message
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                  <FileText className="mr-2 h-4 w-4" />
+                                  View Medical History
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="text-red-500">Deactivate Patient</DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
