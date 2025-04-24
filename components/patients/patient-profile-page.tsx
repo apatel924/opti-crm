@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Calendar, Plus, Edit, Phone, Mail, MessageSquare } from "lucide-react"
+import { ArrowLeft, Calendar, Plus, Edit, Phone, Mail, MessageSquare, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -214,6 +214,23 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
                   </div>
                 </div>
               </CardContent>
+            </Card>
+            <Card>
+            <CardHeader>
+                <CardTitle>Medical Alerts</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="space-y-4">
+                {patient.medicalAlerts.map((alert, index) => (
+                    <div key={index} className="flex items-start gap-2 rounded-md bg-red-50 p-3 dark:bg-red-900/20">
+                    <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
+                    <div>
+                        <div className="font-medium text-red-800 dark:text-red-300">{alert}</div>
+                    </div>
+                    </div>
+                ))}
+                </div>
+            </CardContent>
             </Card>
             {/* Right: Medical Alerts Card (next commit) */}
           </div>
