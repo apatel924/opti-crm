@@ -2,11 +2,35 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Calendar, Plus, Edit, Phone, Mail, MessageSquare, AlertTriangle, ShieldAlert, FileText, Package, ClipboardCheck } from "lucide-react"
+import {
+  ArrowLeft,
+  Calendar,
+  Edit,
+  Eye,
+  FileText,
+  MessageSquare,
+  Package,
+  Phone,
+  Plus,
+  Mail,
+  AlertTriangle,
+  ShieldAlert,
+  DollarSign,
+  FileUp,
+  ClipboardCheck,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { PatientMedicalHistory } from "@/components/patients/patient-medical-history"
 import { PatientVisitHistory } from "@/components/patients/patient-visit-history"
 import { PatientOrdersTab } from "@/components/patients/patient-orders-tab"
@@ -16,14 +40,7 @@ import { PatientBilling } from "@/components/patients/patient-billing"
 import { PatientCommunication } from "@/components/patients/patient-communication"
 import { PatientNotes } from "@/components/patients/patient-notes"
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+// Mock patient data - in a real app, this would come from the database
 
 const patients = {
   "P-10042": {
@@ -50,25 +67,179 @@ const patients = {
       copay: "$20",
       coverage: "80%",
     },
-    medicalAlerts: [],
-    medicalHistory: {
-      allergies: ["Penicillin", "Peanuts", "Shellfish"]
-    },
+    medicalAlerts: ["Diabetes", "Allergies to penicillin"],
     visionHistory: {
       currentRx: {
-        rightEye: { sphere: "-2.00", cylinder: "-0.75", axis: "180", add: "+2.00" },
-        leftEye: { sphere: "-1.75", cylinder: "-0.50", axis: "175", add: "+2.00" },
+        rightEye: {
+          sphere: "-2.00",
+          cylinder: "-0.75",
+          axis: "180",
+          add: "+2.00",
+        },
+        leftEye: {
+          sphere: "-1.75",
+          cylinder: "-0.50",
+          axis: "175",
+          add: "+2.00",
+        },
         pd: "63",
         notes: "Progressive lenses",
       },
-      previousRx: [],
+      previousRx: [
+        {
+          date: "05/01/2022",
+          rightEye: {
+            sphere: "-1.75",
+            cylinder: "-0.75",
+            axis: "180",
+            add: "+1.75",
+          },
+          leftEye: {
+            sphere: "-1.50",
+            cylinder: "-0.50",
+            axis: "175",
+            add: "+1.75",
+          },
+        },
+      ],
     },
-    visits: [] as Array<{ date: string, type: string }>,
-    orders: [],
-    billing: [],
-    documents: [],
-    communications: [],
-    notes: [],
+    medicalHistory: {
+      conditions: ["Type 2 Diabetes (diagnosed 2015)", "Hypertension"],
+      medications: ["Metformin 500mg twice daily", "Lisinopril 10mg daily"],
+      allergies: ["Penicillin", "Sulfa drugs"],
+      familyHistory: ["Father: Glaucoma", "Mother: Cataracts"],
+    },
+    visits: [
+      {
+        id: "V-10042",
+        date: "05/01/2023",
+        type: "Annual Exam",
+        doctor: "Dr. Williams",
+        reason: "Routine eye examination",
+        notes: "Patient reports occasional blurry vision when reading. Recommended progressive lenses.",
+        diagnosis: "Presbyopia, Mild Astigmatism",
+        followUp: "1 year",
+      },
+      {
+        id: "V-10041",
+        date: "05/01/2022",
+        type: "Annual Exam",
+        doctor: "Dr. Williams",
+        reason: "Routine eye examination",
+        notes: "No significant changes from previous exam.",
+        diagnosis: "Presbyopia, Mild Astigmatism",
+        followUp: "1 year",
+      },
+    ],
+    orders: [
+      {
+        id: "O-10042",
+        date: "05/01/2023",
+        type: "Progressive Glasses",
+        status: "In Progress",
+        details: "Ray-Ban RB5154 frame with Essilor Varilux progressive lenses",
+        price: "$450.00",
+        insurance: "$360.00",
+        balance: "$90.00",
+      },
+      {
+        id: "O-10041",
+        date: "05/01/2022",
+        type: "Progressive Glasses",
+        status: "Dispensed",
+        details: "Oakley OX8046 frame with Essilor Varilux progressive lenses",
+        price: "$425.00",
+        insurance: "$340.00",
+        balance: "$85.00",
+      },
+    ],
+    billing: [
+      {
+        id: "B-10042",
+        date: "05/01/2023",
+        description: "Annual Eye Examination",
+        total: "$150.00",
+        insurance: "$120.00",
+        patient: "$30.00",
+        status: "Paid",
+      },
+      {
+        id: "B-10041",
+        date: "05/01/2022",
+        description: "Annual Eye Examination",
+        total: "$150.00",
+        insurance: "$120.00",
+        patient: "$30.00",
+        status: "Paid",
+      },
+      {
+        id: "B-10043",
+        date: "05/01/2023",
+        description: "Progressive Glasses",
+        total: "$450.00",
+        insurance: "$360.00",
+        patient: "$90.00",
+        status: "Due",
+      },
+    ],
+    documents: [
+      {
+        id: "D-10042",
+        name: "Insurance Card",
+        type: "image/jpeg",
+        date: "05/01/2023",
+        uploadedBy: "Front Desk",
+      },
+      {
+        id: "D-10041",
+        name: "Medical Records Release",
+        type: "application/pdf",
+        date: "05/01/2023",
+        uploadedBy: "Patient",
+      },
+      {
+        id: "D-10043",
+        name: "Previous Prescription",
+        type: "application/pdf",
+        date: "05/01/2022",
+        uploadedBy: "Dr. Williams",
+      },
+    ],
+    communications: [
+      {
+        id: "C-10042",
+        date: "05/02/2023",
+        type: "Email",
+        subject: "Appointment Confirmation",
+        content: "Thank you for your visit. Your next appointment is scheduled for May 1, 2024.",
+        sentBy: "System",
+      },
+      {
+        id: "C-10041",
+        date: "04/25/2023",
+        type: "SMS",
+        subject: "Appointment Reminder",
+        content: "Reminder: You have an appointment with Dr. Williams on May 1, 2023 at 10:00 AM.",
+        sentBy: "System",
+      },
+    ],
+    notes: [
+      {
+        id: "N-10042",
+        date: "05/01/2023",
+        title: "Patient Preferences",
+        content:
+          "Patient prefers appointment reminders via text message. Interested in trying contact lenses in the future.",
+        author: "Dr. Williams",
+      },
+      {
+        id: "N-10041",
+        date: "05/01/2022",
+        title: "Frame Selection Notes",
+        content: "Patient prefers lightweight frames. Sensitive to pressure on nose bridge.",
+        author: "Sarah Williams (Optician)",
+      },
+    ],
   },
 }
 
@@ -77,6 +248,9 @@ interface PatientProfilePageProps {
 }
 
 export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
+  const [activeTab, setActiveTab] = useState("overview")
+
+  // In a real app, you would fetch this data from the database
   const patient = patients[patientId as keyof typeof patients]
 
   if (!patient) {
@@ -118,7 +292,6 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
             </Badge>
           )}
         </div>
-
         <div className="flex items-center gap-2">
           <Button variant="outline" asChild>
             <Link href={`/appointments/new?patient=${patient.id}`}>
@@ -135,6 +308,27 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Patient Actions</DropdownMenuLabel>
+              <DropdownMenuItem>
+                <Eye className="mr-2 h-4 w-4" />
+                New Examination
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Package className="mr-2 h-4 w-4" />
+                New Lab Order
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <DollarSign className="mr-2 h-4 w-4" />
+                New Billing
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <FileUp className="mr-2 h-4 w-4" />
+                Upload Document
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <MessageSquare className="mr-2 h-4 w-4" />
+                Send Message
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Edit className="mr-2 h-4 w-4" />
                 Edit Patient
@@ -187,7 +381,6 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
                       </Button>
                     </div>
                   </div>
-
                   <div className="grid flex-1 gap-4 sm:grid-cols-2">
                     <div>
                       <div className="text-sm font-medium text-muted-foreground">Date of Birth</div>
@@ -227,46 +420,47 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
                 </div>
               </CardContent>
             </Card>
+
             <Card>
-            <CardHeader>
+              <CardHeader>
                 <CardTitle>Medical Alerts</CardTitle>
-            </CardHeader>
-            <CardContent>
+              </CardHeader>
+              <CardContent>
                 <div className="space-y-4">
-                {patient.medicalAlerts.map((alert, index) => (
+                  {patient.medicalAlerts.map((alert, index) => (
                     <div key={index} className="flex items-start gap-2 rounded-md bg-red-50 p-3 dark:bg-red-900/20">
-                    <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
-                    <div>
+                      <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
+                      <div>
                         <div className="font-medium text-red-800 dark:text-red-300">{alert}</div>
+                      </div>
                     </div>
-                    </div>
-                ))}
-                <div className="rounded-md bg-yellow-50 p-3 dark:bg-yellow-900/20">
-                  <div className="flex items-start gap-2">
-                    <ShieldAlert className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-                    <div>
-                      <div className="font-medium text-yellow-800 dark:text-yellow-300">Allergies</div>
-                      <div className="text-sm text-yellow-700 dark:text-yellow-400">
-                        {patient.medicalHistory.allergies.join(", ")}
+                  ))}
+                  <div className="rounded-md bg-yellow-50 p-3 dark:bg-yellow-900/20">
+                    <div className="flex items-start gap-2">
+                      <ShieldAlert className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                      <div>
+                        <div className="font-medium text-yellow-800 dark:text-yellow-300">Allergies</div>
+                        <div className="text-sm text-yellow-700 dark:text-yellow-400">
+                          {patient.medicalHistory.allergies.join(", ")}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                </div>
-            </CardContent>
-            <CardFooter>
-              <Button variant="outline" className="w-full">
-                <Edit className="mr-2 h-4 w-4" />
-                Update Alerts
-              </Button>
-            </CardFooter>
+              </CardContent>
+              <CardFooter>
+                <Button variant="outline" className="w-full">
+                  <Edit className="mr-2 h-4 w-4" />
+                  Update Alerts
+                </Button>
+              </CardFooter>
             </Card>
-            {/* Right: Medical Alerts Card (next commit) */}
           </div>
+
           <Card>
             <CardHeader>
               <CardTitle>Current Prescription</CardTitle>
-              <CardDescription>Last updated on {patient.visits[0]?.date || "N/A"}</CardDescription>
+              <CardDescription>Last updated on {patient.visits[0].date}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-6 md:grid-cols-2">
@@ -281,13 +475,14 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
                     </div>
                     <div className="grid grid-cols-4">
                       <div className="border-r p-2 text-center">{patient.visionHistory.currentRx.rightEye.sphere}</div>
-                      <div className="border-r p-2 text-center">{patient.visionHistory.currentRx.rightEye.cylinder}</div>
+                      <div className="border-r p-2 text-center">
+                        {patient.visionHistory.currentRx.rightEye.cylinder}
+                      </div>
                       <div className="border-r p-2 text-center">{patient.visionHistory.currentRx.rightEye.axis}</div>
                       <div className="p-2 text-center">{patient.visionHistory.currentRx.rightEye.add}</div>
                     </div>
                   </div>
                 </div>
-
                 <div>
                   <h3 className="mb-2 text-sm font-medium">Left Eye (OS)</h3>
                   <div className="rounded-md border">
@@ -319,7 +514,7 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
                   <div className="text-sm font-medium">Expiration</div>
                   <div>
                     {new Date(
-                      new Date(patient.visits[0]?.date || new Date()).setFullYear(new Date(patient.visits[0]?.date || new Date()).getFullYear() + 1)
+                      new Date(patient.visits[0].date).setFullYear(new Date(patient.visits[0].date).getFullYear() + 1),
                     ).toLocaleDateString()}
                   </div>
                 </div>
@@ -350,6 +545,7 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
               </div>
             </CardFooter>
           </Card>
+
           <Card>
             <CardHeader>
               <CardTitle>Upcoming Appointments</CardTitle>
@@ -367,29 +563,37 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
             </CardContent>
           </Card>
         </TabsContent>
+
         <TabsContent value="medical" className="mt-6">
-            <PatientMedicalHistory patient={patient} />
+          <PatientMedicalHistory patient={patient} />
         </TabsContent>
+
         <TabsContent value="visits" className="mt-6">
-            <PatientVisitHistory patient={patient} />
+          <PatientVisitHistory patient={patient} />
         </TabsContent>
+
         <TabsContent value="orders" className="mt-6">
-            <PatientOrdersTab patient={patient} />
+          <PatientOrdersTab patient={patient} />
         </TabsContent>
+
         <TabsContent value="insurance" className="mt-6">
-            <PatientInsurance patient={patient} />
+          <PatientInsurance patient={patient} />
         </TabsContent>
+
         <TabsContent value="documents" className="mt-6">
-            <PatientDocuments patient={patient} />
+          <PatientDocuments patient={patient} />
         </TabsContent>
+
         <TabsContent value="billing" className="mt-6">
-            <PatientBilling patient={patient} />
+          <PatientBilling patient={patient} />
         </TabsContent>
+
         <TabsContent value="communication" className="mt-6">
-            <PatientCommunication patient={patient} />
+          <PatientCommunication patient={patient} />
         </TabsContent>
+
         <TabsContent value="notes" className="mt-6">
-            <PatientNotes patient={patient} />
+          <PatientNotes patient={patient} />
         </TabsContent>
       </Tabs>
     </div>
