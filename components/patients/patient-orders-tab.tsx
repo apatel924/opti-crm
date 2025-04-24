@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface PatientOrdersTabProps {
@@ -72,9 +73,19 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
 
 function OrderCard({ order }: { order: any }) {
   return (
-    <div className="border rounded p-4">
-      <h4 className="font-medium">{order.type}</h4>
-      <p className="text-sm text-muted-foreground">{order.date}</p>
-    </div>
+    <Card key={order.id}>
+      <CardHeader>
+        <CardTitle>{order.type}</CardTitle>
+        <CardDescription>{order.date}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm">{order.details}</p>
+      </CardContent>
+      <CardFooter>
+        <div className="text-sm">
+          <span className="font-medium">Order ID:</span> {order.id}
+        </div>
+      </CardFooter>
+    </Card>
   )
 }
