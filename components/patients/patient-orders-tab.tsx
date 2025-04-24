@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea" // Assuming Textarea is imported from the correct path
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -162,6 +163,29 @@ function NewGlassesOrderDialog({ patient }: { patient: any }) {
                     <Input id="osAdd" defaultValue={patient.visionHistory?.currentRx?.leftEye?.add || ""} />
                   </div>
                 </div>
+              </div>
+
+              <div className="rounded-md border p-4">
+                <h4 className="mb-4 font-medium">Pricing & Insurance</h4>
+                <div className="grid gap-4 md:grid-cols-3">
+                  <div>
+                    <Label htmlFor="clRetailPrice">Retail Price</Label>
+                    <Input id="clRetailPrice" placeholder="Enter retail price" type="number" step="0.01" />
+                  </div>
+                  <div>
+                    <Label htmlFor="clInsuranceCoverage">Insurance Coverage</Label>
+                    <Input id="clInsuranceCoverage" placeholder="Enter coverage amount" type="number" step="0.01" />
+                  </div>
+                  <div>
+                    <Label htmlFor="clPatientResponsibility">Patient Responsibility</Label>
+                    <Input id="clPatientResponsibility" placeholder="Enter amount" type="number" step="0.01" />
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="clNotes">Additional Notes</Label>
+                <Textarea id="clNotes" placeholder="Enter any special instructions or notes for this order" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
