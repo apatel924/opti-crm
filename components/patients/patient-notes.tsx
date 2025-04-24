@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Plus, Save, Edit, Trash } from "lucide-react"
+import { Plus, Edit, Trash, Save } from "lucide-react"
 
 interface PatientNotesProps {
   patient: any
@@ -27,7 +27,7 @@ export function PatientNotes({ patient }: PatientNotesProps) {
       date: new Date().toLocaleDateString(),
       title: newNoteTitle,
       content: newNoteContent,
-      author: "Current User",
+      author: "Current User", 
     }
 
     setNotes([newNote, ...notes])
@@ -45,12 +45,32 @@ export function PatientNotes({ patient }: PatientNotesProps) {
     setEditingNoteId(noteId)
   }
 
+  const handleUpdateNote = () => {
+    if (newNoteTitle.trim() === "" || newNoteContent.trim() === "" || !editingNoteId) return
+
+    const updatedNotes = notes.map((note: any) =>
+      note.id === editingNoteId
+        ? {
+            ...note,
+            title: newNoteTitle,
+            content: newNoteContent,
+            date: new Date().toLocaleDateString(), // Update date to current
+          }
+        : note,
+    )
+
+    setNotes(updatedNotes)
+    setNewNoteTitle("")
+    setNewNoteContent("")
+    setEditingNoteId(null)
+  }
+
   const handleDeleteNote = (noteId: string) => {
     const updatedNotes = notes.filter((note: any) => note.id !== noteId)
     setNotes(updatedNotes)
   }
 
-  const handleCancel = () => {
+  const handleCancelEdit = () => {
     setNewNoteTitle("")
     setNewNoteContent("")
     setEditingNoteId(null)
@@ -96,12 +116,12 @@ export function PatientNotes({ patient }: PatientNotesProps) {
                 />
               </div>
               <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={handleCancel}>
+                <Button variant="outline" onClick={handleCancelEdit}>
                   Cancel
                 </Button>
-                <Button onClick={handleAddNote}>
+                <Button onClick={editingNoteId ? handleUpdateNote : handleAddNote}>
                   <Save className="mr-2 h-4 w-4" />
-                  Save
+                  {editingNoteId ? "Update" : "Save"}
                 </Button>
               </div>
             </div>
