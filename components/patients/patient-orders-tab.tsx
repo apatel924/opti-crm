@@ -13,10 +13,44 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { MoreHorizontal, Eye, FileText, Clipboard, DollarSign, Glasses, Package } from "lucide-react"
 
 interface PatientOrdersTabProps {
   patient: any
+}
+
+function NewGlassesOrderDialog({ patient }: { patient: any }) {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          <Glasses className="mr-2 h-4 w-4" />
+          New Glasses Order
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[750px]">
+        <DialogHeader>
+          <DialogTitle>New Glasses Order</DialogTitle>
+          <DialogDescription>
+            Create a new glasses order for {patient.name} ({patient.id})
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline">Cancel</Button>
+          <Button>Create Order</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
 }
 
 export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
@@ -27,10 +61,7 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-medium">Orders & Purchases</h3>
         <div className="flex gap-2">
-          <Button variant="outline">
-            <Glasses className="mr-2 h-4 w-4" />
-            New Glasses Order
-          </Button>
+          <NewGlassesOrderDialog patient={patient} />
           <Button>
             <Package className="mr-2 h-4 w-4" />
             New Contact Lens Order
