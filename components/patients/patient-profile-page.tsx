@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ArrowLeft, Calendar, Plus, Edit } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -131,6 +132,22 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
           </DropdownMenu>
         </div>
       </div>
+
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="w-full justify-start border-b pb-px">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="medical">Medical</TabsTrigger>
+          <TabsTrigger value="visits">Visits</TabsTrigger>
+          <TabsTrigger value="orders">Lab Orders</TabsTrigger>
+          <TabsTrigger value="insurance">Insurance</TabsTrigger>
+          <TabsTrigger value="documents">Documents</TabsTrigger>
+          <TabsTrigger value="billing">Billing</TabsTrigger>
+          <TabsTrigger value="communication">Communication</TabsTrigger>
+          <TabsTrigger value="notes">Notes</TabsTrigger>
+        </TabsList>
+
+        {/* TabContent will be added in future commits */}
+      </Tabs>
     </div>
   )
 }
