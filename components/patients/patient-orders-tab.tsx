@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { MoreHorizontal, Eye, FileText, Clipboard, DollarSign } from "lucide-react"
+import { MoreHorizontal, Eye, FileText, Clipboard, DollarSign, Glasses, Package } from "lucide-react"
 
 interface PatientOrdersTabProps {
   patient: any
@@ -27,7 +27,14 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-medium">Orders & Purchases</h3>
         <div className="flex gap-2">
-          {/* Order dialog triggers will be added later */}
+          <Button variant="outline">
+            <Glasses className="mr-2 h-4 w-4" />
+            New Glasses Order
+          </Button>
+          <Button>
+            <Package className="mr-2 h-4 w-4" />
+            New Contact Lens Order
+          </Button>
         </div>
       </div>
 
