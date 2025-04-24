@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Calendar, Plus, Edit } from "lucide-react"
+import { ArrowLeft, Calendar, Plus, Edit, Phone, Mail, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -160,7 +160,20 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
                       <div className="font-medium">{patient.name}</div>
                       <div className="text-sm text-muted-foreground">{patient.id}</div>
                     </div>
-                    {/* Action buttons (Call, Email, Message) will be added in the next commit */}
+                    <div className="flex gap-2">
+                      <Button size="icon" variant="outline">
+                        <Phone className="h-4 w-4" />
+                        <span className="sr-only">Call</span>
+                      </Button>
+                      <Button size="icon" variant="outline">
+                        <Mail className="h-4 w-4" />
+                        <span className="sr-only">Email</span>
+                      </Button>
+                      <Button size="icon" variant="outline">
+                        <MessageSquare className="h-4 w-4" />
+                        <span className="sr-only">Message</span>
+                      </Button>
+                    </div>
                   </div>
 
                   <div className="grid flex-1 gap-4 sm:grid-cols-2">
