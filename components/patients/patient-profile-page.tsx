@@ -232,6 +232,17 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
                     </div>
                     </div>
                 ))}
+                <div className="rounded-md bg-yellow-50 p-3 dark:bg-yellow-900/20">
+                  <div className="flex items-start gap-2">
+                    <ShieldAlert className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                    <div>
+                      <div className="font-medium text-yellow-800 dark:text-yellow-300">Allergies</div>
+                      <div className="text-sm text-yellow-700 dark:text-yellow-400">
+                        {patient.medicalHistory.allergies.join(", ")}
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 </div>
             </CardContent>
             </Card>
