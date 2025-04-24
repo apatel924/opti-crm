@@ -7,10 +7,21 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { PatientFilters } from "@/components/patients/patient-filters"
+import { usePatients } from "@/lib/hooks/use-patients"
 
 export function PatientListPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showFilters, setShowFilters] = useState(false)
+  const { patients, isLoading, error } = usePatients()
+
+  const filteredPatients = patients.filter(
+    (patient) =>
+      patient.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      patient.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      patient.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      patient.phone.includes(searchQuery),
+  )
 
   return (
     <div className="space-y-6">
@@ -59,12 +70,26 @@ export function PatientListPage() {
           </div>
         </div>
 
-        <TabsContent value="all">
-          <Card>
-            <CardContent className="p-6">
-              <p className="text-sm text-muted-foreground">Patient data will be displayed here.</p>
-            </CardContent>
-          </Card>
+        {showFilters && <PatientFilters />}
+
+        <TabsContent value="all" className="space-y-4">
+          {isLoading ? (
+            <div className="flex h-40 items-center justify-center">
+              <p className="text-muted-foreground">Loading patients...</p>
+            </div>
+          ) : error ? (
+            <div className="flex h-40 items-center justify-center">
+              <p className="text-red-500">Error loading patients: {error}</p>
+            </div>
+          ) : (
+            <Card>
+              <CardContent className="p-6">
+                <p className="text-sm text-muted-foreground">
+                  {filteredPatients.length} patients match your search.
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
       </Tabs>
     </div>
