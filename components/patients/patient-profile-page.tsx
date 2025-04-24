@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Calendar, Plus, Edit, Phone, Mail, MessageSquare, AlertTriangle } from "lucide-react"
+import { ArrowLeft, Calendar, Plus, Edit, Phone, Mail, MessageSquare, AlertTriangle, ShieldAlert } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -42,6 +42,9 @@ const patients = {
       coverage: "80%",
     },
     medicalAlerts: [],
+    medicalHistory: {
+      allergies: ["Penicillin", "Peanuts", "Shellfish"]
+    },
     visionHistory: {
       currentRx: {
         rightEye: { sphere: "-2.00", cylinder: "-0.75", axis: "180", add: "+2.00" },
