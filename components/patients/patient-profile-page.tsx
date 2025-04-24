@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "@/components/ui/card"
+import { PatientMedicalHistory } from "@/components/patients/patient-medical-history"
+import { PatientVisitHistory } from "@/components/patients/patient-visit-history"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -357,6 +360,12 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+        <TabsContent value="medical" className="mt-6">
+            <PatientMedicalHistory patient={patient} />
+        </TabsContent>
+        <TabsContent value="visits" className="mt-6">
+            <PatientVisitHistory patient={patient} />
         </TabsContent>
       </Tabs>
     </div>
