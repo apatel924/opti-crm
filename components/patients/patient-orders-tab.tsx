@@ -232,6 +232,111 @@ function NewGlassesOrderDialog({ patient }: { patient: any }) {
     </Dialog>
   )
 }
+function NewContactLensOrderDialog({ patient }: { patient: any }) {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>
+          <Package className="mr-2 h-4 w-4" />
+          New Contact Lens Order
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle>New Contact Lens Order</DialogTitle>
+          <DialogDescription>
+            Create a new contact lens order for {patient.name} ({patient.id})
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-6 py-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <Label htmlFor="orderType">Order Type</Label>
+              <Select defaultValue="disposable">
+                <SelectTrigger id="orderType">
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="disposable">Disposable</SelectItem>
+                  <SelectItem value="daily">Daily Disposable</SelectItem>
+                  <SelectItem value="biweekly">Bi-weekly</SelectItem>
+                  <SelectItem value="monthly">Monthly</SelectItem>
+                  <SelectItem value="rgp">Rigid Gas Permeable</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="supplyDuration">Supply Duration</Label>
+              <Select defaultValue="6month">
+                <SelectTrigger id="supplyDuration">
+                  <SelectValue placeholder="Select duration" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="3month">3 Months</SelectItem>
+                  <SelectItem value="6month">6 Months</SelectItem>
+                  <SelectItem value="12month">12 Months (Annual)</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className="rounded-md border p-4">
+            <h4 className="mb-4 font-medium">Right Eye (OD)</h4>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <Label htmlFor="odBrand">Brand</Label>
+                <Select defaultValue="acuvue">
+                  <SelectTrigger id="odBrand">
+                    <SelectValue placeholder="Select brand" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="acuvue">Acuvue</SelectItem>
+                    <SelectItem value="biofinity">Biofinity</SelectItem>
+                    <SelectItem value="airoptix">Air Optix</SelectItem>
+                    <SelectItem value="dailies">Dailies</SelectItem>
+                    <SelectItem value="oasys">Acuvue Oasys</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="odProduct">Product Name</Label>
+                <Input id="odProduct" placeholder="e.g., Oasys for Astigmatism" />
+              </div>
+              <div>
+                <Label htmlFor="odPower">Power</Label>
+                <Input id="odPower" placeholder="e.g., -3.00" />
+              </div>
+              <div>
+                <Label htmlFor="odBC">Base Curve</Label>
+                <Input id="odBC" placeholder="e.g., 8.4" />
+              </div>
+              <div>
+                <Label htmlFor="odDIA">Diameter</Label>
+                <Input id="odDIA" placeholder="e.g., 14.0" />
+              </div>
+              <div>
+                <Label htmlFor="odCYL">Cylinder (if applicable)</Label>
+                <Input id="odCYL" placeholder="e.g., -1.25" />
+              </div>
+              <div>
+                <Label htmlFor="odAXIS">Axis (if applicable)</Label>
+                <Input id="odAXIS" placeholder="e.g., 180" />
+              </div>
+              <div>
+                <Label htmlFor="odQuantity">Quantity</Label>
+                <Input id="odQuantity" placeholder="e.g., 6" type="number" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline">Cancel</Button>
+          <Button>Create Order</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
 export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
   const [activeTab, setActiveTab] = useState("all")
   return (
@@ -240,10 +345,7 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
         <h3 className="text-lg font-medium">Orders & Purchases</h3>
         <div className="flex gap-2">
           <NewGlassesOrderDialog patient={patient} />
-          <Button>
-            <Package className="mr-2 h-4 w-4" />
-            New Contact Lens Order
-          </Button>
+          <NewContactLensOrderDialog patient={patient} />
         </div>
       </div>
       <Tabs defaultValue="all" onValueChange={setActiveTab} className="space-y-4">
