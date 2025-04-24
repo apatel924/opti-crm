@@ -2,11 +2,12 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Calendar, Eye, Package, DollarSign, FileUp, MessageSquare, Edit, Plus } from "lucide-react"
+import { ArrowLeft, Calendar, Eye, Package, DollarSign, FileUp, MessageSquare, Edit, Plus, Phone, Mail, AlertTriangle, ShieldAlert } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 
 const patients = {
   "P-10042": {
@@ -207,7 +208,106 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
         </TabsList>
 
         <TabsContent value="overview" className="mt-6 space-y-6">
-          {/* Overview tab content starts here in upcoming commits */}
+          <div className="grid gap-6 md:grid-cols-3">
+            <Card className="md:col-span-2">
+              <CardHeader>
+                <CardTitle>Patient Information</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  <div className="flex flex-col items-center gap-2 sm:w-1/3">
+                    <div className="text-center">
+                      <div className="font-medium">{patient.name}</div>
+                      <div className="text-sm text-muted-foreground">{patient.id}</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button size="icon" variant="outline">
+                        <Phone className="h-4 w-4" />
+                        <span className="sr-only">Call</span>
+                      </Button>
+                      <Button size="icon" variant="outline">
+                        <Mail className="h-4 w-4" />
+                        <span className="sr-only">Email</span>
+                      </Button>
+                      <Button size="icon" variant="outline">
+                        <MessageSquare className="h-4 w-4" />
+                        <span className="sr-only">Message</span>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="grid flex-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">Date of Birth</div>
+                      <div>{patient.dob} ({patient.age} years)</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">Gender</div>
+                      <div>{patient.gender}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">Phone</div>
+                      <div>{patient.phone}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">Email</div>
+                      <div>{patient.email}</div>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <div className="text-sm font-medium text-muted-foreground">Address</div>
+                      <div>{patient.address}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">Occupation</div>
+                      <div>{patient.occupation}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">Primary Insurance</div>
+                      <div>{patient.insurance.primary}</div>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <div className="text-sm font-medium text-muted-foreground">Emergency Contact</div>
+                      <div>{patient.emergencyContact}</div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Medical Alerts</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {patient.medicalAlerts.map((alert, index) => (
+                    <div key={index} className="flex items-start gap-2 rounded-md bg-red-50 p-3 dark:bg-red-900/20">
+                      <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
+                      <div>
+                        <div className="font-medium text-red-800 dark:text-red-300">{alert}</div>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="rounded-md bg-yellow-50 p-3 dark:bg-yellow-900/20">
+                    <div className="flex items-start gap-2">
+                      <ShieldAlert className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                      <div>
+                        <div className="font-medium text-yellow-800 dark:text-yellow-300">Allergies</div>
+                        <div className="text-sm text-yellow-700 dark:text-yellow-400">
+                          {patient.medicalHistory.allergies.join(", ")}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button variant="outline" className="w-full">
+                  <Edit className="mr-2 h-4 w-4" />
+                  Update Alerts
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
