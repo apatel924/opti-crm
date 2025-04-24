@@ -6,7 +6,7 @@ import { ArrowLeft, Calendar, Plus, Edit, Phone, Mail, MessageSquare, AlertTrian
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -245,6 +245,12 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
                 </div>
                 </div>
             </CardContent>
+            <CardFooter>
+              <Button variant="outline" className="w-full">
+                <Edit className="mr-2 h-4 w-4" />
+                Update Alerts
+              </Button>
+            </CardFooter>
             </Card>
             {/* Right: Medical Alerts Card (next commit) */}
           </div>
