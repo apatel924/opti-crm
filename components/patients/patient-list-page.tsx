@@ -8,7 +8,9 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PatientFilters } from "@/components/patients/patient-filters"
-import { usePatients } from "@/lib/hooks/use-patients"
+import { usePatients } from "@/lib/hooks//use-patients"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
 
 export function PatientListPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -83,10 +85,68 @@ export function PatientListPage() {
             </div>
           ) : (
             <Card>
-              <CardContent className="p-6">
-                <p className="text-sm text-muted-foreground">
-                  {filteredPatients.length} patients match your search.
-                </p>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Patient</TableHead>
+                      <TableHead>Contact</TableHead>
+                      <TableHead>Last Visit</TableHead>
+                      <TableHead>Insurance</TableHead>
+                      <TableHead>Balance</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredPatients.map((patient) => (
+                      <TableRow key={patient.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center">
+                              {patient.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
+                            </div>
+                            <div>
+                              <div className="font-medium">{patient.name}</div>
+                              <div className="text-xs text-muted-foreground">
+                                {patient.id} • {patient.age} yrs
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">{patient.phone}</div>
+                          <div className="text-xs text-muted-foreground">{patient.email}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">{patient.lastVisit}</div>
+                          <div className="text-xs text-muted-foreground">Next: {patient.nextVisit}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm">{patient.insurance}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div
+                            className={`text-sm ${
+                              Number(patient.balance.replace("$", "")) > 0 ? "text-red-500 font-medium" : ""
+                            }`}
+                          >
+                            {patient.balance}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant={patient.status === "Active" ? "outline" : "secondary"}>
+                            {patient.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">{/* Actions will be added in next commit */}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </CardContent>
             </Card>
           )}
