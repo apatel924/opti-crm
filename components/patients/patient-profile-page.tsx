@@ -297,6 +297,28 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
                   </div>
                 </div>
               </div>
+              <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
+                <div>
+                  <div className="text-sm font-medium">PD</div>
+                  <div>{patient.visionHistory.currentRx.pd} mm</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Doctor</div>
+                  <div>{patient.doctor}</div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Expiration</div>
+                  <div>
+                    {new Date(
+                      new Date(patient.visits[0]?.date || new Date()).setFullYear(new Date(patient.visits[0]?.date || new Date()).getFullYear() + 1)
+                    ).toLocaleDateString()}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Notes</div>
+                  <div>{patient.visionHistory.currentRx.notes}</div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
