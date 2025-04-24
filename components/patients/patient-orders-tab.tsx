@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select"
+import { Label } from "@/components/ui/label"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,6 +46,40 @@ function NewGlassesOrderDialog({ patient }: { patient: any }) {
             Create a new glasses order for {patient.name} ({patient.id})
           </DialogDescription>
         </DialogHeader>
+
+        <div className="grid gap-6 py-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <Label htmlFor="orderType">Order Type</Label>
+              <Select defaultValue="single">
+                <SelectTrigger id="orderType">
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="single">Single Vision</SelectItem>
+                  <SelectItem value="bifocal">Bifocal</SelectItem>
+                  <SelectItem value="progressive">Progressive</SelectItem>
+                  <SelectItem value="reading">Reading Glasses</SelectItem>
+                  <SelectItem value="sunglasses">Sunglasses</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="priority">Priority</Label>
+              <Select defaultValue="normal">
+                <SelectTrigger id="priority">
+                  <SelectValue placeholder="Select priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="normal">Normal</SelectItem>
+                  <SelectItem value="rush">Rush</SelectItem>
+                  <SelectItem value="high">High Priority</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+
         <DialogFooter>
           <Button variant="outline">Cancel</Button>
           <Button>Create Order</Button>
