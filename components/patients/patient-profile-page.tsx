@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Calendar, Plus, Edit, Phone, Mail, MessageSquare, AlertTriangle, ShieldAlert } from "lucide-react"
+import { ArrowLeft, Calendar, Plus, Edit, Phone, Mail, MessageSquare, AlertTriangle, ShieldAlert, FileText, Package, ClipboardCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -320,6 +320,26 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
                 </div>
               </div>
             </CardContent>
+            <CardFooter className="flex justify-between">
+              <Button variant="outline">
+                <FileText className="mr-2 h-4 w-4" />
+                Print Prescription
+              </Button>
+              <div className="flex gap-2">
+                <Button variant="outline" asChild>
+                  <Link href={`/lab/orders/new?patient=${patient.id}`}>
+                    <Package className="mr-2 h-4 w-4" />
+                    Create Lab Order
+                  </Link>
+                </Button>
+                <Button asChild>
+                  <Link href={`/examinations/new?patient=${patient.id}`}>
+                    <ClipboardCheck className="mr-2 h-4 w-4" />
+                    New Exam
+                  </Link>
+                </Button>
+              </div>
+            </CardFooter>
           </Card>
         </TabsContent>
       </Tabs>
