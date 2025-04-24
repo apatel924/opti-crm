@@ -31,7 +31,7 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
         <TabsContent value="all" className="space-y-4">
           <div className="space-y-4">
             {patient.orders.map((order: any) => (
-              <div key={order.id}>{order.type}</div>
+              <OrderCard key={order.id} order={order} />
             ))}
           </div>
         </TabsContent>
@@ -41,7 +41,7 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
             {patient.orders
               .filter((order: any) => order.type.includes("Glasses"))
               .map((order: any) => (
-                <div key={order.id}>{order.type}</div>
+                <OrderCard key={order.id} order={order} />
               ))}
           </div>
         </TabsContent>
@@ -51,7 +51,7 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
             {patient.orders
               .filter((order: any) => order.type.includes("Contact"))
               .map((order: any) => (
-                <div key={order.id}>{order.type}</div>
+                <OrderCard key={order.id} order={order} />
               ))}
           </div>
         </TabsContent>
@@ -61,11 +61,20 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
             {patient.orders
               .filter((order: any) => order.type.includes("Accessory"))
               .map((order: any) => (
-                <div key={order.id}>{order.type}</div>
+                <OrderCard key={order.id} order={order} />
               ))}
           </div>
         </TabsContent>
       </Tabs>
+    </div>
+  )
+}
+
+function OrderCard({ order }: { order: any }) {
+  return (
+    <div className="border rounded p-4">
+      <h4 className="font-medium">{order.type}</h4>
+      <p className="text-sm text-muted-foreground">{order.date}</p>
     </div>
   )
 }
