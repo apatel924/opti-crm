@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
 
 const patients = [
   {
@@ -73,11 +74,21 @@ export function PatientSearchPage() {
               onClick={() => handlePatientClick(patient.id)}
               className="cursor-pointer border rounded p-4 hover:bg-muted"
             >
-              <p className="font-medium">{patient.name}</p>
-              <p className="text-sm text-muted-foreground">{patient.id}</p>
-              <p className="text-sm">
-                {patient.email} • {patient.phone}
+              <p className="font-medium flex items-center gap-2">
+                {patient.name}
+                <Badge variant="outline">{patient.id}</Badge>
+                {patient.status === "Active" ? (
+                  <Badge variant="outline" className="bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300">
+                    Active
+                  </Badge>
+                ) : (
+                  <Badge variant="outline" className="bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                    Inactive
+                  </Badge>
+                )}
               </p>
+              <p className="text-sm text-muted-foreground">{patient.email}</p>
+              <p className="text-sm">{patient.phone}</p>
             </li>
           ))}
         </ul>
