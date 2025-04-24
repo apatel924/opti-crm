@@ -178,6 +178,36 @@ function NewGlassesOrderDialog({ patient }: { patient: any }) {
               </div>
             </div>
           </div>
+
+          <div className="rounded-md border p-4">
+            <h4 className="mb-4 font-medium">Measurements</h4>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <Label htmlFor="monoRE">Mono PD - Right Eye</Label>
+                <Input id="monoRE" placeholder="Enter in mm" />
+              </div>
+              <div>
+                <Label htmlFor="monoLE">Mono PD - Left Eye</Label>
+                <Input id="monoLE" placeholder="Enter in mm" />
+              </div>
+              <div>
+                <Label htmlFor="vertexDistance">Vertex Distance</Label>
+                <Input id="vertexDistance" placeholder="Enter in mm" />
+              </div>
+              <div>
+                <Label htmlFor="pantoscopicTilt">Pantoscopic Tilt</Label>
+                <Input id="pantoscopicTilt" placeholder="Enter in degrees" />
+              </div>
+              <div>
+                <Label htmlFor="wrapAngle">Wrap Angle</Label>
+                <Input id="wrapAngle" placeholder="Enter in degrees" />
+              </div>
+              <div>
+                <Label htmlFor="backVertexPower">Back Vertex Power</Label>
+                <Input id="backVertexPower" placeholder="Enter value" />
+              </div>
+            </div>
+          </div>
         </div>
 
         <DialogFooter>
