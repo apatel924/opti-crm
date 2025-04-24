@@ -1,9 +1,18 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Calendar, Plus, Edit } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const patients = {
   "P-10042": {
@@ -94,6 +103,32 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
               Inactive
             </Badge>
           )}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button variant="outline" asChild>
+            <Link href={`/appointments/new?patient=${patient.id}`}>
+              <Calendar className="mr-2 h-4 w-4" />
+              Schedule Appointment
+            </Link>
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Actions
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Patient Actions</DropdownMenuLabel>
+              <DropdownMenuItem>
+                <Edit className="mr-2 h-4 w-4" />
+                Edit Patient
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-red-500">Deactivate Patient</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>
