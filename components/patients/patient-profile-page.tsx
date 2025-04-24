@@ -14,6 +14,7 @@ import { PatientInsurance } from "@/components/patients/patient-insurance"
 import { PatientDocuments } from "@/components/patients/patient-documents"
 import { PatientBilling } from "@/components/patients/patient-billing"
 import { PatientCommunication } from "@/components/patients/patient-communication"
+import { PatientNotes } from "@/components/patients/patient-notes"
 
 import {
   DropdownMenu,
@@ -386,6 +387,9 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
         </TabsContent>
         <TabsContent value="communication" className="mt-6">
             <PatientCommunication patient={patient} />
+        </TabsContent>
+        <TabsContent value="notes" className="mt-6">
+            <PatientNotes patient={patient} />
         </TabsContent>
       </Tabs>
     </div>
