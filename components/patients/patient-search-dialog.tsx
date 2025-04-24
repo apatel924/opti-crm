@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -13,6 +14,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 
+// Mock patient data
 const mockPatients = [
   { id: "P10042", name: "Sarah Johnson", dob: "1985-06-15", phone: "(555) 123-4567" },
   { id: "P10043", name: "Michael Smith", dob: "1978-11-22", phone: "(555) 234-5678" },
@@ -29,6 +31,7 @@ const mockPatients = [
 export function PatientSearchDialog() {
   const [isOpen, setIsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const router = useRouter()
 
   const filteredPatients = mockPatients.filter(
     (patient) =>
@@ -36,6 +39,11 @@ export function PatientSearchDialog() {
       patient.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       patient.phone.includes(searchQuery),
   )
+
+  const handlePatientSelect = (patientId: string) => {
+    setIsOpen(false)
+    router.push(`/patients/${patientId}`)
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -52,16 +60,43 @@ export function PatientSearchDialog() {
           <DialogDescription>Search for a patient by name, ID, or phone number</DialogDescription>
         </DialogHeader>
 
-        <div className="relative">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search patients..."
-            className="pl-8"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            autoFocus
-          />
+        <div className="space-y-4 py-4">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search patients..."
+              className="pl-8"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
+            />
+          </div>
+
+          <div className="max-h-[300px] overflow-y-auto rounded-md border">
+            {filteredPatients.length > 0 ? (
+              filteredPatients.map((patient) => (
+                <button
+                  key={patient.id}
+                  className="flex w-full cursor-pointer items-center justify-between border-b p-3 text-left hover:bg-accent last:border-0"
+                  onClick={() => handlePatientSelect(patient.id)}
+                >
+                  <div>
+                    <div className="font-medium">{patient.name}</div>
+                    <div className="text-sm text-muted-foreground">DOB: {patient.dob}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-medium">{patient.id}</div>
+                    <div className="text-sm text-muted-foreground">{patient.phone}</div>
+                  </div>
+                </button>
+              ))
+            ) : (
+              <div className="p-3 text-center text-sm text-muted-foreground">
+                {searchQuery ? "No patients found" : "Enter search terms to find patients"}
+              </div>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
