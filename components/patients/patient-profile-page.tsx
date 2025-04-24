@@ -6,6 +6,7 @@ import { ArrowLeft, Calendar, Plus, Edit } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -148,7 +149,59 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
 
         <TabsContent value="overview" className="mt-6 space-y-6">
           <div className="grid gap-6 md:grid-cols-3">
-            {/* Left: Patient Info Card (next commit) */}
+            <Card className="md:col-span-2">
+              <CardHeader>
+                <CardTitle>Patient Information</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  <div className="flex flex-col items-center gap-2 sm:w-1/3">
+                    <div className="text-center">
+                      <div className="font-medium">{patient.name}</div>
+                      <div className="text-sm text-muted-foreground">{patient.id}</div>
+                    </div>
+                    {/* Action buttons (Call, Email, Message) will be added in the next commit */}
+                  </div>
+
+                  <div className="grid flex-1 gap-4 sm:grid-cols-2">
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">Date of Birth</div>
+                      <div>
+                        {patient.dob} ({patient.age} years)
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">Gender</div>
+                      <div>{patient.gender}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">Phone</div>
+                      <div>{patient.phone}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">Email</div>
+                      <div>{patient.email}</div>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <div className="text-sm font-medium text-muted-foreground">Address</div>
+                      <div>{patient.address}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">Occupation</div>
+                      <div>{patient.occupation}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-muted-foreground">Primary Insurance</div>
+                      <div>{patient.insurance.primary}</div>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <div className="text-sm font-medium text-muted-foreground">Emergency Contact</div>
+                      <div>{patient.emergencyContact}</div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
             {/* Right: Medical Alerts Card (next commit) */}
           </div>
         </TabsContent>
