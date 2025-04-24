@@ -6,6 +6,7 @@ import { ArrowLeft, Calendar, Eye, Package, DollarSign, FileUp, MessageSquare, E
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
 const patients = {
   "P-10042": {
@@ -104,7 +105,6 @@ interface PatientProfilePageProps {
 }
 
 export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
-  const [activeTab, setActiveTab] = useState("overview")
   const patient = patients[patientId as keyof typeof patients]
 
   if (!patient) {
@@ -193,6 +193,23 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
           </DropdownMenu>
         </div>
       </div>
+      <Tabs defaultValue="overview" className="w-full">
+        <TabsList className="w-full justify-start border-b pb-px">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="medical">Medical</TabsTrigger>
+          <TabsTrigger value="visits">Visits</TabsTrigger>
+          <TabsTrigger value="orders">Lab Orders</TabsTrigger>
+          <TabsTrigger value="insurance">Insurance</TabsTrigger>
+          <TabsTrigger value="documents">Documents</TabsTrigger>
+          <TabsTrigger value="billing">Billing</TabsTrigger>
+          <TabsTrigger value="communication">Communication</TabsTrigger>
+          <TabsTrigger value="notes">Notes</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="mt-6 space-y-6">
+          {/* Overview tab content starts here in upcoming commits */}
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
