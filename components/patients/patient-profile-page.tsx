@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 
 const patients = {
   "P-10042": {
@@ -73,5 +73,29 @@ export function PatientProfilePage({ patientId }: PatientProfilePageProps) {
     )
   }
 
-  return <div className="space-y-6">{/* Content coming in future commits */}</div>
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="icon" asChild>
+            <Link href="/patients">
+              <ArrowLeft className="h-4 w-4" />
+              <span className="sr-only">Back</span>
+            </Link>
+          </Button>
+          <h1 className="text-3xl font-bold tracking-tight">{patient.name}</h1>
+          <Badge variant="outline">{patient.id}</Badge>
+          {patient.status === "Active" ? (
+            <Badge variant="outline" className="bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300">
+              Active
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+              Inactive
+            </Badge>
+          )}
+        </div>
+      </div>
+    </div>
+  )
 }
