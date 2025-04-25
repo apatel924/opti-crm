@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -119,6 +120,19 @@ export function PatientSearchPage() {
                   </div>
                 </div>
               )}
+
+              <div className="mt-4 flex justify-between gap-2">
+                <Button size="sm" variant="outline" asChild>
+                  <Link href={`/patients/${patient.id}`}>
+                    Profile
+                  </Link>
+                </Button>
+                <Button size="sm" variant="outline" asChild>
+                  <Link href={`/appointments/new?patient=${patient.id}`}>
+                    Schedule
+                  </Link>
+                </Button>
+              </div>
             </li>
           ))}
         </ul>
