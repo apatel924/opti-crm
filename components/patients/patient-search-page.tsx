@@ -89,6 +89,23 @@ export function PatientSearchPage() {
               </p>
               <p className="text-sm text-muted-foreground">{patient.email}</p>
               <p className="text-sm">{patient.phone}</p>
+
+              <div className="mt-2 grid grid-cols-2 text-sm gap-2">
+                <div>
+                  <span className="text-muted-foreground">Last Visit: </span>
+                  {patient.lastVisit}
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Next Visit: </span>
+                  {patient.nextVisit}
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Balance: </span>
+                  <span className={Number(patient.balance.replace("$", "")) > 0 ? "text-red-500 font-medium" : ""}>
+                    {patient.balance}
+                  </span>
+                </div>
+              </div>
             </li>
           ))}
         </ul>
