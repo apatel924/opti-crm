@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent } from "@/components/ui/card"
 import { Eye, Calendar } from "lucide-react"
 
 const patients = [
@@ -79,75 +80,84 @@ export function PatientSearchPage() {
           </TabsList>
         </div>
 
-        <TabsContent value="grid">
-          <ul className="mt-4 space-y-2">
+        <TabsContent value="grid" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {filteredPatients.map((patient) => (
-              <li
+              <Card
                 key={patient.id}
+                className="cursor-pointer transition-shadow hover:shadow-md"
                 onClick={() => handlePatientClick(patient.id)}
-                className="cursor-pointer border rounded p-4 hover:bg-muted"
               >
-                <p className="font-medium flex items-center gap-2">
-                  {patient.name}
-                  <Badge variant="outline">{patient.id}</Badge>
-                  {patient.status === "Active" ? (
-                    <Badge variant="outline" className="bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300">
-                      Active
-                    </Badge>
-                  ) : (
-                    <Badge variant="outline" className="bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-                      Inactive
-                    </Badge>
-                  )}
-                </p>
-                <p className="text-sm text-muted-foreground">{patient.email}</p>
-                <p className="text-sm">{patient.phone}</p>
-
-                <div className="mt-2 grid grid-cols-2 text-sm gap-2">
-                  <div>
-                    <span className="text-muted-foreground">Last Visit: </span>
-                    {patient.lastVisit}
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Next Visit: </span>
-                    {patient.nextVisit}
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Balance: </span>
-                    <span className={Number(patient.balance.replace("$", "")) > 0 ? "text-red-500 font-medium" : ""}>
-                      {patient.balance}
-                    </span>
-                  </div>
-                </div>
-
-                {patient.alerts.length > 0 && (
-                  <div className="mt-3">
-                    <p className="text-xs font-medium text-muted-foreground">ALERTS</p>
-                    <div className="mt-1 flex flex-wrap gap-1">
-                      {patient.alerts.map((alert) => (
-                        <Badge key={alert} variant="destructive" className="text-xs">
-                          {alert}
-                        </Badge>
-                      ))}
+                <CardContent className="p-6">
+                  <div className="mb-2">
+                    <h3 className="font-medium">{patient.name}</h3>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline">{patient.id}</Badge>
+                      <Badge
+                        variant="outline"
+                        className={
+                          patient.status === "Active"
+                            ? "bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300"
+                            : "bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                        }
+                      >
+                        {patient.status}
+                      </Badge>
                     </div>
                   </div>
-                )}
 
-                <div className="mt-4 flex justify-between gap-2">
-                  <Button size="sm" variant="outline" asChild>
-                    <Link href={`/patients/${patient.id}`}>
-                      Profile
-                    </Link>
-                  </Button>
-                  <Button size="sm" variant="outline" asChild>
-                    <Link href={`/appointments/new?patient=${patient.id}`}>
-                      Schedule
-                    </Link>
-                  </Button>
-                </div>
-              </li>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div>
+                      <p className="text-muted-foreground">DOB</p>
+                      <p>
+                        {patient.dob} ({patient.age}y)
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Phone</p>
+                      <p>{patient.phone}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Last Visit</p>
+                      <p>{patient.lastVisit}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Balance</p>
+                      <p className={Number(patient.balance.replace("$", "")) > 0 ? "text-red-500 font-medium" : ""}>
+                        {patient.balance}
+                      </p>
+                    </div>
+                  </div>
+
+                  {patient.alerts.length > 0 && (
+                    <div className="mt-3">
+                      <p className="text-xs font-medium text-muted-foreground">ALERTS</p>
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {patient.alerts.map((alert) => (
+                          <Badge key={alert} variant="destructive" className="text-xs">
+                            {alert}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="mt-4 flex justify-between gap-2">
+                    <Button size="sm" variant="outline" asChild>
+                      <Link href={`/patients/${patient.id}`}>
+                        Profile
+                      </Link>
+                    </Button>
+                    <Button size="sm" variant="outline" asChild>
+                      <Link href={`/appointments/new?patient=${patient.id}`}>
+                        Schedule
+                      </Link>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
-          </ul>
+          </div>
         </TabsContent>
 
         <TabsContent value="list">
