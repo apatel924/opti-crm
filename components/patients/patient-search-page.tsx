@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Eye, Calendar } from "lucide-react"
 
 const patients = [
   {
@@ -150,7 +151,60 @@ export function PatientSearchPage() {
         </TabsContent>
 
         <TabsContent value="list">
-          {/* List view will be implemented in the next commit */}
+          <div className="rounded-md border">
+            <div className="grid grid-cols-7 border-b py-3 px-4 font-medium">
+              <div className="col-span-2">Patient</div>
+              <div>Contact</div>
+              <div>Last Visit</div>
+              <div>Insurance</div>
+              <div>Balance</div>
+              <div className="text-right">Actions</div>
+            </div>
+            <div className="divide-y">
+              {filteredPatients.map((patient) => (
+                <div
+                  key={patient.id}
+                  className="grid grid-cols-7 items-center py-3 px-4 hover:bg-muted/50 cursor-pointer"
+                  onClick={() => handlePatientClick(patient.id)}
+                >
+                  <div className="col-span-2">
+                    <div className="font-medium">{patient.name}</div>
+                    <div className="text-xs text-muted-foreground">{patient.id}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm">{patient.phone}</div>
+                    <div className="text-xs text-muted-foreground">{patient.email}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm">{patient.lastVisit}</div>
+                    <div className="text-xs text-muted-foreground">Next: {patient.nextVisit}</div>
+                  </div>
+                  <div className="text-sm">{patient.insurance}</div>
+                  <div>
+                    <div
+                      className={`text-sm ${
+                        Number(patient.balance.replace("$", "")) > 0 ? "text-red-500 font-medium" : ""
+                      }`}
+                    >
+                      {patient.balance}
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button variant="ghost" size="icon" asChild>
+                      <Link href={`/patients/${patient.id}`}>
+                        <Eye className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                    <Button variant="ghost" size="icon" asChild>
+                      <Link href={`/appointments/new?patient=${patient.id}`}>
+                        <Calendar className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
