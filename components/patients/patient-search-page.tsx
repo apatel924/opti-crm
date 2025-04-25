@@ -106,6 +106,19 @@ export function PatientSearchPage() {
                   </span>
                 </div>
               </div>
+
+              {patient.alerts.length > 0 && (
+                <div className="mt-3">
+                  <p className="text-xs font-medium text-muted-foreground">ALERTS</p>
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {patient.alerts.map((alert) => (
+                      <Badge key={alert} variant="destructive" className="text-xs">
+                        {alert}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
             </li>
           ))}
         </ul>
