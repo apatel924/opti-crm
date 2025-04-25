@@ -6,6 +6,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const patients = [
   {
@@ -63,80 +64,95 @@ export function PatientSearchPage() {
         <Button>Search</Button>
       </div>
 
-      <div>
-        <h2 className="text-xl font-semibold">Search Results</h2>
-        <p className="text-sm text-muted-foreground">
-          Found {filteredPatients.length} patient{filteredPatients.length !== 1 ? "s" : ""}
-        </p>
-        <ul className="mt-4 space-y-2">
-          {filteredPatients.map((patient) => (
-            <li
-              key={patient.id}
-              onClick={() => handlePatientClick(patient.id)}
-              className="cursor-pointer border rounded p-4 hover:bg-muted"
-            >
-              <p className="font-medium flex items-center gap-2">
-                {patient.name}
-                <Badge variant="outline">{patient.id}</Badge>
-                {patient.status === "Active" ? (
-                  <Badge variant="outline" className="bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300">
-                    Active
-                  </Badge>
-                ) : (
-                  <Badge variant="outline" className="bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-                    Inactive
-                  </Badge>
-                )}
-              </p>
-              <p className="text-sm text-muted-foreground">{patient.email}</p>
-              <p className="text-sm">{patient.phone}</p>
+      <Tabs defaultValue="grid" className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold">Search Results</h2>
+            <p className="text-sm text-muted-foreground">
+              Found {filteredPatients.length} patient{filteredPatients.length !== 1 ? "s" : ""}
+            </p>
+          </div>
+          <TabsList>
+            <TabsTrigger value="grid">Grid</TabsTrigger>
+            <TabsTrigger value="list">List</TabsTrigger>
+          </TabsList>
+        </div>
 
-              <div className="mt-2 grid grid-cols-2 text-sm gap-2">
-                <div>
-                  <span className="text-muted-foreground">Last Visit: </span>
-                  {patient.lastVisit}
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Next Visit: </span>
-                  {patient.nextVisit}
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Balance: </span>
-                  <span className={Number(patient.balance.replace("$", "")) > 0 ? "text-red-500 font-medium" : ""}>
-                    {patient.balance}
-                  </span>
-                </div>
-              </div>
+        <TabsContent value="grid">
+          <ul className="mt-4 space-y-2">
+            {filteredPatients.map((patient) => (
+              <li
+                key={patient.id}
+                onClick={() => handlePatientClick(patient.id)}
+                className="cursor-pointer border rounded p-4 hover:bg-muted"
+              >
+                <p className="font-medium flex items-center gap-2">
+                  {patient.name}
+                  <Badge variant="outline">{patient.id}</Badge>
+                  {patient.status === "Active" ? (
+                    <Badge variant="outline" className="bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300">
+                      Active
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                      Inactive
+                    </Badge>
+                  )}
+                </p>
+                <p className="text-sm text-muted-foreground">{patient.email}</p>
+                <p className="text-sm">{patient.phone}</p>
 
-              {patient.alerts.length > 0 && (
-                <div className="mt-3">
-                  <p className="text-xs font-medium text-muted-foreground">ALERTS</p>
-                  <div className="mt-1 flex flex-wrap gap-1">
-                    {patient.alerts.map((alert) => (
-                      <Badge key={alert} variant="destructive" className="text-xs">
-                        {alert}
-                      </Badge>
-                    ))}
+                <div className="mt-2 grid grid-cols-2 text-sm gap-2">
+                  <div>
+                    <span className="text-muted-foreground">Last Visit: </span>
+                    {patient.lastVisit}
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Next Visit: </span>
+                    {patient.nextVisit}
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Balance: </span>
+                    <span className={Number(patient.balance.replace("$", "")) > 0 ? "text-red-500 font-medium" : ""}>
+                      {patient.balance}
+                    </span>
                   </div>
                 </div>
-              )}
 
-              <div className="mt-4 flex justify-between gap-2">
-                <Button size="sm" variant="outline" asChild>
-                  <Link href={`/patients/${patient.id}`}>
-                    Profile
-                  </Link>
-                </Button>
-                <Button size="sm" variant="outline" asChild>
-                  <Link href={`/appointments/new?patient=${patient.id}`}>
-                    Schedule
-                  </Link>
-                </Button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+                {patient.alerts.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-xs font-medium text-muted-foreground">ALERTS</p>
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {patient.alerts.map((alert) => (
+                        <Badge key={alert} variant="destructive" className="text-xs">
+                          {alert}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-4 flex justify-between gap-2">
+                  <Button size="sm" variant="outline" asChild>
+                    <Link href={`/patients/${patient.id}`}>
+                      Profile
+                    </Link>
+                  </Button>
+                  <Button size="sm" variant="outline" asChild>
+                    <Link href={`/appointments/new?patient=${patient.id}`}>
+                      Schedule
+                    </Link>
+                  </Button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </TabsContent>
+
+        <TabsContent value="list">
+          {/* List view will be implemented in the next commit */}
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }
