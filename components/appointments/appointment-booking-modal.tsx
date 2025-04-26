@@ -61,7 +61,33 @@ export function AppointmentBookingModal({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Form fields will be added next */}
+          <div className="space-y-2">
+            <Label htmlFor="patient">Patient</Label>
+            <Select value={patientId} onValueChange={setPatientId}>
+              <SelectTrigger id="patient">
+                <SelectValue placeholder="Select patient" />
+              </SelectTrigger>
+              <SelectContent>
+                {mockPatients.map((patient) => (
+                  <SelectItem key={patient.id} value={patient.id}>
+                    {patient.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="appointment-time">Time</Label>
+            <Input
+              id="appointment-time"
+              type="time"
+              value={appointmentTime}
+              onChange={(e) => setAppointmentTime(e.target.value)}
+            />
+          </div>
+          
+          {/* More fields will be added next */}
         </form>
       </DialogContent>
     </Dialog>
