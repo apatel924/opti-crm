@@ -26,7 +26,7 @@ export const appointmentTypes = {
     Block: { color: "bg-gray-300", border: "border-gray-400", textColor: "text-gray-700", shortName: "Block" },
     Lunch: { color: "bg-yellow-200", border: "border-yellow-300", textColor: "text-gray-800", shortName: "Lunch" },
   }
-// Define providers
+
 export const providers = [
     { id: "dr-williams", name: "Dr. Williams" },
     { id: "dr-smith", name: "Dr. Smith" },
@@ -34,7 +34,7 @@ export const providers = [
     { id: "optician", name: "Optician", isOptician: true },
   ]
   
-  // Mock patient data
+
   export const mockPatients = [
     {
       id: "P-10042",
@@ -83,7 +83,7 @@ export const providers = [
     },
   ]  
 
-// Initial appointments
+
 export const initialAppointments = [
     {
       id: "appt-1",
