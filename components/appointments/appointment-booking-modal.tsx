@@ -29,12 +29,40 @@ export function AppointmentBookingModal({
   onBookAppointment,
   isOptician = false,
 }: AppointmentBookingModalProps) {
+  const [patientId, setPatientId] = useState("")
+  const [appointmentType, setAppointmentType] = useState(isOptician ? "Frame Selection" : "Annual Exam")
+  const [appointmentDuration, setAppointmentDuration] = useState("30")
+  const [appointmentTime, setAppointmentTime] = useState(time || "09:00")
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!patientId) return
+
+    const appointmentData = {
+      patientId: patientId,
+      patientName: "Unknown Patient", // placeholder for now
+      date: date,
+      time: appointmentTime,
+      duration: appointmentDuration,
+      type: appointmentType,
+      provider: doctor,
+      isOptician: isOptician,
+    }
+
+    onBookAppointment(appointmentData)
+    onClose()
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Book {isOptician ? "Optician" : "Doctor"} Appointment</DialogTitle>
         </DialogHeader>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Form fields will be added next */}
+        </form>
       </DialogContent>
     </Dialog>
   )
