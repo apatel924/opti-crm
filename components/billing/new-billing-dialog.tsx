@@ -15,10 +15,9 @@ import { PatientSearchDialog } from "@/components/patient-search/patient-search-
 
 export function NewBillingDialog() {
   const [open, setOpen] = useState(false)
-// when backend is ready, we can use the following:
-//   const [selectedPatient, setSelectedPatient] = useState<string | null>(null)
-//   const [selectedExam, setSelectedExam] = useState<string | null>(null)
-//   const [selectedLabOrder, setSelectedLabOrder] = useState<string | null>(null)
+  const [selectedPatient, setSelectedPatient] = useState<string | null>(null)
+  const [selectedExam, setSelectedExam] = useState<string | null>(null)
+  const [selectedLabOrder, setSelectedLabOrder] = useState<string | null>(null)
 
   const exams = [
     { id: "E-10042", type: "Annual Exam", date: "05/01/2023", cost: "$150.00" },
