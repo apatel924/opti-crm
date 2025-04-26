@@ -187,6 +187,32 @@ export function QuickBillingPage() {
                       </Select>
                     </div>
 
+                    {paymentMethod === "credit" && (
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="card-number">Card Number</Label>
+                          <Input id="card-number" placeholder="•••• •••• •••• ••••" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="expiry">Expiry Date</Label>
+                            <Input id="expiry" placeholder="MM/YY" />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="cvc">CVC</Label>
+                            <Input id="cvc" placeholder="•••" />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {paymentMethod === "check" && (
+                      <div className="space-y-2">
+                        <Label htmlFor="check-number">Check Number</Label>
+                        <Input id="check-number" placeholder="Enter check number" />
+                      </div>
+                    )}
+
                     <div className="space-y-2">
                       <Label htmlFor="amount">Amount</Label>
                       <div className="relative">
