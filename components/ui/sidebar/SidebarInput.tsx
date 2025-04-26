@@ -4,7 +4,7 @@ import * as React from "react";
 import { Input } from "@/components/ui/input";
 
 export const SidebarInput = React.forwardRef<
-  React.ElementRef<typeof Input>,
+  HTMLInputElement,
   React.ComponentProps<typeof Input>
 >(({ ...props }, ref) => {
   return (
