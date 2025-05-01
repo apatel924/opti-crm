@@ -59,6 +59,35 @@ export function AppointmentCalendarView({ date, view, onViewPatient, selectedDoc
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const appointmentsInitialized = useRef(false)
 
+  const calendarDays = useMemo(() => {
+    const days = []
+    const currentDate = new Date(date)
+
+    if (view === "week") {
+      const startOfWeek = new Date(currentDate)
+      startOfWeek.setDate(currentDate.getDate() - currentDate.getDay())
+
+      for (let i = 0; i < 7; i++) {
+        const day = new Date(startOfWeek)
+        day.setDate(startOfWeek.getDate() + i)
+        days.push(day)
+      }
+    } else if (view === "month") {
+      const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
+      const firstDayOfWeek = firstDayOfMonth.getDay()
+      const startDate = new Date(firstDayOfMonth)
+      startDate.setDate(1 - firstDayOfWeek)
+
+      for (let i = 0; i < 42; i++) {
+        const day = new Date(startDate)
+        day.setDate(startDate.getDate() + i)
+        days.push(day)
+      }
+    }
+
+    return days
+  }, [date, view])
+
   useEffect(() => {
     if (appointmentsInitialized.current) return
     appointmentsInitialized.current = true
