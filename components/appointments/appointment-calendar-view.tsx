@@ -1,6 +1,20 @@
 "use client"
+
 import { useState, useEffect, useCallback, useMemo, useRef } from "react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Plus, Calendar } from "lucide-react"
 import { format, isSameMonth, addDays } from "date-fns"
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+  ContextMenuSeparator,
+} from "@/components/ui/context-menu"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+// import { ScrollArea } from "@/components/ui/scroll-area"
+import { AppointmentBookingModal } from "./appointment-booking-modal"
 
 interface Appointment {
   id: string
