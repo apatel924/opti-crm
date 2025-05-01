@@ -57,6 +57,27 @@ export function AppointmentCalendarView({ date, view, onViewPatient, selectedDoc
   const [appointments, setAppointments] = useState<Record<string, Appointment[]>>({})
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const appointmentsInitialized = useRef(false)
+
+  useEffect(() => {
+    if (appointmentsInitialized.current) return
+    appointmentsInitialized.current = true
+
+    const today = new Date()
+    const todayStr = format(today, "yyyy-MM-dd")
+    const tomorrow = addDays(today, 1)
+    const tomorrowStr = format(tomorrow, "yyyy-MM-dd")
+
+    setAppointments({
+      [todayStr]: [
+        { id: "1", patientName: "Sarah Johnson", patientId: "P-10042", time: "09:00", duration: 30, type: "Annual Exam", doctor: "Dr. Williams", status: "Checked In", room: "Exam 1" },
+        { id: "2", patientName: "Michael Chen", patientId: "P-10043", time: "10:00", duration: 45, type: "Contact Lens Fitting", doctor: "Dr. Williams", status: "Scheduled", room: "Exam 2" },
+      ],
+      [tomorrowStr]: [
+        { id: "3", patientName: "Robert Garcia", patientId: "P-10044", time: "11:00", duration: 30, type: "Follow-up", doctor: "Dr. Smith", status: "Scheduled", room: "Exam 1" },
+      ],
+    })
+  }, [])
 
   return (
     <div>
