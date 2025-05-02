@@ -13,8 +13,9 @@ import {
   ContextMenuSeparator,
 } from "@/components/ui/context-menu"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-// import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { AppointmentBookingModal } from "./appointment-booking-modal"
+import { AppointmentDayView } from "./appointment-day-view"
 
 interface Appointment {
   id: string
@@ -71,6 +72,8 @@ export function AppointmentCalendarView({ date, view, onViewPatient, selectedDoc
   const [appointments, setAppointments] = useState<Record<string, Appointment[]>>({})
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const [isDayDetailOpen, setIsDayDetailOpen] = useState(false)
+  const [selectedDayForDetail, setSelectedDayForDetail] = useState<Date | null>(null)
   const appointmentsInitialized = useRef(false)
 
   const calendarDays = useMemo(() => {
@@ -122,7 +125,94 @@ export function AppointmentCalendarView({ date, view, onViewPatient, selectedDoc
     })
   }, [])
 
+  const formatDateKey = useCallback((date: Date) => {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
+  }, [])
+
+  const isToday = useCallback((date: Date) => {
+    const today = new Date()
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    )
+  }, [])
+
+  const isCurrentMonth = useCallback(
+    (day: Date) => {
+      return isSameMonth(day, date)
+    },
+    [date],
+  )
+
+  const filterAppointmentsByDoctor = useCallback(
+    (appts: Appointment[]) => {
+      if (selectedDoctors.includes("all")) return appts
+      return appts.filter((app) => selectedDoctors.includes(app.doctor.replace("Dr. ", "dr-").toLowerCase()))
+    },
+    [selectedDoctors],
+  )
+
+  const handleDoubleClick = useCallback((day: Date) => {
+    setSelectedDate(day)
+    setIsBookingModalOpen(true)
+  }, [])
+
+  const handleDayClick = useCallback((day: Date) => {
+    setSelectedDayForDetail(day)
+    setIsDayDetailOpen(true)
+  }, [])
+
+  const handleBookAppointment = useCallback(
+    (appointmentData: any) => {
+      const dateKey = format(new Date(appointmentData.date), "yyyy-MM-dd")
+      const newId = `${Math.floor(10000 + Math.random() * 90000)}`
+
+      const newAppointment: Appointment = {
+        id: newId,
+        patientName: appointmentData.patientName,
+        patientId: appointmentData.patientId,
+        time: appointmentData.time,
+        duration: appointmentData.duration,
+        type: appointmentData.type,
+        doctor: `Dr. ${appointmentData.doctor.replace("dr-", "").charAt(0).toUpperCase() + appointmentData.doctor.replace("dr-", "").slice(1)}`,
+        status: "Scheduled",
+        room: appointmentData.isOptician ? "Optical" : `Exam ${Math.floor(1 + Math.random() * 3)}`,
+        isOptician: appointmentData.isOptician,
+      }
+
+      setAppointments((prev) => {
+        const updatedAppointments = { ...prev }
+        if (!updatedAppointments[dateKey]) {
+          updatedAppointments[dateKey] = []
+        }
+        updatedAppointments[dateKey] = [...updatedAppointments[dateKey], newAppointment]
+        return updatedAppointments
+      })
+
+      if (isDayDetailOpen) {
+        setIsDayDetailOpen(false)
+      }
+    },
+    [isDayDetailOpen],
+  )
+
   return (
+    <>
+      <div className="overflow-auto">
+        <div className={`grid ${view === "week" ? "grid-cols-7" : "grid-cols-7"} gap-1`}>
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((dayName, index) => (
+            <div key={dayName} className="p-2 text-center font-medium text-gray-700">
+              {dayName}
+            </div>
+          ))}
+
+          {calendarDays.map((day, index) => {
+            const dateKey = formatDateKey(day)
+            const dayAppointments = appointments[dateKey] || []
+            const filteredAppointments = filterAppointmentsByDoctor(dayAppointments)
+
+            return (
     <div>
       <h1>Appointment Calendar View</h1>
       <p>View: {view}</p>
