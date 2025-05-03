@@ -240,6 +240,76 @@ export function AppointmentDayView({
     }
   }, [])
 
+  // Handle drag start
+  const handleDragStart = useCallback((e: React.DragEvent, appointmentId: string, timeSlot: string) => {
+    setDraggingAppointment(appointmentId)
+    dragSourceTimeSlot.current = timeSlot
+    e.dataTransfer.setData("appointmentId", appointmentId)
+  }, [])
+
+  // Handle drag over
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+  }, [])
+
+  // Handle drop
+  const handleDrop = useCallback((e: React.DragEvent, targetTimeSlot: string) => {
+    e.preventDefault()
+    const appointmentId = e.dataTransfer.getData("appointmentId")
+
+    if (!appointmentId || !dragSourceTimeSlot.current) return
+
+    // Set flag to update parent
+    shouldUpdateParent.current = true
+
+    // Update the appointment time
+    setLocalAppointments((prevAppointments) =>
+      prevAppointments.map((appointment) =>
+        appointment.id === appointmentId ? { ...appointment, time: targetTimeSlot } : appointment,
+      ),
+    )
+
+    // Reset drag state
+    setDraggingAppointment(null)
+    dragSourceTimeSlot.current = null
+  }, [])
+
+  // Handle double click on empty slot
+  const handleDoubleClick = useCallback((timeSlot: string, isOptician = false) => {
+    setSelectedTimeSlot(timeSlot)
+    setIsOpticianBooking(isOptician)
+    setIsBookingModalOpen(true)
+  }, [])
+
+  // Handle booking appointment
+  const handleBookAppointment = useCallback(
+    (appointmentData: any) => {
+      // Generate a unique ID for the new appointment
+      const newId = `A-${isOpticianBooking ? "2" : "1"}${Math.floor(10000 + Math.random() * 90000)}`
+
+      // Create new appointment object
+      const newAppointment: Appointment = {
+        id: newId,
+        patientId: appointmentData.patientId,
+        patientName: appointmentData.patientName,
+        time: appointmentData.time,
+        duration: appointmentData.duration,
+        type: appointmentData.type,
+        status: "Scheduled",
+        doctor: isOpticianBooking ? "optician" : appointmentData.provider,
+        room: isOpticianBooking ? "Optical" : `Exam ${Math.floor(1 + Math.random() * 3)}`,
+        isOptician: isOpticianBooking,
+      }
+
+      // Set flag to update parent
+      shouldUpdateParent.current = true
+
+      // Add the new appointment to the list
+      setLocalAppointments((prev) => [...prev, newAppointment])
+    },
+    [isOpticianBooking],
+  )
+
   return (
     <div>
       <Tabs
@@ -275,58 +345,75 @@ export function AppointmentDayView({
               )}
               {!showTimeLabel && <div className="w-20"></div>}
 
-              <div className="flex-1 border-l">
-                {appointment ? (
-                  <Card
-                    key={appointment.id}
-                    className={`border-l-4 ${getAppointmentTypeColor(appointment.type, appointment.isOptician)} 
-                               hover:bg-accent/50 cursor-grab active:cursor-grabbing h-full`}
-                    style={{
-                      height: `${calculateAppointmentSpan(appointment.duration) * (showTimeLabel ? 64 : 32)}px`,
-                      zIndex: 10,
-                    }}
-                  >
-                    <CardContent className="flex p-2 h-full">
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="font-semibold text-gray-900">{appointment.patientName}</div>
-                            <div className="text-xs text-gray-600">{appointment.type}</div>
+              <div 
+                className="flex-1 border-l" 
+                onDragOver={handleDragOver} 
+                onDrop={(e) => handleDrop(e, time)}
+                onDoubleClick={() => handleDoubleClick(time, activeTab === "opticians")}
+              >
+                <ContextMenu>
+                  <ContextMenuTrigger>
+                    {appointment ? (
+                      <Card
+                        key={appointment.id}
+                        className={`border-l-4 ${getAppointmentTypeColor(appointment.type, appointment.isOptician)} 
+                                   hover:bg-accent/50 cursor-grab active:cursor-grabbing h-full`}
+                        style={{
+                          height: `${calculateAppointmentSpan(appointment.duration) * (showTimeLabel ? 64 : 32)}px`,
+                          zIndex: 10,
+                        }}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, appointment.id, time)}
+                      >
+                        <CardContent className="flex p-2 h-full">
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <div className="font-semibold text-gray-900">{appointment.patientName}</div>
+                                <div className="text-xs text-gray-600">{appointment.type}</div>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                {appointment.status === "Checked In" && (
+                                  <Badge
+                                    variant="outline"
+                                    className="bg-amber-100 text-amber-800 hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 text-[10px] py-0 h-5"
+                                  >
+                                    Checked In
+                                  </Badge>
+                                )}
+                                {appointment.status === "Completed" && (
+                                  <Badge
+                                    variant="outline"
+                                    className="bg-green-100 text-green-800 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 text-[10px] py-0 h-5"
+                                  >
+                                    Completed
+                                  </Badge>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-1">
-                            {appointment.status === "Checked In" && (
-                              <Badge
-                                variant="outline"
-                                className="bg-amber-100 text-amber-800 hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 text-[10px] py-0 h-5"
-                              >
-                                Checked In
-                              </Badge>
-                            )}
-                            {appointment.status === "Completed" && (
-                              <Badge
-                                variant="outline"
-                                className="bg-green-100 text-green-800 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 text-[10px] py-0 h-5"
-                              >
-                                Completed
-                              </Badge>
-                            )}
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      <div className="h-full rounded-md border border-dashed p-2">
+                        {showTimeLabel && (
+                          <div className="flex h-full items-center justify-center text-xs text-gray-500">
+                            <span className="text-center">
+                              Available
+                              <div className="text-[10px] text-gray-400 mt-1">Double-click to book</div>
+                            </span>
                           </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  <div className="h-full rounded-md border border-dashed p-2">
-                    {showTimeLabel && (
-                      <div className="flex h-full items-center justify-center text-xs text-gray-500">
-                        <span className="text-center">
-                          Available
-                          <div className="text-[10px] text-gray-400 mt-1">Double-click to book</div>
-                        </span>
+                        )}
                       </div>
                     )}
-                  </div>
-                )}
+                  </ContextMenuTrigger>
+                  <ContextMenuContent>
+                    <ContextMenuItem onClick={() => handleDoubleClick(time, activeTab === "opticians")}>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Book Appointment
+                    </ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>
               </div>
             </div>
           )
@@ -343,7 +430,7 @@ export function AppointmentDayView({
         date={date}
         time={selectedTimeSlot}
         doctor={isOpticianBooking ? "optician" : doctor === "all" ? "dr-williams" : doctor}
-        onBookAppointment={() => {}}
+        onBookAppointment={handleBookAppointment}
         isOptician={isOpticianBooking}
       />
     </div>
