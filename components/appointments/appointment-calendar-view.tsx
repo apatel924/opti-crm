@@ -75,7 +75,6 @@ export function AppointmentCalendarView({
   onViewPatient,
   selectedDoctors,
 }: AppointmentCalendarViewProps) {
-  // --- State & refs (Commits 5 & 6) ---
   const [multiBookSlots, setMultiBookSlots] = useState<Record<string, number>>({})
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
@@ -135,7 +134,6 @@ export function AppointmentCalendarView({
     })
   }, [])
 
-  // --- Calendar utilities (Commit 7) ---
   const calendarDays = useMemo(() => {
     const days: Date[] = []
     const current = new Date(date)
@@ -177,7 +175,6 @@ export function AppointmentCalendarView({
 
   const isCurrentMonth = useCallback((d: Date) => isSameMonth(d, date), [date])
 
-  // --- Handlers & filters (Commit 8) ---
   const filterAppointmentsByDoctor = useCallback(
     (appts: Appointment[]) => {
       if (selectedDoctors.includes("all")) return appts
@@ -199,7 +196,6 @@ export function AppointmentCalendarView({
     setIsDayDetailOpen(true)
   }, [])
 
-  // --- Time helpers (Commit 9) ---
   const timeSlots = [
     "07:00","07:15","07:30","07:45","08:00","08:15","08:30","08:45",
     "09:00","09:15","09:30","09:45","10:00","10:15","10:30","10:45",
@@ -277,19 +273,161 @@ export function AppointmentCalendarView({
     [formatDateKey]
   )
 
+  const handleBookAppointment = useCallback(() => {
+    // Placeholder for booking logic
+  }, [])
+
   return (
     <>
-      {/* Calendar grid (from Commit 10) */}
       <div className="overflow-auto">
-        <div className="grid grid-cols-7 gap-1">
+        <div className={`grid ${view === "week" ? "grid-cols-7" : "grid-cols-7"} gap-1`}>
           {/* Day headers */}
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-            <div key={d} className="p-2 text-center font-medium text-gray-700">
-              {d}
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((dayName, index) => (
+            <div key={dayName} className="p-2 text-center font-medium text-gray-700">
+              {dayName}
             </div>
           ))}
 
-          {/* Cells omitted for brevity… use the Commit 10 code here */}
+          {/* Calendar cells */}
+          {calendarDays.map((day, index) => {
+            const dateKey = formatDateKey(day)
+            const dayAppointments = appointments[dateKey] || []
+            const filteredAppointments = filterAppointmentsByDoctor(dayAppointments)
+
+            return (
+              <ContextMenu key={index}>
+                <ContextMenuTrigger>
+                  <div
+                    className={`border ${isToday(day) ? "bg-primary/5 border-primary" : ""} ${
+                      !isCurrentMonth(day) && view === "month" ? "text-muted-foreground bg-muted/50" : ""
+                    }`}
+                    onClick={() => handleDayClick(day)}
+                  >
+                    <div className="sticky top-0 z-10 flex items-center justify-between p-1 bg-background border-b">
+                      <div className="text-sm font-medium text-gray-900">
+                        {format(day, "E")}, {day.getDate()}
+                      </div>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-5 w-5"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleDoubleClick(day)
+                        }}
+                      >
+                        <Plus className="h-3 w-3" />
+                      </Button>
+                    </div>
+
+                    {/* Compact view with all time slots visible */}
+                    {view === "week" && (
+                      <div className="divide-y">
+                        {/* Only show hour and half-hour slots for cleaner UI */}
+                        {timeSlots
+                          .filter((time) => time.endsWith(":00") || time.endsWith(":30"))
+                          .map((time) => {
+                            const appointment = getAppointmentForTimeSlot(day, time)
+                            const isWithinDuration =
+                              isWithinAppointmentDuration(day, time, filteredAppointments) && !appointment
+
+                            return (
+                              <div key={time} className="flex py-1 px-1 min-h-[24px] hover:bg-accent/10 text-xs">
+                                {time === "07:00" && <div className="w-10 text-muted-foreground mr-1">7AM</div>}
+                                {time === "07:30" && <div className="w-10 text-muted-foreground mr-1"></div>}
+                                {time === "08:00" && <div className="w-10 text-muted-foreground mr-1">8AM</div>}
+                                {time === "08:30" && <div className="w-10 text-muted-foreground mr-1"></div>}
+                                {time === "09:00" && <div className="w-10 text-muted-foreground mr-1">9AM</div>}
+                                {time === "09:30" && <div className="w-10 text-muted-foreground mr-1"></div>}
+                                {time === "10:00" && <div className="w-10 text-muted-foreground mr-1">10AM</div>}
+                                {time === "10:30" && <div className="w-10 text-muted-foreground mr-1"></div>}
+                                {time === "11:00" && <div className="w-10 text-muted-foreground mr-1">11AM</div>}
+                                {time === "11:30" && <div className="w-10 text-muted-foreground mr-1"></div>}
+                                {time === "12:00" && <div className="w-10 text-muted-foreground mr-1">12PM</div>}
+                                {time === "12:30" && <div className="w-10 text-muted-foreground mr-1"></div>}
+                                {time === "13:00" && <div className="w-10 text-muted-foreground mr-1">1PM</div>}
+                                {time === "13:30" && <div className="w-10 text-muted-foreground mr-1"></div>}
+                                {time === "14:00" && <div className="w-10 text-muted-foreground mr-1">2PM</div>}
+                                {time === "14:30" && <div className="w-10 text-muted-foreground mr-1"></div>}
+                                {time === "15:00" && <div className="w-10 text-muted-foreground mr-1">3PM</div>}
+                                {time === "15:30" && <div className="w-10 text-muted-foreground mr-1"></div>}
+                                {time === "16:00" && <div className="w-10 text-muted-foreground mr-1">4PM</div>}
+                                {time === "16:30" && <div className="w-10 text-muted-foreground mr-1"></div>}
+                                {time === "17:00" && <div className="w-10 text-muted-foreground mr-1">5PM</div>}
+
+                                {appointment ? (
+                                  <div className="flex-1 flex gap-1">
+                                    <div
+                                      className={`flex-1 rounded-sm text-xs border-l-2 px-1 truncate ${getAppointmentStatusColor(appointment.status)} bg-white`}
+                                    >
+                                      <span className="font-medium truncate">{appointment.patientName}</span>
+                                    </div>
+                                  </div>
+                                ) : isWithinDuration ? (
+                                  <div className="flex-1 bg-gray-100 opacity-50"></div>
+                                ) : (
+                                  <div className="flex-1 text-gray-400 text-[9px]">Available</div>
+                                )}
+                              </div>
+                            )
+                          })}
+                      </div>
+                    )}
+
+                    {/* Month view keeps the compact card style */}
+                    {view === "month" && (
+                      <div className="min-h-[100px] p-1">
+                        <div className="mt-1 space-y-1">
+                          {filteredAppointments.slice(0, getMaxAppointmentsToShow()).map((appointment) => (
+                            <div
+                              key={appointment.id}
+                              className={`border-l-4 ${getAppointmentStatusColor(appointment.status)} p-1 text-xs bg-white rounded-sm shadow-sm`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="font-medium text-gray-900 truncate">
+                                  {formatTimeForDisplay(appointment.time)}
+                                </div>
+                                <Badge variant="outline" className="text-[8px] px-1 py-0 text-gray-700">
+                                  {appointment.doctor.replace("Dr. ", "")}
+                                </Badge>
+                              </div>
+                              <div className="truncate text-gray-800">{appointment.patientName}</div>
+                            </div>
+                          ))}
+
+                          {/* Show count of additional appointments */}
+                          {filteredAppointments.length > getMaxAppointmentsToShow() && (
+                            <div className="text-xs text-center font-medium text-primary">
+                              +{filteredAppointments.length - getMaxAppointmentsToShow()} more
+                            </div>
+                          )}
+
+                          {/* Show hint if no appointments */}
+                          {filteredAppointments.length === 0 && (
+                            <div className="flex h-full items-center justify-center text-xs text-gray-400 mt-8">
+                              Click to view
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  <ContextMenuItem onClick={() => handleDoubleClick(day)}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Book Appointment
+                  </ContextMenuItem>
+                  <ContextMenuItem onClick={() => handleDayClick(day)}>
+                    <Calendar className="mr-2 h-4 w-4" />
+                    View Day
+                  </ContextMenuItem>
+                  <ContextMenuSeparator />
+                  <ContextMenuItem>Block Day</ContextMenuItem>
+                </ContextMenuContent>
+              </ContextMenu>
+            )
+          })}
         </div>
       </div>
 
@@ -298,16 +436,15 @@ export function AppointmentCalendarView({
         <DialogContent className="max-w-5xl max-h-[90vh] flex flex-col">
           <DialogHeader>
             <div className="flex items-center justify-between">
-              <DialogTitle>
-                {selectedDayForDetail &&
-                  format(selectedDayForDetail, "EEEE, MMMM d, yyyy")}
-              </DialogTitle>
+              <DialogTitle>{selectedDayForDetail && format(selectedDayForDetail, "EEEE, MMMM d, yyyy")}</DialogTitle>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() =>
-                  selectedDayForDetail && handleDoubleClick(selectedDayForDetail)
-                }
+                onClick={() => {
+                  if (selectedDayForDetail) {
+                    handleDoubleClick(selectedDayForDetail)
+                  }
+                }}
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Book Appointment
@@ -318,22 +455,31 @@ export function AppointmentCalendarView({
             {selectedDayForDetail && (
               <AppointmentDayView
                 date={selectedDayForDetail}
-                doctor={
-                  selectedDoctors.includes("all")
-                    ? "all"
-                    : selectedDoctors[0]
-                }
-                appointments={
-                  appointments[formatDateKey(selectedDayForDetail)] || []
-                }
-                onAppointmentUpdate={(updated: Appointment[]) =>
-                  handleAppointmentUpdate(updated, selectedDayForDetail)
+                doctor={selectedDoctors.includes("all") ? "all" : selectedDoctors[0]}
+                appointments={appointments[formatDateKey(selectedDayForDetail)] || []}
+                onAppointmentUpdate={(updatedAppointments) =>
+                  handleAppointmentUpdate(updatedAppointments, selectedDayForDetail)
                 }
               />
             )}
           </ScrollArea>
         </DialogContent>
       </Dialog>
+
+      {/* Booking Modal */}
+      {selectedDate && (
+        <AppointmentBookingModal
+          isOpen={isBookingModalOpen}
+          onClose={() => {
+            setIsBookingModalOpen(false)
+            setSelectedDate(null)
+          }}
+          date={selectedDate}
+          time={selectedTime}
+          doctor={selectedDoctors.includes("all") ? "dr-williams" : selectedDoctors[0]}
+          onBookAppointment={handleBookAppointment}
+        />
+      )}
     </>
   )
 }
