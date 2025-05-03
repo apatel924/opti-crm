@@ -38,7 +38,7 @@ interface Appointment {
   isOptician?: boolean
 }
 
-// Props now reference the typed Appointment[]
+// Props for this view
 interface AppointmentDayViewProps {
   date: Date
   doctor: string
@@ -48,21 +48,19 @@ interface AppointmentDayViewProps {
 
 // Helper: format "HH:MM" → "h:MM AM/PM"
 function formatTimeForDisplay(time: string) {
-  if (time.includes("AM") || time.includes("PM")) {
-    return time
-  }
+  if (time.includes("AM") || time.includes("PM")) return time
   const [hours, minutes] = time.split(":")
-  const hourNum = parseInt(hours, 10)
-  const ampm = hourNum >= 12 ? "PM" : "AM"
-  const hour12 = hourNum % 12 || 12
-  return `${hour12}:${minutes} ${ampm}`
+  const h = parseInt(hours, 10)
+  const ampm = h >= 12 ? "PM" : "AM"
+  const h12 = h % 12 || 12
+  return `${h12}:${minutes} ${ampm}`
 }
 
-// Helper: normalize any "h:MM AM/PM" or "HH:MM" → "HH:MM" (24‑h) 
+// Helper: normalize any "h:MM AM/PM" or "HH:MM" → "HH:MM"
 function normalizeTimeForComparison(time: string) {
-  let hour = 0
-  let minute = 0
-  let isPM = false
+  let hour = 0,
+    minute = 0,
+    isPM = false
 
   if (time.includes(":") && !time.match(/AM|PM/)) {
     const [h, m] = time.split(":")
@@ -81,15 +79,32 @@ function normalizeTimeForComparison(time: string) {
   return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`
 }
 
+const timeSlots = Array.from({ length: 41 }, (_, i) => {
+  const hr = Math.floor(i / 4) + 7
+  const min = (i % 4) * 15
+  return `${hr.toString().padStart(2, "0")}:${min.toString().padStart(2, "0")}`
+})
+
 export function AppointmentDayView({
   date,
   doctor,
   appointments = [],
   onAppointmentUpdate,
 }: AppointmentDayViewProps) {
+  // Local working copy of incoming appointments
+  const [localAppointments, setLocalAppointments] = useState<Appointment[]>([])
+  // Multi‑booking counts
+  const [multiBookSlots, setMultiBookSlots] = useState<Record<string, number>>({})
+  // Tab state: doctors vs opticians
+  const [activeTab, setActiveTab] = useState<"doctors" | "opticians">("doctors")
+
+  // --- Drag‑and‑drop state (this commit) ---
+  const [draggingAppointment, setDraggingAppointment] = useState<string | null>(null)
+  const dragSourceTimeSlot = useRef<string | null>(null)
+
   return (
     <div>
-      {/* TODO: implement AppointmentDayView */}
+      {/* TODO: render tabs & time‑slot grid */}
     </div>
   )
 }
