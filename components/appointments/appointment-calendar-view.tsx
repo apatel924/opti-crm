@@ -13,9 +13,9 @@ import {
   ContextMenuSeparator,
 } from "@/components/ui/context-menu"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-// import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { AppointmentBookingModal } from "./appointment-booking-modal"
-// import { AppointmentDayView } from "./appointment-day-view"
+import { AppointmentDayView } from "./appointment-day-view"
 
 interface AppointmentCalendarViewProps {
   date: Date
@@ -37,11 +37,8 @@ interface Appointment {
   isOptician?: boolean
 }
 
-// Format “HH:MM” → “h:MM AM/PM”
 function formatTimeForDisplay(time: string) {
-  if (time.includes("AM") || time.includes("PM")) {
-    return time
-  }
+  if (time.includes("AM") || time.includes("PM")) return time
   const [hours, minutes] = time.split(":")
   const hour = parseInt(hours, 10)
   const ampm = hour >= 12 ? "PM" : "AM"
@@ -49,7 +46,6 @@ function formatTimeForDisplay(time: string) {
   return `${hour12}:${minutes} ${ampm}`
 }
 
-// Normalize any time to 24‑hour “HH:MM” for comparisons
 function normalizeTimeForComparison(time: string) {
   let hour = 0
   let minute = 0
@@ -63,7 +59,7 @@ function normalizeTimeForComparison(time: string) {
   } else if (time.match(/AM|PM/)) {
     isPM = time.includes("PM")
     const cleaned = time.replace(/AM|PM/, "").trim()
-    let [h, m] = cleaned.split(":").map(str => parseInt(str, 10))
+    let [h, m] = cleaned.split(":").map((n) => parseInt(n, 10))
     if (isPM && h < 12) h += 12
     if (!isPM && h === 12) h = 0
     hour = h
@@ -79,19 +75,13 @@ export function AppointmentCalendarView({
   onViewPatient,
   selectedDoctors,
 }: AppointmentCalendarViewProps) {
-  // Multi‑booking slot counts
+  // --- State hooks (from Commit 5 & 6) ---
   const [multiBookSlots, setMultiBookSlots] = useState<Record<string, number>>({})
-
-  // Booking modal state
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
-
-  // Day‑detail dialog state
   const [isDayDetailOpen, setIsDayDetailOpen] = useState(false)
   const [selectedDayForDetail, setSelectedDayForDetail] = useState<Date | null>(null)
-
-  // Appointments data (keyed by "YYYY-MM-DD")
   const [appointments, setAppointments] = useState<Record<string, Appointment[]>>({})
   const appointmentsInitialized = useRef(false)
 
@@ -145,9 +135,54 @@ export function AppointmentCalendarView({
     })
   }, [])
 
+  const calendarDays = useMemo(() => {
+    const days: Date[] = []
+    const current = new Date(date)
+
+    if (view === "week") {
+      const startOfWeek = new Date(current)
+      startOfWeek.setDate(current.getDate() - current.getDay())
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(startOfWeek)
+        d.setDate(startOfWeek.getDate() + i)
+        days.push(d)
+      }
+    } else {
+      const firstOfMonth = new Date(current.getFullYear(), current.getMonth(), 1)
+      const offset = firstOfMonth.getDay()
+      const gridStart = new Date(firstOfMonth)
+      gridStart.setDate(1 - offset)
+      for (let i = 0; i < 42; i++) {
+        const d = new Date(gridStart)
+        d.setDate(gridStart.getDate() + i)
+        days.push(d)
+      }
+    }
+
+    return days
+  }, [date, view])
+
+  const formatDateKey = useCallback((d: Date) => {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
+  }, [])
+
+  const isToday = useCallback((d: Date) => {
+    const now = new Date()
+    return (
+      d.getDate() === now.getDate() &&
+      d.getMonth() === now.getMonth() &&
+      d.getFullYear() === now.getFullYear()
+    )
+  }, [])
+
+  const isCurrentMonth = useCallback(
+    (d: Date) => isSameMonth(d, date),
+    [date]
+  )
+
   return (
     <div>
-      {/* TODO: render calendar grid here */}
+      {/* TODO: Render calendar grid using calendarDays */}
     </div>
   )
 }
