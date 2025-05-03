@@ -59,7 +59,7 @@ function normalizeTimeForComparison(time: string) {
   } else if (time.match(/AM|PM/)) {
     isPM = time.includes("PM")
     const cleaned = time.replace(/AM|PM/, "").trim()
-    let [h, m] = cleaned.split(":").map(n => parseInt(n, 10))
+    let [h, m] = cleaned.split(":").map((n) => parseInt(n, 10))
     if (isPM && h < 12) h += 12
     if (!isPM && h === 12) h = 0
     hour = h
@@ -75,13 +75,15 @@ export function AppointmentCalendarView({
   onViewPatient,
   selectedDoctors,
 }: AppointmentCalendarViewProps) {
-  // --- State (Commits 5 & 6) ---
+  // State: multi‑booking slots, modals, day detail
   const [multiBookSlots, setMultiBookSlots] = useState<Record<string, number>>({})
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
   const [isDayDetailOpen, setIsDayDetailOpen] = useState(false)
   const [selectedDayForDetail, setSelectedDayForDetail] = useState<Date | null>(null)
+
+  // State: appointments data
   const [appointments, setAppointments] = useState<Record<string, Appointment[]>>({})
   const appointmentsInitialized = useRef(false)
 
@@ -135,11 +137,10 @@ export function AppointmentCalendarView({
     })
   }, [])
 
-  // --- Date utilities (Commit 7) ---
+  // Calendar day generation & date utilities (from Commit 7)
   const calendarDays = useMemo(() => {
     const days: Date[] = []
     const current = new Date(date)
-
     if (view === "week") {
       const startOfWeek = new Date(current)
       startOfWeek.setDate(current.getDate() - current.getDay())
@@ -159,7 +160,6 @@ export function AppointmentCalendarView({
         days.push(d)
       }
     }
-
     return days
   }, [date, view])
 
@@ -181,6 +181,7 @@ export function AppointmentCalendarView({
     [date]
   )
 
+  // Filtering & click handlers (Commit 8)
   const filterAppointmentsByDoctor = useCallback(
     (appts: Appointment[]) => {
       if (selectedDoctors.includes("all")) return appts
@@ -192,10 +193,7 @@ export function AppointmentCalendarView({
   )
 
   const handleMultiBook = useCallback((dateKey: string, slots: number) => {
-    setMultiBookSlots((prev) => ({
-      ...prev,
-      [dateKey]: slots,
-    }))
+    setMultiBookSlots((prev) => ({ ...prev, [dateKey]: slots }))
   }, [])
 
   const handleDoubleClick = useCallback((day: Date) => {
@@ -209,9 +207,62 @@ export function AppointmentCalendarView({
     setIsDayDetailOpen(true)
   }, [])
 
+  const timeSlots = [
+    "07:00","07:15","07:30","07:45","08:00","08:15","08:30","08:45",
+    "09:00","09:15","09:30","09:45","10:00","10:15","10:30","10:45",
+    "11:00","11:15","11:30","11:45","12:00","12:15","12:30","12:45",
+    "13:00","13:15","13:30","13:45","14:00","14:15","14:30","14:45",
+    "15:00","15:15","15:30","15:45","16:00","16:15","16:30","16:45","17:00"
+  ]
+
+  const getAppointmentDurationSlots = useCallback((duration: string | number) => {
+    let mins: number
+    if (typeof duration === "number") {
+      mins = duration
+    } else {
+      const match = duration.match(/(\d+)/)
+      mins = match ? parseInt(match[1], 10) : 30
+    }
+    return Math.ceil(mins / 15)
+  }, [])
+
+  const isWithinAppointmentDuration = useCallback(
+    (day: Date, slot: string, appts: Appointment[]) => {
+      for (const app of appts) {
+        const appTime = normalizeTimeForComparison(app.time)
+        const slotTime = normalizeTimeForComparison(slot)
+        const [ah, am] = appTime.split(":").map(Number)
+        const [sh, sm] = slotTime.split(":").map(Number)
+        const appStart = ah * 60 + am
+        const slotStart = sh * 60 + sm
+        const duration = getAppointmentDurationSlots(app.duration) * 15
+        if (slotStart >= appStart && slotStart < appStart + duration) {
+          return true
+        }
+      }
+      return false
+    },
+    [getAppointmentDurationSlots]
+  )
+
+  const getAppointmentForTimeSlot = useCallback(
+    (day: Date, slot: string) => {
+      const key = formatDateKey(day)
+      const dayAppts = appointments[key] || []
+      const filtered = filterAppointmentsByDoctor(dayAppts)
+      for (const app of filtered) {
+        if (normalizeTimeForComparison(app.time) === normalizeTimeForComparison(slot)) {
+          return app
+        }
+      }
+      return null
+    },
+    [appointments, filterAppointmentsByDoctor, formatDateKey]
+  )
+
   return (
     <div>
-      {/* TODO: Render calendar grid and dialogs */}
+      {/* TODO: Render calendar using calendarDays, timeSlots, and above helpers */}
     </div>
   )
 }
