@@ -59,7 +59,7 @@ function normalizeTimeForComparison(time: string) {
   } else if (time.match(/AM|PM/)) {
     isPM = time.includes("PM")
     const cleaned = time.replace(/AM|PM/, "").trim()
-    let [h, m] = cleaned.split(":").map((n) => parseInt(n, 10))
+    let [h, m] = cleaned.split(":").map(n => parseInt(n, 10))
     if (isPM && h < 12) h += 12
     if (!isPM && h === 12) h = 0
     hour = h
@@ -75,7 +75,7 @@ export function AppointmentCalendarView({
   onViewPatient,
   selectedDoctors,
 }: AppointmentCalendarViewProps) {
-  // --- State hooks (from Commit 5 & 6) ---
+  // --- State (Commits 5 & 6) ---
   const [multiBookSlots, setMultiBookSlots] = useState<Record<string, number>>({})
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
@@ -135,6 +135,7 @@ export function AppointmentCalendarView({
     })
   }, [])
 
+  // --- Date utilities (Commit 7) ---
   const calendarDays = useMemo(() => {
     const days: Date[] = []
     const current = new Date(date)
@@ -180,9 +181,37 @@ export function AppointmentCalendarView({
     [date]
   )
 
+  const filterAppointmentsByDoctor = useCallback(
+    (appts: Appointment[]) => {
+      if (selectedDoctors.includes("all")) return appts
+      return appts.filter((app) =>
+        selectedDoctors.includes(app.doctor.replace("Dr. ", "").toLowerCase())
+      )
+    },
+    [selectedDoctors]
+  )
+
+  const handleMultiBook = useCallback((dateKey: string, slots: number) => {
+    setMultiBookSlots((prev) => ({
+      ...prev,
+      [dateKey]: slots,
+    }))
+  }, [])
+
+  const handleDoubleClick = useCallback((day: Date) => {
+    setSelectedDate(day)
+    setSelectedTime(undefined)
+    setIsBookingModalOpen(true)
+  }, [])
+
+  const handleDayClick = useCallback((day: Date) => {
+    setSelectedDayForDetail(day)
+    setIsDayDetailOpen(true)
+  }, [])
+
   return (
     <div>
-      {/* TODO: Render calendar grid using calendarDays */}
+      {/* TODO: Render calendar grid and dialogs */}
     </div>
   )
 }
