@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+
 import { useState, useRef, useEffect, useCallback, useMemo } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -24,51 +25,6 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
 import { AppointmentBookingModal } from "./appointment-booking-modal"
 
-// Define appointment shape
-interface Appointment {
-  id: string
-  patientId: string
-  patientName: string
-  time: string
-  duration: string | number
-  type: string
-  status: string
-  doctor: string
-  room: string
-  isOptician?: boolean
-}
-
-// Props for the Day View
-interface AppointmentDayViewProps {
-  date: Date
-  doctor: string
-  appointments?: Appointment[]
-  onAppointmentUpdate?: (appointments: Appointment[]) => void
-}
-
-// Helper: normalize any "h:MM AM/PM" or "HH:MM" → "HH:MM"
-function normalizeTimeForComparison(time: string) {
-  let hour = 0,
-    minute = 0,
-    isPM = false
-
-  if (time.includes(":") && !time.match(/AM|PM/)) {
-    const [h, m] = time.split(":")
-    hour = parseInt(h, 10)
-    minute = parseInt(m, 10)
-  } else {
-    isPM = time.includes("PM")
-    const cleaned = time.replace(/AM|PM/, "").trim()
-    let [h, m] = cleaned.split(":").map((v) => parseInt(v, 10))
-    if (isPM && h < 12) h += 12
-    if (!isPM && h === 12) h = 0
-    hour = h
-    minute = m
-  }
-
-  return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`
-}
-
 // Helper function to format time display
 function formatTimeForDisplay(time: string) {
   // Handle already formatted times (e.g. "9:00 AM")
@@ -83,36 +39,145 @@ function formatTimeForDisplay(time: string) {
   return `${hour12}:${minutes} ${ampm}`
 }
 
-// Time slots from 7 AM to 5 PM in 15‑minute increments
+// Helper function to normalize time for comparison
+function normalizeTimeForComparison(time: string) {
+  // Convert any time format to a standard format for comparison
+  let hour = 0
+  let minute = 0
+  let isPM = false
+
+  // Handle "HH:MM" format
+  if (time.includes(":") && !time.includes("AM") && !time.includes("PM")) {
+    const [hours, minutes] = time.split(":")
+    hour = Number.parseInt(hours, 10)
+    minute = Number.parseInt(minutes, 10)
+    isPM = hour >= 12
+  }
+  // Handle "H:MM AM/PM" format
+  else if (time.includes(":") && (time.includes("AM") || time.includes("PM"))) {
+    isPM = time.includes("PM")
+    const timePart = time.replace("AM", "").replace("PM", "").trim()
+    const [hours, minutes] = timePart.split(":")
+    hour = Number.parseInt(hours, 10)
+    if (isPM && hour < 12) hour += 12
+    if (!isPM && hour === 12) hour = 0
+    minute = Number.parseInt(minutes, 10)
+  }
+
+  // Return in 24-hour format for easy comparison
+  return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`
+}
+
+// Define appointment type
+interface Appointment {
+  id: string
+  patientId: string
+  patientName: string
+  time: string
+  duration: string | number
+  type: string
+  status: string
+  doctor: string
+  room: string
+  isOptician?: boolean
+}
+
+// Time slots from 7:00 AM to 5:00 PM in 15-minute increments
 const timeSlots = Array.from({ length: 41 }, (_, i) => {
-  const hr = Math.floor(i / 4) + 7
-  const min = (i % 4) * 15
-  return `${hr.toString().padStart(2, "0")}:${min.toString().padStart(2, "0")}`
+  const hour = Math.floor(i / 4) + 7
+  const minute = (i % 4) * 15
+  return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`
 })
 
-export function AppointmentDayView({
-  date,
-  doctor,
-  appointments = [],
-  onAppointmentUpdate,
-}: AppointmentDayViewProps) {
-  // Local working copy
+interface AppointmentDayViewProps {
+  date: Date
+  doctor: string
+  appointments?: Appointment[]
+  onAppointmentUpdate?: (appointments: Appointment[]) => void
+}
+
+export function AppointmentDayView({ date, doctor, appointments = [], onAppointmentUpdate }: AppointmentDayViewProps) {
+  // State for appointments and booking configuration
   const [localAppointments, setLocalAppointments] = useState<Appointment[]>([])
   const [multiBookSlots, setMultiBookSlots] = useState<Record<string, number>>({})
   const [activeTab, setActiveTab] = useState<"doctors" | "opticians">("doctors")
 
-  // Drag‑and‑drop state
+  // State for drag and drop
   const [draggingAppointment, setDraggingAppointment] = useState<string | null>(null)
   const dragSourceTimeSlot = useRef<string | null>(null)
 
-  // Booking modal state
+  // State for booking modal
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | undefined>(undefined)
   const [isOpticianBooking, setIsOpticianBooking] = useState(false)
 
-  // Sync refs
+  // Use a ref to track if we should update the parent
   const shouldUpdateParent = useRef(false)
+
+  // Use a ref to track the previous appointments prop for comparison
   const prevAppointmentsRef = useRef<Appointment[]>([])
+
+  // Initialize with provided appointments - only when appointments prop changes
+  useEffect(() => {
+    // Skip if the appointments are the same as before
+    if (JSON.stringify(prevAppointmentsRef.current) === JSON.stringify(appointments)) {
+      return
+    }
+
+    prevAppointmentsRef.current = appointments
+
+    if (appointments && appointments.length > 0) {
+      // Convert time format if needed
+      const formattedAppointments = appointments.map((app) => {
+        // Ensure time is in HH:MM format for internal use
+        let time = app.time
+        if (time.includes("AM") || time.includes("PM")) {
+          const normalizedTime = normalizeTimeForComparison(time)
+          time = normalizedTime
+        }
+
+        return {
+          ...app,
+          time,
+        }
+      })
+
+      // Set local appointments without triggering an update to the parent
+      shouldUpdateParent.current = false
+      setLocalAppointments(formattedAppointments)
+    } else if (appointments.length === 0 && localAppointments.length > 0) {
+      // Clear local appointments if the parent component cleared them
+      shouldUpdateParent.current = false
+      setLocalAppointments([])
+    }
+  }, [appointments])
+
+  // Update parent component when local appointments change due to user actions
+  useEffect(() => {
+    // Only call the update if we have a callback and we should update the parent
+    if (onAppointmentUpdate && shouldUpdateParent.current) {
+      onAppointmentUpdate(localAppointments)
+      // Reset the flag
+      shouldUpdateParent.current = false
+    }
+  }, [localAppointments, onAppointmentUpdate])
+
+  // Filter appointments by doctor if needed and by type (doctor/optician)
+  const filteredAppointments = useMemo(() => {
+    return localAppointments.filter((appointment) => {
+      // Filter by doctor/optician tab
+      const isOpticianAppointment = appointment.isOptician || appointment.doctor === "optician"
+      if (activeTab === "doctors" && isOpticianAppointment) return false
+      if (activeTab === "opticians" && !isOpticianAppointment) return false
+
+      // Filter by selected doctor (only for doctor appointments)
+      if (activeTab === "doctors" && doctor !== "all" && appointment.doctor !== doctor) {
+        return false
+      }
+
+      return true
+    })
+  }, [localAppointments, activeTab, doctor])
 
   // Calculate appointment spans (how many 15-min slots an appointment takes)
   const calculateAppointmentSpan = useCallback((duration: string | number) => {
@@ -131,46 +196,6 @@ export function AppointmentDayView({
 
     return Math.ceil(durationMinutes / 15)
   }, [])
-
-  // Commit 7: sync incoming prop → localAppointments
-  useEffect(() => {
-    if (JSON.stringify(prevAppointmentsRef.current) === JSON.stringify(appointments)) return
-    prevAppointmentsRef.current = appointments
-
-    if (appointments.length > 0) {
-      const formatted = appointments.map((app) => ({
-        ...app,
-        time: normalizeTimeForComparison(app.time),
-      }))
-      shouldUpdateParent.current = false
-      setLocalAppointments(formatted)
-    } else if (appointments.length === 0 && localAppointments.length > 0) {
-      shouldUpdateParent.current = false
-      setLocalAppointments([])
-    }
-  }, [appointments])
-
-  // Commit 8: notify parent on localAppointments change
-  useEffect(() => {
-    if (onAppointmentUpdate && shouldUpdateParent.current) {
-      onAppointmentUpdate(localAppointments)
-      shouldUpdateParent.current = false
-    }
-  }, [localAppointments, onAppointmentUpdate])
-
-  const filteredAppointments = useMemo(() => {
-    return localAppointments.filter((appt) => {
-      const isOpt = appt.isOptician || appt.doctor === "optician"
-      // Filter by tab
-      if (activeTab === "doctors" && isOpt) return false
-      if (activeTab === "opticians" && !isOpt) return false
-      // Filter by selected doctor (only for doctor tab)
-      if (activeTab === "doctors" && doctor !== "all" && appt.doctor !== doctor) {
-        return false
-      }
-      return true
-    })
-  }, [localAppointments, activeTab, doctor])
 
   // Get appointment for a specific time slot
   const getAppointmentForTimeSlot = useCallback(
@@ -274,6 +299,14 @@ export function AppointmentDayView({
     dragSourceTimeSlot.current = null
   }, [])
 
+  // Handle multi-booking (double or triple booking)
+  const handleMultiBook = useCallback((timeSlot: string, slots: number) => {
+    setMultiBookSlots((prev) => ({
+      ...prev,
+      [timeSlot]: slots,
+    }))
+  }, [])
+
   // Handle double click on empty slot
   const handleDoubleClick = useCallback((timeSlot: string, isOptician = false) => {
     setSelectedTimeSlot(timeSlot)
@@ -296,7 +329,7 @@ export function AppointmentDayView({
         duration: appointmentData.duration,
         type: appointmentData.type,
         status: "Scheduled",
-        doctor: isOpticianBooking ? "optician" : appointmentData.provider,
+        doctor: isOpticianBooking ? "optician" : appointmentData.doctor,
         room: isOpticianBooking ? "Optical" : `Exam ${Math.floor(1 + Math.random() * 3)}`,
         isOptician: isOpticianBooking,
       }
@@ -310,8 +343,33 @@ export function AppointmentDayView({
     [isOpticianBooking],
   )
 
+  // Handle sign out (mark as completed)
+  const handleSignOut = useCallback((appointmentId: string) => {
+    // Set flag to update parent
+    shouldUpdateParent.current = true
+
+    setLocalAppointments((prevAppointments) =>
+      prevAppointments.map((appointment) =>
+        appointment.id === appointmentId ? { ...appointment, status: "Completed" } : appointment,
+      ),
+    )
+  }, [])
+
+  // Get the grid class based on number of slots
+  const getGridClass = useCallback((slots: number) => {
+    switch (slots) {
+      case 2:
+        return "grid-cols-2"
+      case 3:
+        return "grid-cols-3"
+      default:
+        return ""
+    }
+  }, [])
+
+  // Update the day view to be more compact
   return (
-    <div>
+    <>
       <Tabs
         value={activeTab}
         onValueChange={(value) => setActiveTab(value as "doctors" | "opticians")}
@@ -345,73 +403,132 @@ export function AppointmentDayView({
               )}
               {!showTimeLabel && <div className="w-20"></div>}
 
-              <div 
-                className="flex-1 border-l" 
-                onDragOver={handleDragOver} 
-                onDrop={(e) => handleDrop(e, time)}
-                onDoubleClick={() => handleDoubleClick(time, activeTab === "opticians")}
-              >
+              <div className="flex-1 border-l" onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, time)}>
                 <ContextMenu>
                   <ContextMenuTrigger>
-                    {appointment ? (
-                      <Card
-                        key={appointment.id}
-                        className={`border-l-4 ${getAppointmentTypeColor(appointment.type, appointment.isOptician)} 
-                                   hover:bg-accent/50 cursor-grab active:cursor-grabbing h-full`}
-                        style={{
-                          height: `${calculateAppointmentSpan(appointment.duration) * (showTimeLabel ? 64 : 32)}px`,
-                          zIndex: 10,
-                        }}
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, appointment.id, time)}
-                      >
-                        <CardContent className="flex p-2 h-full">
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <div className="font-semibold text-gray-900">{appointment.patientName}</div>
-                                <div className="text-xs text-gray-600">{appointment.type}</div>
+                    <div className={`grid gap-1 h-full ${multiBookCount > 1 ? getGridClass(multiBookCount) : ""}`}>
+                      {appointment ? (
+                        <Card
+                          key={appointment.id}
+                          className={`border-l-4 ${getAppointmentTypeColor(appointment.type, appointment.isOptician)} 
+                                     hover:bg-accent/50 cursor-grab active:cursor-grabbing h-full`}
+                          style={{
+                            height: `${calculateAppointmentSpan(appointment.duration) * (showTimeLabel ? 64 : 32)}px`,
+                            zIndex: 10,
+                          }}
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, appointment.id, time)}
+                        >
+                          <CardContent className="flex p-2 h-full">
+                            <div className="flex-1">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <div className="font-semibold text-gray-900">{appointment.patientName}</div>
+                                  <div className="text-xs text-gray-600">{appointment.type}</div>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  {appointment.status === "Checked In" && (
+                                    <Badge
+                                      variant="outline"
+                                      className="bg-amber-100 text-amber-800 hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 text-[10px] py-0 h-5"
+                                    >
+                                      Checked In
+                                    </Badge>
+                                  )}
+                                  {appointment.status === "Completed" && (
+                                    <Badge
+                                      variant="outline"
+                                      className="bg-green-100 text-green-800 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 text-[10px] py-0 h-5"
+                                    >
+                                      Completed
+                                    </Badge>
+                                  )}
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button variant="ghost" size="icon" className="h-6 w-6">
+                                        <MoreHorizontal className="h-3 w-3" />
+                                        <span className="sr-only">More options</span>
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                      <DropdownMenuItem asChild>
+                                        <Link href={`/patients/${appointment.patientId}`}>View Patient</Link>
+                                      </DropdownMenuItem>
+                                      {appointment.status !== "Checked In" && (
+                                        <DropdownMenuItem>Check In</DropdownMenuItem>
+                                      )}
+                                      {appointment.status !== "Completed" && (
+                                        <DropdownMenuItem onClick={() => handleSignOut(appointment.id)}>
+                                          <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
+                                          Sign Out
+                                        </DropdownMenuItem>
+                                      )}
+                                      <DropdownMenuItem>Reschedule</DropdownMenuItem>
+                                      <DropdownMenuSeparator />
+                                      <DropdownMenuItem className="text-destructive">Cancel</DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                </div>
                               </div>
-                              <div className="flex items-center gap-1">
-                                {appointment.status === "Checked In" && (
-                                  <Badge
-                                    variant="outline"
-                                    className="bg-amber-100 text-amber-800 hover:bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400 text-[10px] py-0 h-5"
-                                  >
-                                    Checked In
-                                  </Badge>
-                                )}
-                                {appointment.status === "Completed" && (
-                                  <Badge
-                                    variant="outline"
-                                    className="bg-green-100 text-green-800 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 text-[10px] py-0 h-5"
-                                  >
-                                    Completed
-                                  </Badge>
-                                )}
+                              <div className="mt-1 flex items-center justify-between text-xs">
+                                <div className="flex items-center gap-1">
+                                  <div className="flex h-4 w-4 items-center justify-center rounded-full bg-primary/10">
+                                    <User className="h-2 w-2 text-primary" />
+                                  </div>
+                                  <span className="text-gray-700">Room: {appointment.room}</span>
+                                </div>
+                                <div className="flex items-center gap-1 text-gray-600">
+                                  <Clock className="h-3 w-3 text-gray-400" />
+                                  {typeof appointment.duration === "string"
+                                    ? appointment.duration
+                                    : `${appointment.duration} min`}
+                                </div>
                               </div>
                             </div>
+                          </CardContent>
+                        </Card>
+                      ) : (
+                        // Empty slots
+                        Array.from({
+                          length: Math.max(multiBookCount, 1),
+                        }).map((_, index) => (
+                          <div
+                            key={`empty-${index}`}
+                            className="h-full rounded-md border border-dashed p-2 cursor-pointer hover:bg-accent/10 transition-colors"
+                            onDoubleClick={() => handleDoubleClick(time, activeTab === "opticians")}
+                          >
+                            {showTimeLabel && (
+                              <div className="flex h-full items-center justify-center text-xs text-gray-500">
+                                <span className="text-center">
+                                  Available
+                                  <div className="text-[10px] text-gray-400 mt-1">Double-click to book</div>
+                                </span>
+                              </div>
+                            )}
                           </div>
-                        </CardContent>
-                      </Card>
-                    ) : (
-                      <div className="h-full rounded-md border border-dashed p-2">
-                        {showTimeLabel && (
-                          <div className="flex h-full items-center justify-center text-xs text-gray-500">
-                            <span className="text-center">
-                              Available
-                              <div className="text-[10px] text-gray-400 mt-1">Double-click to book</div>
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                        ))
+                      )}
+                    </div>
                   </ContextMenuTrigger>
                   <ContextMenuContent>
                     <ContextMenuItem onClick={() => handleDoubleClick(time, activeTab === "opticians")}>
                       <Plus className="mr-2 h-4 w-4" />
                       Book Appointment
                     </ContextMenuItem>
+                    <ContextMenuItem onClick={() => handleMultiBook(time, 1)}>
+                      <Calendar className="mr-2 h-4 w-4" />
+                      Single Booking
+                    </ContextMenuItem>
+                    <ContextMenuItem onClick={() => handleMultiBook(time, 2)}>
+                      <Calendar className="mr-2 h-4 w-4" />
+                      Double Booking
+                    </ContextMenuItem>
+                    <ContextMenuItem onClick={() => handleMultiBook(time, 3)}>
+                      <Calendar className="mr-2 h-4 w-4" />
+                      Triple Booking
+                    </ContextMenuItem>
+                    <ContextMenuSeparator />
+                    <ContextMenuItem>Block Time</ContextMenuItem>
                   </ContextMenuContent>
                 </ContextMenu>
               </div>
@@ -433,6 +550,6 @@ export function AppointmentDayView({
         onBookAppointment={handleBookAppointment}
         isOptician={isOpticianBooking}
       />
-    </div>
+    </>
   )
 }
