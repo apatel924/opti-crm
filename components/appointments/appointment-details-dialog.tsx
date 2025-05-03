@@ -1,19 +1,28 @@
 "use client"
 import { format } from "date-fns"
+import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog"
-import { Calendar, Clock, User, MapPin, Phone, Mail } from "lucide-react"
+import { Calendar, Clock, User, MapPin, Phone, Mail, AlertCircle, CheckCircle, X } from "lucide-react"
 import { mockPatients } from "@/lib/mock-data"
 
 interface AppointmentDetailsDialogProps {
   isOpen: boolean
   onClose: () => void
   appointment: any
+  onCheckIn: (appointmentId: string) => void
+  onComplete: (appointmentId: string) => void
+  onCancel: (appointmentId: string) => void
+  onReschedule: (appointmentId: string) => void
 }
 
 export function AppointmentDetailsDialog({
   isOpen,
   onClose,
   appointment,
+  onCheckIn,
+  onComplete,
+  onCancel,
+  onReschedule,
 }: AppointmentDetailsDialogProps) {
   if (!appointment) return null
 
@@ -28,6 +37,7 @@ export function AppointmentDetailsDialog({
         </DialogHeader>
 
         <div className="space-y-4">
+          {/* Appointment Info */}
           <div className="space-y-2">
             <h3 className="font-medium">Appointment Information</h3>
             <div className="grid grid-cols-2 gap-2 text-sm">
@@ -52,6 +62,7 @@ export function AppointmentDetailsDialog({
             </div>
           </div>
 
+          {/* Patient Info */}
           {appointment.patientId && patient && (
             <div className="space-y-2">
               <h3 className="font-medium">Patient Information</h3>
@@ -77,8 +88,24 @@ export function AppointmentDetailsDialog({
           )}
         </div>
 
-        <DialogFooter>
-          <button onClick={onClose}>Close</button>
+        <DialogFooter className="flex flex-col sm:flex-row gap-2">
+          <Button variant="outline" onClick={() => onCheckIn(appointment.id)}>
+            <AlertCircle className="mr-2 h-4 w-4" />
+            Check In
+          </Button>
+          <Button variant="outline" onClick={() => onComplete(appointment.id)}>
+            <CheckCircle className="mr-2 h-4 w-4" />
+            Complete
+          </Button>
+          <Button variant="outline" onClick={() => onReschedule(appointment.id)}>
+            <Calendar className="mr-2 h-4 w-4" />
+            Reschedule
+          </Button>
+          <Button variant="outline" onClick={() => onCancel(appointment.id)}>
+            <X className="mr-2 h-4 w-4" />
+            Cancel
+          </Button>
+          <Button onClick={onClose}>Close</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
