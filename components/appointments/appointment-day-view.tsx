@@ -58,10 +58,7 @@ function formatTimeForDisplay(time: string) {
 
 // Helper: normalize any "h:MM AM/PM" or "HH:MM" → "HH:MM"
 function normalizeTimeForComparison(time: string) {
-  let hour = 0,
-    minute = 0,
-    isPM = false
-
+  let hour = 0, minute = 0, isPM = false
   if (time.includes(":") && !time.match(/AM|PM/)) {
     const [h, m] = time.split(":")
     hour = parseInt(h, 10)
@@ -75,10 +72,10 @@ function normalizeTimeForComparison(time: string) {
     hour = h
     minute = m
   }
-
   return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`
 }
 
+// Time slots from 7 AM to 5 PM in 15‑minute increments
 const timeSlots = Array.from({ length: 41 }, (_, i) => {
   const hr = Math.floor(i / 4) + 7
   const min = (i % 4) * 15
@@ -91,20 +88,27 @@ export function AppointmentDayView({
   appointments = [],
   onAppointmentUpdate,
 }: AppointmentDayViewProps) {
-  // Local working copy of incoming appointments
+  // Local state
   const [localAppointments, setLocalAppointments] = useState<Appointment[]>([])
-  // Multi‑booking counts
   const [multiBookSlots, setMultiBookSlots] = useState<Record<string, number>>({})
-  // Tab state: doctors vs opticians
   const [activeTab, setActiveTab] = useState<"doctors" | "opticians">("doctors")
 
-  // --- Drag‑and‑drop state (this commit) ---
+  // Drag‑and‑drop state
   const [draggingAppointment, setDraggingAppointment] = useState<string | null>(null)
   const dragSourceTimeSlot = useRef<string | null>(null)
 
+  // Booking modal state
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | undefined>(undefined)
+  const [isOpticianBooking, setIsOpticianBooking] = useState(false)
+
+  // Refs for syncing with parent props
+  const shouldUpdateParent = useRef(false)
+  const prevAppointmentsRef = useRef<Appointment[]>([])
+
   return (
     <div>
-      {/* TODO: render tabs & time‑slot grid */}
+      {/* TODO: render tabs & time‑slot grid & booking modal */}
     </div>
   )
 }
