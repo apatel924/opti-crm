@@ -75,18 +75,17 @@ export function AppointmentCalendarView({
   onViewPatient,
   selectedDoctors,
 }: AppointmentCalendarViewProps) {
-  // State: multi‑booking slots, modals, day detail
+  // State and refs
   const [multiBookSlots, setMultiBookSlots] = useState<Record<string, number>>({})
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
   const [isDayDetailOpen, setIsDayDetailOpen] = useState(false)
   const [selectedDayForDetail, setSelectedDayForDetail] = useState<Date | null>(null)
-
-  // State: appointments data
   const [appointments, setAppointments] = useState<Record<string, Appointment[]>>({})
   const appointmentsInitialized = useRef(false)
 
+  // Sample data init
   useEffect(() => {
     if (appointmentsInitialized.current) return
     appointmentsInitialized.current = true
@@ -137,7 +136,7 @@ export function AppointmentCalendarView({
     })
   }, [])
 
-  // Calendar day generation & date utilities (from Commit 7)
+  // Calendar days
   const calendarDays = useMemo(() => {
     const days: Date[] = []
     const current = new Date(date)
@@ -163,10 +162,12 @@ export function AppointmentCalendarView({
     return days
   }, [date, view])
 
-  const formatDateKey = useCallback((d: Date) => {
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
-  }, [])
+  const formatDateKey = useCallback((d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`,
+    []
+  )
 
+  // Utility callbacks
   const isToday = useCallback((d: Date) => {
     const now = new Date()
     return (
@@ -176,12 +177,8 @@ export function AppointmentCalendarView({
     )
   }, [])
 
-  const isCurrentMonth = useCallback(
-    (d: Date) => isSameMonth(d, date),
-    [date]
-  )
+  const isCurrentMonth = useCallback((d: Date) => isSameMonth(d, date), [date])
 
-  // Filtering & click handlers (Commit 8)
   const filterAppointmentsByDoctor = useCallback(
     (appts: Appointment[]) => {
       if (selectedDoctors.includes("all")) return appts
@@ -191,10 +188,6 @@ export function AppointmentCalendarView({
     },
     [selectedDoctors]
   )
-
-  const handleMultiBook = useCallback((dateKey: string, slots: number) => {
-    setMultiBookSlots((prev) => ({ ...prev, [dateKey]: slots }))
-  }, [])
 
   const handleDoubleClick = useCallback((day: Date) => {
     setSelectedDate(day)
@@ -207,6 +200,7 @@ export function AppointmentCalendarView({
     setIsDayDetailOpen(true)
   }, [])
 
+  // Time slots & helpers
   const timeSlots = [
     "07:00","07:15","07:30","07:45","08:00","08:15","08:30","08:45",
     "09:00","09:15","09:30","09:45","10:00","10:15","10:30","10:45",
@@ -216,13 +210,9 @@ export function AppointmentCalendarView({
   ]
 
   const getAppointmentDurationSlots = useCallback((duration: string | number) => {
-    let mins: number
-    if (typeof duration === "number") {
-      mins = duration
-    } else {
-      const match = duration.match(/(\d+)/)
-      mins = match ? parseInt(match[1], 10) : 30
-    }
+    let mins = typeof duration === "number"
+      ? duration
+      : Number(duration.toString().match(/(\d+)/)?.[0] || 30)
     return Math.ceil(mins / 15)
   }, [])
 
@@ -233,10 +223,9 @@ export function AppointmentCalendarView({
         const slotTime = normalizeTimeForComparison(slot)
         const [ah, am] = appTime.split(":").map(Number)
         const [sh, sm] = slotTime.split(":").map(Number)
-        const appStart = ah * 60 + am
-        const slotStart = sh * 60 + sm
-        const duration = getAppointmentDurationSlots(app.duration) * 15
-        if (slotStart >= appStart && slotStart < appStart + duration) {
+        const start = ah * 60 + am
+        const minutes = getAppointmentDurationSlots(app.duration) * 15
+        if (sh * 60 + sm >= start && sh * 60 + sm < start + minutes) {
           return true
         }
       }
@@ -250,19 +239,172 @@ export function AppointmentCalendarView({
       const key = formatDateKey(day)
       const dayAppts = appointments[key] || []
       const filtered = filterAppointmentsByDoctor(dayAppts)
-      for (const app of filtered) {
-        if (normalizeTimeForComparison(app.time) === normalizeTimeForComparison(slot)) {
-          return app
-        }
-      }
-      return null
+      return filtered.find(
+        (app) =>
+          normalizeTimeForComparison(app.time) === normalizeTimeForComparison(slot)
+      ) || null
     },
     [appointments, filterAppointmentsByDoctor, formatDateKey]
   )
 
+  const getAppointmentStatusColor = useCallback((status: string) => {
+    switch (status) {
+      case "Checked In":
+        return "border-l-yellow-500"
+      case "In Progress":
+        return "border-l-blue-500"
+      case "Completed":
+        return "border-l-green-500"
+      default:
+        return "border-l-gray-200"
+    }
+  }, [])
+
+  const getMaxAppointmentsToShow = useCallback(() => (view === "week" ? 3 : 2), [view])
+
   return (
-    <div>
-      {/* TODO: Render calendar using calendarDays, timeSlots, and above helpers */}
-    </div>
+    <>
+      <div className="overflow-auto">
+        <div className="grid grid-cols-7 gap-1">
+          {/* Day headers */}
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((dayName) => (
+            <div key={dayName} className="p-2 text-center font-medium text-gray-700">
+              {dayName}
+            </div>
+          ))}
+
+          {/* Calendar cells */}
+          {calendarDays.map((day, idx) => {
+            const dateKey = formatDateKey(day)
+            const dayAppts = appointments[dateKey] || []
+            const filteredAppts = filterAppointmentsByDoctor(dayAppts)
+
+            return (
+              <ContextMenu key={idx}>
+                <ContextMenuTrigger>
+                  <div
+                    className={`border ${
+                      isToday(day) ? "bg-primary/5 border-primary" : ""
+                    } ${
+                      !isCurrentMonth(day) && view === "month"
+                        ? "text-muted-foreground bg-muted/50"
+                        : ""
+                    }`}
+                    onClick={() => handleDayClick(day)}
+                  >
+                    <div className="sticky top-0 z-10 flex items-center justify-between p-1 bg-background border-b">
+                      <div className="text-sm font-medium text-gray-900">
+                        {format(day, "E")}, {day.getDate()}
+                      </div>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-5 w-5"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleDoubleClick(day)
+                        }}
+                      >
+                        <Plus className="h-3 w-3" />
+                      </Button>
+                    </div>
+
+                    {view === "week" && (
+                      <div className="divide-y">
+                        {timeSlots
+                          .filter((t) => t.endsWith(":00") || t.endsWith(":30"))
+                          .map((t) => {
+                            const appt = getAppointmentForTimeSlot(day, t)
+                            const within = isWithinAppointmentDuration(day, t, filteredAppts)
+
+                            return (
+                              <div
+                                key={t}
+                                className="flex py-1 px-1 min-h-[24px] hover:bg-accent/10 text-xs"
+                              >
+                                <div className="w-10 text-muted-foreground mr-1">
+                                  {t.endsWith(":00") ? `${parseInt(t) % 12 || 12}${t.includes("13") ? "1PM" : t.endsWith(":00") && formatTimeForDisplay(t).includes("PM") ? "PM" : ""}` : ""}
+                                </div>
+                                {appt ? (
+                                  <div
+                                    className={`flex-1 flex gap-1 rounded-sm text-xs border-l-2 px-1 truncate ${getAppointmentStatusColor(
+                                      appt.status
+                                    )} bg-white`}
+                                  >
+                                    <span className="font-medium truncate">
+                                      {appt.patientName}
+                                    </span>
+                                  </div>
+                                ) : within ? (
+                                  <div className="flex-1 bg-gray-100 opacity-50"></div>
+                                ) : (
+                                  <div className="flex-1 text-gray-400 text-[9px]">
+                                    Available
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          })}
+                      </div>
+                    )}
+
+                    {view === "month" && (
+                      <div className="min-h-[100px] p-1">
+                        <div className="mt-1 space-y-1">
+                          {filteredAppts.slice(0, getMaxAppointmentsToShow()).map((appt) => (
+                            <div
+                              key={appt.id}
+                              className={`border-l-4 ${getAppointmentStatusColor(
+                                appt.status
+                              )} p-1 text-xs bg-white rounded-sm shadow-sm`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div className="font-medium text-gray-900 truncate">
+                                  {formatTimeForDisplay(appt.time)}
+                                </div>
+                                <Badge variant="outline" className="text-[8px] px-1 py-0 text-gray-700">
+                                  {appt.doctor.replace("Dr. ", "")}
+                                </Badge>
+                              </div>
+                              <div className="truncate text-gray-800">
+                                {appt.patientName}
+                              </div>
+                            </div>
+                          ))}
+
+                          {filteredAppts.length > getMaxAppointmentsToShow() && (
+                            <div className="text-xs text-center font-medium text-primary">
+                              +{filteredAppts.length - getMaxAppointmentsToShow()} more
+                            </div>
+                          )}
+
+                          {filteredAppts.length === 0 && (
+                            <div className="flex h-full items-center justify-center text-xs text-gray-400 mt-8">
+                              Click to view
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  <ContextMenuItem onClick={() => handleDoubleClick(day)}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Book Appointment
+                  </ContextMenuItem>
+                  <ContextMenuItem onClick={() => handleDayClick(day)}>
+                    <Calendar className="mr-2 h-4 w-4" />
+                    View Day
+                  </ContextMenuItem>
+                  <ContextMenuSeparator />
+                  <ContextMenuItem>Block Day</ContextMenuItem>
+                </ContextMenuContent>
+              </ContextMenu>
+            )
+          })}
+        </div>
+      </div>
+    </>
   )
 }
