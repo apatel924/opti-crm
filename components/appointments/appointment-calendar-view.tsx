@@ -1,5 +1,4 @@
 "use client"
-
 import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -37,55 +36,72 @@ interface Appointment {
   isOptician?: boolean
 }
 
+// Helper function to format time display
 function formatTimeForDisplay(time: string) {
-  if (time.includes("AM") || time.includes("PM")) return time
+  // Handle already formatted times (e.g. "9:00 AM")
+  if (time.includes("AM") || time.includes("PM")) {
+    return time
+  }
+
   const [hours, minutes] = time.split(":")
-  const hour = parseInt(hours, 10)
+  const hour = Number.parseInt(hours, 10)
   const ampm = hour >= 12 ? "PM" : "AM"
   const hour12 = hour % 12 || 12
   return `${hour12}:${minutes} ${ampm}`
 }
 
+// Helper function to normalize time for comparison
 function normalizeTimeForComparison(time: string) {
+  // Convert any time format to a standard format for comparison
   let hour = 0
   let minute = 0
   let isPM = false
 
-  if (time.includes(":") && !time.match(/AM|PM/)) {
-    const [h, m] = time.split(":")
-    hour = parseInt(h, 10)
-    minute = parseInt(m, 10)
+  // Handle "HH:MM" format
+  if (time.includes(":") && !time.includes("AM") && !time.includes("PM")) {
+    const [hours, minutes] = time.split(":")
+    hour = Number.parseInt(hours, 10)
+    minute = Number.parseInt(minutes, 10)
     isPM = hour >= 12
-  } else if (time.match(/AM|PM/)) {
+  }
+  // Handle "H:MM AM/PM" format
+  else if (time.includes(":") && (time.includes("AM") || time.includes("PM"))) {
     isPM = time.includes("PM")
-    const cleaned = time.replace(/AM|PM/, "").trim()
-    let [h, m] = cleaned.split(":").map((n) => parseInt(n, 10))
-    if (isPM && h < 12) h += 12
-    if (!isPM && h === 12) h = 0
-    hour = h
-    minute = m
+    const timePart = time.replace("AM", "").replace("PM", "").trim()
+    const [hours, minutes] = timePart.split(":")
+    hour = Number.parseInt(hours, 10)
+    if (isPM && hour < 12) hour += 12
+    if (!isPM && hour === 12) hour = 0
+    minute = Number.parseInt(minutes, 10)
   }
 
+  // Return in 24-hour format for easy comparison
   return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`
 }
 
-export function AppointmentCalendarView({
-  date,
-  view,
-  onViewPatient,
-  selectedDoctors,
-}: AppointmentCalendarViewProps) {
+export function AppointmentCalendarView({ date, view, onViewPatient, selectedDoctors }: AppointmentCalendarViewProps) {
+  // State for multi-booking
   const [multiBookSlots, setMultiBookSlots] = useState<Record<string, number>>({})
+
+  // State for booking modal
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
+
+  // State for day detail view
   const [isDayDetailOpen, setIsDayDetailOpen] = useState(false)
   const [selectedDayForDetail, setSelectedDayForDetail] = useState<Date | null>(null)
+
+  // Sample data - in a real app, this would come from an API
   const [appointments, setAppointments] = useState<Record<string, Appointment[]>>({})
+
+  // Use a ref to track if appointments have been initialized
   const appointmentsInitialized = useRef(false)
 
+  // Initialize with sample appointments only once
   useEffect(() => {
     if (appointmentsInitialized.current) return
+
     appointmentsInitialized.current = true
 
     const today = new Date()
@@ -134,116 +150,138 @@ export function AppointmentCalendarView({
     })
   }, [])
 
+  // Generate calendar days based on view
   const calendarDays = useMemo(() => {
-    const days: Date[] = []
-    const current = new Date(date)
+    const days = []
+    const currentDate = new Date(date)
+
     if (view === "week") {
-      const startOfWeek = new Date(current)
-      startOfWeek.setDate(current.getDate() - current.getDay())
+      // Set to the beginning of the week (Sunday)
+      const startOfWeek = new Date(currentDate)
+      startOfWeek.setDate(currentDate.getDate() - currentDate.getDay())
+
+      // Generate 7 days (Sunday to Saturday)
       for (let i = 0; i < 7; i++) {
-        const d = new Date(startOfWeek)
-        d.setDate(startOfWeek.getDate() + i)
-        days.push(d)
+        const day = new Date(startOfWeek)
+        day.setDate(startOfWeek.getDate() + i)
+        days.push(day)
       }
-    } else {
-      const firstOfMonth = new Date(current.getFullYear(), current.getMonth(), 1)
-      const offset = firstOfMonth.getDay()
-      const gridStart = new Date(firstOfMonth)
-      gridStart.setDate(1 - offset)
+    } else if (view === "month") {
+      // Set to the first day of the month
+      const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
+
+      // Get the day of the week for the first day (0 = Sunday, 6 = Saturday)
+      const firstDayOfWeek = firstDayOfMonth.getDay()
+
+      // Calculate the date for the first cell in the calendar (might be from the previous month)
+      const startDate = new Date(firstDayOfMonth)
+      startDate.setDate(1 - firstDayOfWeek)
+
+      // Generate 42 days (6 weeks * 7 days) to ensure we cover the entire month
       for (let i = 0; i < 42; i++) {
-        const d = new Date(gridStart)
-        d.setDate(gridStart.getDate() + i)
-        days.push(d)
+        const day = new Date(startDate)
+        day.setDate(startDate.getDate() + i)
+        days.push(day)
       }
     }
+
     return days
   }, [date, view])
 
-  const formatDateKey = useCallback((d: Date) =>
-    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`,
-    []
-  )
+  // Format date as YYYY-MM-DD for lookup in appointments object
+  const formatDateKey = useCallback((date: Date) => {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`
+  }, [])
 
-  const isToday = useCallback((d: Date) => {
-    const now = new Date()
+  // Check if a date is today
+  const isToday = useCallback((date: Date) => {
+    const today = new Date()
     return (
-      d.getDate() === now.getDate() &&
-      d.getMonth() === now.getMonth() &&
-      d.getFullYear() === now.getFullYear()
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
     )
   }, [])
 
-  const isCurrentMonth = useCallback((d: Date) => isSameMonth(d, date), [date])
+  // Check if a date is in the current month
+  const isCurrentMonth = useCallback(
+    (day: Date) => {
+      return isSameMonth(day, date)
+    },
+    [date],
+  )
 
+  // Filter appointments by selected doctors
   const filterAppointmentsByDoctor = useCallback(
     (appts: Appointment[]) => {
       if (selectedDoctors.includes("all")) return appts
-      return appts.filter((app) =>
-        selectedDoctors.includes(app.doctor.replace("Dr. ", "").toLowerCase())
-      )
+      return appts.filter((app) => selectedDoctors.includes(app.doctor.replace("Dr. ", "dr-").toLowerCase()))
     },
-    [selectedDoctors]
+    [selectedDoctors],
   )
 
+  // Handle multi-booking
+  const handleMultiBook = useCallback((dateKey: string, slots: number) => {
+    setMultiBookSlots((prev) => ({
+      ...prev,
+      [dateKey]: slots,
+    }))
+  }, [])
+
+  // Handle double click on a day
   const handleDoubleClick = useCallback((day: Date) => {
     setSelectedDate(day)
     setSelectedTime(undefined)
     setIsBookingModalOpen(true)
   }, [])
 
+  // Handle click on a day to show detail view
   const handleDayClick = useCallback((day: Date) => {
     setSelectedDayForDetail(day)
     setIsDayDetailOpen(true)
   }, [])
 
-  const timeSlots = [
-    "07:00","07:15","07:30","07:45","08:00","08:15","08:30","08:45",
-    "09:00","09:15","09:30","09:45","10:00","10:15","10:30","10:45",
-    "11:00","11:15","11:30","11:45","12:00","12:15","12:30","12:45",
-    "13:00","13:15","13:30","13:45","14:00","14:15","14:30","14:45",
-    "15:00","15:15","15:30","15:45","16:00","16:15","16:30","16:45","17:00"
-  ]
+  // Handle booking appointment
+  const handleBookAppointment = useCallback(
+    (appointmentData: any) => {
+      const dateKey = format(new Date(appointmentData.date), "yyyy-MM-dd")
 
-  const getAppointmentDurationSlots = useCallback((duration: string | number) => {
-    let mins = typeof duration === "number"
-      ? duration
-      : Number(duration.toString().match(/(\d+)/)?.[0] || 30)
-    return Math.ceil(mins / 15)
-  }, [])
+      // Generate a unique ID for the new appointment
+      const newId = `${Math.floor(10000 + Math.random() * 90000)}`
 
-  const isWithinAppointmentDuration = useCallback(
-    (day: Date, slot: string, appts: Appointment[]) => {
-      for (const app of appts) {
-        const appTime = normalizeTimeForComparison(app.time)
-        const slotTime = normalizeTimeForComparison(slot)
-        const [ah, am] = appTime.split(":").map(Number)
-        const [sh, sm] = slotTime.split(":").map(Number)
-        const start = ah * 60 + am
-        const span = getAppointmentDurationSlots(app.duration) * 15
-        if (sh * 60 + sm >= start && sh * 60 + sm < start + span) {
-          return true
-        }
+      // Create new appointment object
+      const newAppointment: Appointment = {
+        id: newId,
+        patientName: appointmentData.patientName,
+        patientId: appointmentData.patientId,
+        time: appointmentData.time,
+        duration: appointmentData.duration,
+        type: appointmentData.type,
+        doctor: `Dr. ${appointmentData.doctor.replace("dr-", "").charAt(0).toUpperCase() + appointmentData.doctor.replace("dr-", "").slice(1)}`,
+        status: "Scheduled",
+        room: appointmentData.isOptician ? "Optical" : `Exam ${Math.floor(1 + Math.random() * 3)}`,
+        isOptician: appointmentData.isOptician,
       }
-      return false
+
+      // Add the new appointment to the list
+      setAppointments((prev) => {
+        const updatedAppointments = { ...prev }
+        if (!updatedAppointments[dateKey]) {
+          updatedAppointments[dateKey] = []
+        }
+        updatedAppointments[dateKey] = [...updatedAppointments[dateKey], newAppointment]
+        return updatedAppointments
+      })
+
+      // Close the day detail view if it's open
+      if (isDayDetailOpen) {
+        setIsDayDetailOpen(false)
+      }
     },
-    [getAppointmentDurationSlots]
+    [isDayDetailOpen],
   )
 
-  const getAppointmentForTimeSlot = useCallback(
-    (day: Date, slot: string) => {
-      const key = formatDateKey(day)
-      const dayAppts = appointments[key] || []
-      const filtered = filterAppointmentsByDoctor(dayAppts)
-      return (
-        filtered.find(
-          (app) =>
-            normalizeTimeForComparison(app.time) === normalizeTimeForComparison(slot)
-        ) || null
-      )
-    },
-    [appointments, filterAppointmentsByDoctor, formatDateKey]
-  )
-
+  // Get appointment status color
   const getAppointmentStatusColor = useCallback((status: string) => {
     switch (status) {
       case "Checked In":
@@ -257,25 +295,141 @@ export function AppointmentCalendarView({
     }
   }, [])
 
-  const getMaxAppointmentsToShow = useCallback(() => (view === "week" ? 3 : 2), [view])
+  // Get the maximum number of appointments to show in compact view
+  const getMaxAppointmentsToShow = useCallback(() => {
+    return view === "week" ? 3 : 2
+  }, [view])
 
-  const handleAppointmentUpdate = useCallback(
-    (updated: Appointment[], day: Date) => {
-      const key = formatDateKey(day)
-      setAppointments((prev) => {
-        const prevList = prev[key] || []
-        if (JSON.stringify(prevList) === JSON.stringify(updated)) {
-          return prev
+  // Time slots for week view (15-minute increments)
+  const timeSlots = [
+    "07:00",
+    "07:15",
+    "07:30",
+    "07:45",
+    "08:00",
+    "08:15",
+    "08:30",
+    "08:45",
+    "09:00",
+    "09:15",
+    "09:30",
+    "09:45",
+    "10:00",
+    "10:15",
+    "10:30",
+    "10:45",
+    "11:00",
+    "11:15",
+    "11:30",
+    "11:45",
+    "12:00",
+    "12:15",
+    "12:30",
+    "12:45",
+    "13:00",
+    "13:15",
+    "13:30",
+    "13:45",
+    "14:00",
+    "14:15",
+    "14:30",
+    "14:45",
+    "15:00",
+    "15:15",
+    "15:30",
+    "15:45",
+    "16:00",
+    "16:15",
+    "16:30",
+    "16:45",
+    "17:00",
+  ]
+
+  // Get appointment duration in number of 15-minute slots
+  const getAppointmentDurationSlots = useCallback((duration: string | number) => {
+    // Handle both string and number duration types
+    let durationMinutes: number
+
+    if (typeof duration === "number") {
+      durationMinutes = duration
+    } else if (typeof duration === "string") {
+      // Extract the number from strings like "30 min"
+      const match = duration.match(/(\d+)/)
+      durationMinutes = match ? Number.parseInt(match[1], 10) : 30 // Default to 30 if parsing fails
+    } else {
+      durationMinutes = 30 // Default duration
+    }
+
+    return Math.ceil(durationMinutes / 15)
+  }, [])
+
+  // Check if a time slot is within an appointment's duration
+  const isWithinAppointmentDuration = useCallback(
+    (day: Date, timeSlot: string, appointments: Appointment[]) => {
+      for (const app of appointments) {
+        const appTime = normalizeTimeForComparison(app.time)
+        const slotTime = normalizeTimeForComparison(timeSlot)
+
+        // Convert times to minutes for easier comparison
+        const [appHour, appMinute] = appTime.split(":").map(Number)
+        const [slotHour, slotMinute] = slotTime.split(":").map(Number)
+
+        const appTimeInMinutes = appHour * 60 + appMinute
+        const slotTimeInMinutes = slotHour * 60 + slotMinute
+
+        // Get duration in minutes
+        const durationInMinutes = getAppointmentDurationSlots(app.duration) * 15
+
+        // Check if the slot time is within the appointment duration
+        if (slotTimeInMinutes >= appTimeInMinutes && slotTimeInMinutes < appTimeInMinutes + durationInMinutes) {
+          return true
         }
-        return { ...prev, [key]: updated }
-      })
+      }
+      return false
     },
-    [formatDateKey]
+    [getAppointmentDurationSlots],
   )
 
-  const handleBookAppointment = useCallback(() => {
-    // Placeholder for booking logic
-  }, [])
+  // Get appointment for a specific time slot
+  const getAppointmentForTimeSlot = useCallback(
+    (day: Date, timeSlot: string) => {
+      const dateKey = formatDateKey(day)
+      const dayAppointments = appointments[dateKey] || []
+      const filteredAppointments = filterAppointmentsByDoctor(dayAppointments)
+
+      for (const app of filteredAppointments) {
+        const appTime = normalizeTimeForComparison(app.time)
+        const slotTime = normalizeTimeForComparison(timeSlot)
+
+        if (appTime === slotTime) {
+          return app
+        }
+      }
+      return null
+    },
+    [appointments, filterAppointmentsByDoctor, formatDateKey],
+  )
+
+  // Handle appointment updates from day view
+  const handleAppointmentUpdate = useCallback(
+    (updatedAppointments: Appointment[], date: Date) => {
+      const dateKey = formatDateKey(date)
+
+      // Use a functional update to avoid dependency on the current state
+      setAppointments((prev) => {
+        // Skip update if nothing changed
+        if (JSON.stringify(prev[dateKey]) === JSON.stringify(updatedAppointments)) {
+          return prev
+        }
+
+        return {
+          ...prev,
+          [dateKey]: updatedAppointments,
+        }
+      })
+    },
+    [formatDateKey],
+  )
 
   return (
     <>
