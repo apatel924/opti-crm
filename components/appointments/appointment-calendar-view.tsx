@@ -1,4 +1,5 @@
 "use client"
+
 import { useState, useEffect, useCallback, useMemo, useRef } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -12,9 +13,9 @@ import {
   ContextMenuSeparator,
 } from "@/components/ui/context-menu"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
+// import { ScrollArea } from "@/components/ui/scroll-area"
 import { AppointmentBookingModal } from "./appointment-booking-modal"
-import { AppointmentDayView } from "./appointment-day-view"
+// import { AppointmentDayView } from "./appointment-day-view"
 
 interface AppointmentCalendarViewProps {
   date: Date
@@ -36,72 +37,66 @@ interface Appointment {
   isOptician?: boolean
 }
 
-// Helper function to format time display
+// Format “HH:MM” → “h:MM AM/PM”
 function formatTimeForDisplay(time: string) {
-  // Handle already formatted times (e.g. "9:00 AM")
   if (time.includes("AM") || time.includes("PM")) {
     return time
   }
-
   const [hours, minutes] = time.split(":")
-  const hour = Number.parseInt(hours, 10)
+  const hour = parseInt(hours, 10)
   const ampm = hour >= 12 ? "PM" : "AM"
   const hour12 = hour % 12 || 12
   return `${hour12}:${minutes} ${ampm}`
 }
 
-// Helper function to normalize time for comparison
+// Normalize any time to 24‑hour “HH:MM” for comparisons
 function normalizeTimeForComparison(time: string) {
-  // Convert any time format to a standard format for comparison
   let hour = 0
   let minute = 0
   let isPM = false
 
-  // Handle "HH:MM" format
-  if (time.includes(":") && !time.includes("AM") && !time.includes("PM")) {
-    const [hours, minutes] = time.split(":")
-    hour = Number.parseInt(hours, 10)
-    minute = Number.parseInt(minutes, 10)
+  if (time.includes(":") && !time.match(/AM|PM/)) {
+    const [h, m] = time.split(":")
+    hour = parseInt(h, 10)
+    minute = parseInt(m, 10)
     isPM = hour >= 12
-  }
-  // Handle "H:MM AM/PM" format
-  else if (time.includes(":") && (time.includes("AM") || time.includes("PM"))) {
+  } else if (time.match(/AM|PM/)) {
     isPM = time.includes("PM")
-    const timePart = time.replace("AM", "").replace("PM", "").trim()
-    const [hours, minutes] = timePart.split(":")
-    hour = Number.parseInt(hours, 10)
-    if (isPM && hour < 12) hour += 12
-    if (!isPM && hour === 12) hour = 0
-    minute = Number.parseInt(minutes, 10)
+    const cleaned = time.replace(/AM|PM/, "").trim()
+    let [h, m] = cleaned.split(":").map(str => parseInt(str, 10))
+    if (isPM && h < 12) h += 12
+    if (!isPM && h === 12) h = 0
+    hour = h
+    minute = m
   }
 
-  // Return in 24-hour format for easy comparison
   return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`
 }
 
-export function AppointmentCalendarView({ date, view, onViewPatient, selectedDoctors }: AppointmentCalendarViewProps) {
-  // State for multi-booking
+export function AppointmentCalendarView({
+  date,
+  view,
+  onViewPatient,
+  selectedDoctors,
+}: AppointmentCalendarViewProps) {
+  // Multi‑booking slot counts
   const [multiBookSlots, setMultiBookSlots] = useState<Record<string, number>>({})
 
-  // State for booking modal
+  // Booking modal state
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [selectedTime, setSelectedTime] = useState<string | undefined>(undefined)
 
-  // State for day detail view
+  // Day‑detail dialog state
   const [isDayDetailOpen, setIsDayDetailOpen] = useState(false)
   const [selectedDayForDetail, setSelectedDayForDetail] = useState<Date | null>(null)
 
-  // Sample data - in a real app, this would come from an API
+  // Appointments data (keyed by "YYYY-MM-DD")
   const [appointments, setAppointments] = useState<Record<string, Appointment[]>>({})
-
-  // Use a ref to track if appointments have been initialized
   const appointmentsInitialized = useRef(false)
 
-  // Initialize with sample appointments only once
   useEffect(() => {
     if (appointmentsInitialized.current) return
-
     appointmentsInitialized.current = true
 
     const today = new Date()
@@ -149,3 +144,10 @@ export function AppointmentCalendarView({ date, view, onViewPatient, selectedDoc
       ],
     })
   }, [])
+
+  return (
+    <div>
+      {/* TODO: render calendar grid here */}
+    </div>
+  )
+}
