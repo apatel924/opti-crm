@@ -46,16 +46,6 @@ interface AppointmentDayViewProps {
   onAppointmentUpdate?: (appointments: Appointment[]) => void
 }
 
-// Helper: format "HH:MM" → "h:MM AM/PM"
-function formatTimeForDisplay(time: string) {
-  if (time.includes("AM") || time.includes("PM")) return time
-  const [hours, minutes] = time.split(":")
-  const h = parseInt(hours, 10)
-  const ampm = h >= 12 ? "PM" : "AM"
-  const h12 = h % 12 || 12
-  return `${h12}:${minutes} ${ampm}`
-}
-
 // Helper: normalize any "h:MM AM/PM" or "HH:MM" → "HH:MM"
 function normalizeTimeForComparison(time: string) {
   let hour = 0, minute = 0, isPM = false
@@ -88,16 +78,12 @@ export function AppointmentDayView({
   appointments = [],
   onAppointmentUpdate,
 }: AppointmentDayViewProps) {
-  // Local state
   const [localAppointments, setLocalAppointments] = useState<Appointment[]>([])
   const [multiBookSlots, setMultiBookSlots] = useState<Record<string, number>>({})
   const [activeTab, setActiveTab] = useState<"doctors" | "opticians">("doctors")
-
-  // Drag‑and‑drop state
   const [draggingAppointment, setDraggingAppointment] = useState<string | null>(null)
   const dragSourceTimeSlot = useRef<string | null>(null)
 
-  // Booking modal state
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | undefined>(undefined)
   const [isOpticianBooking, setIsOpticianBooking] = useState(false)
@@ -105,6 +91,28 @@ export function AppointmentDayView({
   // Refs for syncing with parent props
   const shouldUpdateParent = useRef(false)
   const prevAppointmentsRef = useRef<Appointment[]>([])
+
+  // Sync incoming prop → localAppointments
+  useEffect(() => {
+    // If unchanged, skip
+    if (JSON.stringify(prevAppointmentsRef.current) === JSON.stringify(appointments)) {
+      return
+    }
+    prevAppointmentsRef.current = appointments
+
+    if (appointments.length > 0) {
+      // Normalize times for internal use
+      const formatted = appointments.map((app) => ({
+        ...app,
+        time: normalizeTimeForComparison(app.time),
+      }))
+      shouldUpdateParent.current = false
+      setLocalAppointments(formatted)
+    } else if (appointments.length === 0 && localAppointments.length > 0) {
+      shouldUpdateParent.current = false
+      setLocalAppointments([])
+    }
+  }, [appointments])
 
   return (
     <div>
