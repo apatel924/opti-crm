@@ -24,7 +24,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Link from "next/link"
 import { AppointmentBookingModal } from "./appointment-booking-modal"
 
-// Define appointment type
+// Appointment type
 interface Appointment {
   id: string
   patientId: string
@@ -38,7 +38,7 @@ interface Appointment {
   isOptician?: boolean
 }
 
-// Props for this view
+// Props for the day view
 interface AppointmentDayViewProps {
   date: Date
   doctor: string
@@ -46,7 +46,7 @@ interface AppointmentDayViewProps {
   onAppointmentUpdate?: (appointments: Appointment[]) => void
 }
 
-// Helper: normalize any "h:MM AM/PM" or "HH:MM" → "HH:MM"
+// Normalize "h:MM AM/PM" or "HH:MM" → "HH:MM"
 function normalizeTimeForComparison(time: string) {
   let hour = 0, minute = 0, isPM = false
   if (time.includes(":") && !time.match(/AM|PM/)) {
@@ -65,7 +65,7 @@ function normalizeTimeForComparison(time: string) {
   return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`
 }
 
-// Time slots from 7 AM to 5 PM in 15‑minute increments
+// Time slots (7 AM–5 PM in 15‑min increments)
 const timeSlots = Array.from({ length: 41 }, (_, i) => {
   const hr = Math.floor(i / 4) + 7
   const min = (i % 4) * 15
@@ -78,30 +78,32 @@ export function AppointmentDayView({
   appointments = [],
   onAppointmentUpdate,
 }: AppointmentDayViewProps) {
+  // Local state
   const [localAppointments, setLocalAppointments] = useState<Appointment[]>([])
   const [multiBookSlots, setMultiBookSlots] = useState<Record<string, number>>({})
   const [activeTab, setActiveTab] = useState<"doctors" | "opticians">("doctors")
+
+  // Drag‑and‑drop state
   const [draggingAppointment, setDraggingAppointment] = useState<string | null>(null)
   const dragSourceTimeSlot = useRef<string | null>(null)
 
+  // Booking modal state
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | undefined>(undefined)
   const [isOpticianBooking, setIsOpticianBooking] = useState(false)
 
-  // Refs for syncing with parent props
+  // Refs for syncing updates
   const shouldUpdateParent = useRef(false)
   const prevAppointmentsRef = useRef<Appointment[]>([])
 
-  // Sync incoming prop → localAppointments
+  // Commit 7: Sync incoming prop → local state
   useEffect(() => {
-    // If unchanged, skip
     if (JSON.stringify(prevAppointmentsRef.current) === JSON.stringify(appointments)) {
       return
     }
     prevAppointmentsRef.current = appointments
 
     if (appointments.length > 0) {
-      // Normalize times for internal use
       const formatted = appointments.map((app) => ({
         ...app,
         time: normalizeTimeForComparison(app.time),
@@ -114,9 +116,16 @@ export function AppointmentDayView({
     }
   }, [appointments])
 
+  useEffect(() => {
+    if (onAppointmentUpdate && shouldUpdateParent.current) {
+      onAppointmentUpdate(localAppointments)
+      shouldUpdateParent.current = false
+    }
+  }, [localAppointments, onAppointmentUpdate])
+
   return (
     <div>
-      {/* TODO: render tabs & time‑slot grid & booking modal */}
+      {/* TODO: render tabs, grid, and booking modal */}
     </div>
   )
 }
