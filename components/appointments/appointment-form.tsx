@@ -1,4 +1,4 @@
-// src/components/AppointmentForm.tsx
+
 "use client"
 
 import React from "react"
@@ -31,6 +31,27 @@ export function AppointmentForm({ patientId }: { patientId?: string }) {
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [patientSearchOpen, setPatientSearchOpen] = useState(false)
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | { target: { name: string; value: string } }
+  ) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+    if (errors[name]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev }
+        delete newErrors[name]
+        return newErrors
+      })
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    // TODO: validate & submit
+    setIsSubmitting(false)
+  }
 
   return null
 }
