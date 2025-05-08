@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { addDays } from "date-fns"
+import { addDays, format } from "date-fns"
 
 export function AppointmentsPage() {
   const [currentDate, setCurrentDate] = useState(new Date())
@@ -26,6 +26,7 @@ export function AppointmentsPage() {
         <Button variant="outline" size="icon" onClick={goToNext}>
           <ChevronRight className="h-4 w-4" />
         </Button>
+        <div className="ml-2 text-lg font-medium">{format(currentDate, "EEEE, MMMM d, yyyy")}</div>
       </div>
     </div>
   )
