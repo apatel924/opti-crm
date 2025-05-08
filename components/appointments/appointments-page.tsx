@@ -4,9 +4,11 @@ import { useState } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { addDays, format } from "date-fns"
+import { providers } from "@/lib/mock-data"
 
 export function AppointmentsPage() {
   const [currentDate, setCurrentDate] = useState(new Date())
+  const [selectedProvider, setSelectedProvider] = useState("all")
 
   const goToToday = () => setCurrentDate(new Date())
   const goToPrevious = () => setCurrentDate(addDays(currentDate, -1))
@@ -27,6 +29,18 @@ export function AppointmentsPage() {
           <ChevronRight className="h-4 w-4" />
         </Button>
         <div className="ml-2 text-lg font-medium">{format(currentDate, "EEEE, MMMM d, yyyy")}</div>
+        <select
+          className="block rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
+          value={selectedProvider}
+          onChange={(e) => setSelectedProvider(e.target.value)}
+        >
+          <option value="all">All Providers</option>
+          {providers.map((provider) => (
+            <option key={provider.id} value={provider.id}>
+              {provider.name}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   )
