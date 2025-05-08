@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, Calendar, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { addDays, format } from "date-fns"
 import { providers } from "@/lib/mock-data"
@@ -9,6 +9,7 @@ import { providers } from "@/lib/mock-data"
 export function AppointmentsPage() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedProvider, setSelectedProvider] = useState("all")
+  const [currentView, setCurrentView] = useState("day")
 
   const goToToday = () => setCurrentDate(new Date())
   const goToPrevious = () => setCurrentDate(addDays(currentDate, -1))
@@ -41,6 +42,32 @@ export function AppointmentsPage() {
             </option>
           ))}
         </select>
+        <div className="flex rounded-md border">
+          <Button
+            variant={currentView === "day" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setCurrentView("day")}
+          >
+            <Clock className="mr-2 h-4 w-4" />
+            Day
+          </Button>
+          <Button
+            variant={currentView === "week" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setCurrentView("week")}
+          >
+            <Calendar className="mr-2 h-4 w-4" />
+            Week
+          </Button>
+          <Button
+            variant={currentView === "month" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setCurrentView("month")}
+          >
+            <Calendar className="mr-2 h-4 w-4" />
+            Month
+          </Button>
+        </div>
       </div>
     </div>
   )
