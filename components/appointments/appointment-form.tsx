@@ -123,8 +123,6 @@ export function AppointmentForm({ patientId }: { patientId?: string }) {
                     </Button>
                   }
                   onSelect={(patient) => setSelectedPatient(patient)}
-                  isOpen={patientSearchOpen}
-                  onOpenChange={setPatientSearchOpen}
                 />
               </div>
               {errors.patientId && <p className="text-sm text-red-500">{errors.patientId}</p>}
