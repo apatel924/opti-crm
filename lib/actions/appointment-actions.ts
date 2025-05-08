@@ -81,3 +81,20 @@ export async function createAppointment(data: any) {
     return { success: false, message: "Failed to create appointment" }
   }
 }
+
+export async function getAppointments() {
+  // In a real app, this would fetch from a database
+  return appointments
+}
+
+export async function getAppointmentsByDate(date: string) {
+  return appointments.filter((appointment) => appointment.date === date)
+}
+
+export async function getAppointmentsByPatient(patientId: string) {
+  return appointments.filter((appointment) => appointment.patientId === patientId)
+}
+
+export async function getAppointmentsByDoctor(doctorId: string) {
+  return appointments.filter((appointment) => appointment.doctor === doctorId)
+}
