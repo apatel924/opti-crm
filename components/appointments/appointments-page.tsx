@@ -4,7 +4,7 @@ import { useState } from "react"
 import { ChevronLeft, ChevronRight, Calendar, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { addDays, format } from "date-fns"
+import { addDays, format, startOfWeek } from "date-fns"
 import { providers } from "@/lib/mock-data"
 
 interface TimeSlot {
@@ -36,9 +36,19 @@ export function AppointmentsPage() {
     }
   }
 
-  const handleTimeSlotClick = (time: string, providerId: string) => {
+  const handleTimeSlotClick = (time: string, providerId: string, date?: Date) => {
     // TODO: Implement appointment creation
-    console.log(`Clicked time slot ${time} for provider ${providerId}`)
+    console.log(`Clicked time slot ${time} for provider ${providerId} on ${date?.toISOString()}`)
+  }
+
+  // weekDays helper
+  const weekDays = () => {
+    const days = []
+    const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 })
+    for (let i = 0; i < 7; i++) {
+      days.push(addDays(weekStart, i))
+    }
+    return days
   }
 
   // renderDayView skeleton
@@ -63,6 +73,36 @@ export function AppointmentsPage() {
                   key={`${provider.id}-${slot.time}`}
                   className="h-12 border-t border-gray-100 hover:bg-gray-50 cursor-pointer"
                   onClick={() => handleTimeSlotClick(slot.time, provider.id)}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  // renderWeekView
+  const renderWeekView = () => {
+    const days = weekDays()
+    return (
+      <div className="grid grid-cols-[80px_1fr]">
+        <div className="border-r">
+          {timeSlots.map((slot) => (
+            <div key={slot.time} className="h-12 text-xs text-gray-500">
+              {slot.displayTime}
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-7">
+          {days.map((day) => (
+            <div key={day.toISOString()} className="border-l">
+              <div className="text-center">{format(day, "EEE MMM d")}</div>
+              {timeSlots.map((slot) => (
+                <div
+                  key={`${day.toISOString()}-${slot.time}`}
+                  className="h-12 border-t border-gray-100 hover:bg-gray-50 cursor-pointer"
+                  onClick={() => handleTimeSlotClick(slot.time, selectedProvider, day)}
                 />
               ))}
             </div>
@@ -128,7 +168,7 @@ export function AppointmentsPage() {
       </div>
       <Card className="overflow-hidden">
         {currentView === "day" && renderDayView()}
-        {currentView === "week" && <div>Week View Placeholder</div>}
+        {currentView === "week" && renderWeekView()}
         {currentView === "month" && <div>Month View Placeholder</div>}
       </Card>
     </div>
