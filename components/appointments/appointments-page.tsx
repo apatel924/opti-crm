@@ -4,7 +4,7 @@ import { useState } from "react"
 import { ChevronLeft, ChevronRight, Calendar, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { addDays, format, startOfWeek } from "date-fns"
+import { addDays, format, startOfWeek, isSameDay, subMonths, addMonths } from "date-fns"
 import { providers } from "@/lib/mock-data"
 
 interface TimeSlot {
@@ -20,8 +20,20 @@ export function AppointmentsPage() {
   const [currentView, setCurrentView] = useState("day")
 
   const goToToday = () => setCurrentDate(new Date())
-  const goToPrevious = () => setCurrentDate(addDays(currentDate, -1))
-  const goToNext = () => setCurrentDate(addDays(currentDate, 1))
+  const goToPrevious = () => {
+    if (currentView === "month") {
+      setCurrentDate(subMonths(currentDate, 1))
+    } else {
+      setCurrentDate(addDays(currentDate, -1))
+    }
+  }
+  const goToNext = () => {
+    if (currentView === "month") {
+      setCurrentDate(addMonths(currentDate, 1))
+    } else {
+      setCurrentDate(addDays(currentDate, 1))
+    }
+  }
 
   // generate timeSlots
   const timeSlots: TimeSlot[] = []
@@ -47,6 +59,25 @@ export function AppointmentsPage() {
     const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 })
     for (let i = 0; i < 7; i++) {
       days.push(addDays(weekStart, i))
+    }
+    return days
+  }
+
+  // monthDays helper
+  const monthDays = () => {
+    const year = currentDate.getFullYear()
+    const month = currentDate.getMonth()
+    const firstDay = new Date(year, month, 1)
+    const lastDay = new Date(year, month + 1, 0)
+    const daysInMonth = lastDay.getDate()
+    const firstDayOfWeek = firstDay.getDay()
+    const days = []
+
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      days.push(null)
+    }
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push(new Date(year, month, i))
     }
     return days
   }
@@ -112,6 +143,27 @@ export function AppointmentsPage() {
     )
   }
 
+  // renderMonthView
+  const renderMonthView = () => {
+    const days = monthDays()
+    return (
+      <div className="grid grid-rows-6">
+        <div className="grid grid-cols-7">
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+            <div key={day} className="text-center">{day}</div>
+          ))}
+        </div>
+        <div className="grid grid-cols-7 grid-rows-6">
+          {days.map((day, index) => (
+            <div key={index} className={`border p-1 ${day && isSameDay(day, new Date()) ? "bg-blue-50" : ""}`}>
+              {day && day.getDate()}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div>
       <h1 className="text-2xl font-bold tracking-tight">Appointments</h1>
@@ -169,7 +221,7 @@ export function AppointmentsPage() {
       <Card className="overflow-hidden">
         {currentView === "day" && renderDayView()}
         {currentView === "week" && renderWeekView()}
-        {currentView === "month" && <div>Month View Placeholder</div>}
+        {currentView === "month" && renderMonthView()}
       </Card>
     </div>
   )
