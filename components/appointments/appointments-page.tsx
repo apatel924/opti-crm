@@ -7,6 +7,13 @@ import { Card } from "@/components/ui/card"
 import { addDays, format } from "date-fns"
 import { providers } from "@/lib/mock-data"
 
+interface TimeSlot {
+  hour: number
+  minute: number
+  time: string
+  displayTime: string
+}
+
 export function AppointmentsPage() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedProvider, setSelectedProvider] = useState("all")
@@ -17,7 +24,7 @@ export function AppointmentsPage() {
   const goToNext = () => setCurrentDate(addDays(currentDate, 1))
 
   // generate timeSlots
-  const timeSlots = []
+  const timeSlots: TimeSlot[] = []
   for (let hour = 7; hour < 18; hour++) {
     for (let minute = 0; minute < 60; minute += 15) {
       timeSlots.push({
