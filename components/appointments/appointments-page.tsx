@@ -16,6 +16,33 @@ export function AppointmentsPage() {
   const goToPrevious = () => setCurrentDate(addDays(currentDate, -1))
   const goToNext = () => setCurrentDate(addDays(currentDate, 1))
 
+  // generate timeSlots
+  const timeSlots = []
+  for (let hour = 7; hour < 18; hour++) {
+    for (let minute = 0; minute < 60; minute += 15) {
+      timeSlots.push({
+        hour,
+        minute,
+        time: `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`,
+        displayTime: `${hour > 12 ? hour - 12 : hour}:${minute.toString().padStart(2, "0")} ${hour >= 12 ? "PM" : "AM"}`,
+      })
+    }
+  }
+
+  // renderDayView skeleton
+  const renderDayView = () => {
+    const providersToShow = selectedProvider === "all" ? providers : providers.filter((p) => p.id === selectedProvider)
+
+    return (
+      <div className="grid grid-cols-[80px_1fr]">
+        <div className="border-r">Time Column</div>
+        <div className="grid" style={{ gridTemplateColumns: `repeat(${providersToShow.length}, 1fr)` }}>
+          Provider Columns
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div>
       <h1 className="text-2xl font-bold tracking-tight">Appointments</h1>
@@ -71,7 +98,7 @@ export function AppointmentsPage() {
         </div>
       </div>
       <Card className="overflow-hidden">
-        {currentView === "day" && <div>Day View Placeholder</div>}
+        {currentView === "day" && renderDayView()}
         {currentView === "week" && <div>Week View Placeholder</div>}
         {currentView === "month" && <div>Month View Placeholder</div>}
       </Card>
