@@ -29,15 +29,37 @@ export function AppointmentsPage() {
     }
   }
 
+  const handleTimeSlotClick = (time: string, providerId: string) => {
+    // TODO: Implement appointment creation
+    console.log(`Clicked time slot ${time} for provider ${providerId}`)
+  }
+
   // renderDayView skeleton
   const renderDayView = () => {
     const providersToShow = selectedProvider === "all" ? providers : providers.filter((p) => p.id === selectedProvider)
 
     return (
       <div className="grid grid-cols-[80px_1fr]">
-        <div className="border-r">Time Column</div>
+        <div className="border-r">
+          {timeSlots.map((slot) => (
+            <div key={slot.time} className="h-12 text-xs text-gray-500">
+              {slot.displayTime}
+            </div>
+          ))}
+        </div>
         <div className="grid" style={{ gridTemplateColumns: `repeat(${providersToShow.length}, 1fr)` }}>
-          Provider Columns
+          {providersToShow.map((provider) => (
+            <div key={provider.id}>
+              <div className="text-center">{provider.name}</div>
+              {timeSlots.map((slot) => (
+                <div
+                  key={`${provider.id}-${slot.time}`}
+                  className="h-12 border-t border-gray-100 hover:bg-gray-50 cursor-pointer"
+                  onClick={() => handleTimeSlotClick(slot.time, provider.id)}
+                />
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     )
