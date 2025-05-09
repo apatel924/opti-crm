@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { ChevronLeft, ChevronRight, Calendar, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import { addDays, format } from "date-fns"
 import { providers } from "@/lib/mock-data"
 
@@ -69,6 +70,11 @@ export function AppointmentsPage() {
           </Button>
         </div>
       </div>
+      <Card className="overflow-hidden">
+        {currentView === "day" && <div>Day View Placeholder</div>}
+        {currentView === "week" && <div>Week View Placeholder</div>}
+        {currentView === "month" && <div>Month View Placeholder</div>}
+      </Card>
     </div>
   )
 }
