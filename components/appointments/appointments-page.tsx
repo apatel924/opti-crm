@@ -1,11 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight, Calendar, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { addDays, format, startOfWeek, isSameDay, subMonths, addMonths } from "date-fns"
-import { providers } from "@/lib/mock-data"
+import { addDays, format, startOfWeek, isSameDay, subMonths, addMonths, endOfWeek } from "date-fns"
+import { providers, initialAppointments } from "@/lib/mock-data"
 
 interface TimeSlot {
   hour: number
@@ -18,6 +18,36 @@ export function AppointmentsPage() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedProvider, setSelectedProvider] = useState("all")
   const [currentView, setCurrentView] = useState("day")
+  const [appointments, setAppointments] = useState([])
+
+  // Load mock appointments
+  useEffect(() => {
+    const formatted = initialAppointments.map((appt) => ({
+      ...appt,
+      date: new Date(appt.date),
+    }))
+    setAppointments(formatted)
+  }, [])
+
+  // Filter appointments based on current view and provider
+  const filteredAppointments = appointments.filter((appointment) => {
+    if (selectedProvider !== "all" && appointment.provider !== selectedProvider) {
+      return false
+    }
+
+    if (currentView === "day") {
+      return isSameDay(appointment.date, currentDate)
+    } else if (currentView === "week") {
+      const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 })
+      const weekEnd = endOfWeek(currentDate, { weekStartsOn: 0 })
+      return appointment.date >= weekStart && appointment.date <= weekEnd
+    }
+
+    return (
+      appointment.date.getMonth() === currentDate.getMonth() &&
+      appointment.date.getFullYear() === currentDate.getFullYear()
+    )
+  })
 
   const goToToday = () => setCurrentDate(new Date())
   const goToPrevious = () => {
