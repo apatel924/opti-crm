@@ -517,11 +517,7 @@ export function LabManagementPage() {
         <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <LabOrderDetails 
-              order={{
-                ...selectedOrder,
-                patientName: selectedOrder.patient,
-                orderDate: selectedOrder.dateOrdered
-              }} 
+              order={selectedOrder}
               onClose={() => setDetailsOpen(false)} 
             />
           </DialogContent>
