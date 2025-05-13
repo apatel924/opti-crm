@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 
-// Sample patients data - in a real app, this would come from backend storage
 const patientsData = [
   {
     id: "P-10042",
@@ -135,4 +134,3 @@ export function usePatients() {
 
   return { patients, isLoading, error }
 }
-
