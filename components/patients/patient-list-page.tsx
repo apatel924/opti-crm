@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Search, Filter, Plus, Download, MoreHorizontal, Eye, Calendar, MessageSquare, FileText } from "lucide-react"
+import { Search, Filter as FilterIcon, Plus, Download, MoreHorizontal, Eye, Calendar, MessageSquare, FileText } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -70,7 +70,7 @@ export function PatientListPage() {
               />
             </form>
             <Button variant="outline" size="icon" onClick={() => setShowFilters(!showFilters)}>
-              <Filter className="h-4 w-4" />
+              <FilterIcon className="h-4 w-4" />
               <span className="sr-only">Filter</span>
             </Button>
             <Button variant="outline" size="icon">
