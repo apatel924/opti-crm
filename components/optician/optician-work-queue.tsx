@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 // Sample data for optician work queue
@@ -301,15 +300,6 @@ export function OpticianWorkQueue() {
                       <TableCell className="font-medium">{item.id}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage src={`/placeholder.svg?height=32&width=32`} alt={item.patientName} />
-                            <AvatarFallback>
-                              {item.patientName
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
                           <div>
                             <div className="font-medium">{item.patientName}</div>
                             <div className="text-xs text-muted-foreground">
