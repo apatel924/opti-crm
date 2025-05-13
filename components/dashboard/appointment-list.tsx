@@ -1,9 +1,17 @@
 "use client"
 
-import { Clock } from "lucide-react"
+import { Clock, MoreHorizontal } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const appointments = [
   {
@@ -108,6 +116,22 @@ export function AppointmentList() {
                     </div>
                     <div className="text-xs text-muted-foreground">{appointment.duration}</div>
                   </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                        <MoreHorizontal className="h-4 w-4" />
+                        <span className="sr-only">More options</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="rounded-xl">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuItem className="rounded-lg">View Details</DropdownMenuItem>
+                      <DropdownMenuItem className="rounded-lg">Check In</DropdownMenuItem>
+                      <DropdownMenuItem className="rounded-lg">Start Exam</DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem className="text-ghibli-pink rounded-lg">Cancel Appointment</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </CardHeader>
               <CardContent className="pb-2">
@@ -125,15 +149,21 @@ export function AppointmentList() {
                   {appointment.status === "Checked In" && <span>Waiting for {appointment.waitTime}</span>}
                 </div>
                 <div className="flex gap-2">
-                  <Button className="ghibli-button border border-ghibli-blue-light hover:bg-ghibli-blue-light/10">
+                  <Button size="sm" variant="outline" className="ghibli-button">
                     View Chart
                   </Button>
                   <Button
-                    className={`ghibli-button ${
-                      appointment.status === "Scheduled" ? "bg-primary" :
-                      appointment.status === "Checked In" ? "bg-green-500" :
-                      appointment.status === "In Progress" ? "bg-gray-500" : "bg-primary"
-                    }`}
+                    size="sm"
+                    className="ghibli-button"
+                    variant={
+                      appointment.status === "Scheduled"
+                        ? "default"
+                        : appointment.status === "Checked In"
+                          ? "green"
+                          : appointment.status === "In Progress"
+                            ? "secondary"
+                            : "default"
+                    }
                   >
                     {appointment.status === "Scheduled"
                       ? "Check In"
