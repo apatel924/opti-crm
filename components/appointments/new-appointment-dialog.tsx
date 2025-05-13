@@ -12,6 +12,7 @@ import { Plus, User } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { DatePicker } from "@/components/ui/date-picker"
+import { createAppointment } from "@/lib/actions/appointment-actions"
 import { toast } from "@/components/ui/use-toast"
 
 export function NewAppointmentDialog() {
@@ -39,9 +40,9 @@ export function NewAppointmentDialog() {
       return
     }
 
+    // Simulate API call
     setIsSubmitting(true)
-    
-    // Simplified submission logic
+
     try {
       // Format date for submission
       const formattedDate = date.toISOString().split("T")[0]
@@ -58,23 +59,31 @@ export function NewAppointmentDialog() {
         notes,
       }
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      setIsSuccess(true)
-      
-      // Reset form and close dialog after success
-      setTimeout(() => {
-        setIsSuccess(false)
-        setSelectedPatient(null)
-        setDate(new Date())
-        setAppointmentType("annual")
-        setDoctor("dr-williams")
-        setDuration("30")
-        setTime("09:00")
-        setNotes("")
-        setOpen(false)
-      }, 1500)
+      // Submit to server action
+      const result = await createAppointment(appointmentData)
+
+      if (result.success) {
+        setIsSuccess(true)
+
+        // Reset form and close dialog after success
+        setTimeout(() => {
+          setIsSuccess(false)
+          setSelectedPatient(null)
+          setDate(new Date())
+          setAppointmentType("annual")
+          setDoctor("dr-williams")
+          setDuration("30")
+          setTime("09:00")
+          setNotes("")
+          setOpen(false)
+        }, 1500)
+      } else {
+        toast({
+          title: "Error",
+          description: result.message || "Failed to schedule appointment",
+          variant: "destructive",
+        })
+      }
     } catch (error) {
       console.error("Error scheduling appointment:", error)
       toast({
@@ -175,6 +184,8 @@ export function NewAppointmentDialog() {
                     <SelectItem value="comprehensive">Comprehensive Exam</SelectItem>
                     <SelectItem value="emergency">Emergency</SelectItem>
                     <SelectItem value="kids">Kids Exam</SelectItem>
+                    <SelectItem value="dfe">DFE</SelectItem>
+                    <SelectItem value="troubleshooting">Troubleshooting</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
