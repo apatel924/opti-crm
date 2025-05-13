@@ -1,5 +1,5 @@
 import type React from "react"
-import { SidebarProvider } from "@/components/ui/sidebar/SidebarProvider"
+import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import { TopNavigation } from "@/components/top-navigation"
 
