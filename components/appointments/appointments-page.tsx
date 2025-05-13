@@ -11,12 +11,15 @@ import { AppointmentDetailsDialog } from "./appointment-details-dialog"
 import { Card } from "@/components/ui/card"
 import { providers, appointmentTypes, initialAppointments } from "@/lib/mock-data"
 
+// Add near other interfaces
+type AppointmentType = keyof typeof appointmentTypes;
+
 // Define appointment interface
 interface Appointment {
   id: string
   patientId: string
   patientName: string
-  type: string
+  type: AppointmentType
   date: Date
   startTime: string
   endTime: string
@@ -73,7 +76,7 @@ export function AppointmentsPage() {
       ...appt,
       date: new Date(appt.date),
     }))
-    setAppointments(formattedAppointments)
+    setAppointments(formattedAppointments as Appointment[])
   }, [])
 
   // Filter appointments based on selected provider and current view/date
