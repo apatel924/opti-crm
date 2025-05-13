@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Filter, ArrowUpDown, CheckCircle, Clock, Package, AlertCircle, Eye } from "lucide-react"
+import { Search, Filter as FilterIcon, ArrowUpDown, CheckCircle, Clock, Package, AlertCircle, Eye } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -207,7 +207,7 @@ export function OpticianWorkQueue() {
               />
             </form>
             <Button variant="outline" size="icon" onClick={() => setShowFilters(!showFilters)}>
-              <Filter className="h-4 w-4" />
+              <FilterIcon className="h-4 w-4" />
               <span className="sr-only">Filter</span>
             </Button>
           </div>
