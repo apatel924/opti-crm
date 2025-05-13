@@ -155,6 +155,8 @@ export function NewAppointmentDialog() {
                       </Button>
                     }
                     onSelect={(patient) => setSelectedPatient(patient)}
+                    isOpen={patientSearchOpen}
+                    onOpenChange={setPatientSearchOpen}
                   />
                 </div>
               </div>
