@@ -11,25 +11,33 @@ interface RoleSelectorProps {
 export function RoleSelector({ value, onValueChange }: RoleSelectorProps) {
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger>
+      <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Select role" />
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="front-desk">
-          <Users className="h-4 w-4" />
-          <span>Front Desk</span>
+          <div className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            <span>Front Desk</span>
+          </div>
         </SelectItem>
         <SelectItem value="optometrist">
-          <Eye className="h-4 w-4" />
-          <span>Optometrist</span>
+          <div className="flex items-center gap-2">
+            <Eye className="h-4 w-4" />
+            <span>Optometrist</span>
+          </div>
         </SelectItem>
         <SelectItem value="lab-tech">
-          <Flask className="h-4 w-4" />
-          <span>Lab Technician</span>
+          <div className="flex items-center gap-2">
+            <Flask className="h-4 w-4" />
+            <span>Lab Technician</span>
+          </div>
         </SelectItem>
         <SelectItem value="admin">
-          <DollarSign className="h-4 w-4" />
-          <span>Administration</span>
+          <div className="flex items-center gap-2">
+            <DollarSign className="h-4 w-4" />
+            <span>Administration</span>
+          </div>
         </SelectItem>
       </SelectContent>
     </Select>
