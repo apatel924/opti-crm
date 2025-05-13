@@ -19,6 +19,9 @@ export function AppointmentsPage() {
   const [selectedProvider, setSelectedProvider] = useState("all")
   const [currentView, setCurrentView] = useState("day")
   const [appointments, setAppointments] = useState([])
+  const [selectedAppointment, setSelectedAppointment] = useState(null)
+  const [isAppointmentDetailsOpen, setIsAppointmentDetailsOpen] = useState(false)
+  const [draggingAppointment, setDraggingAppointment] = useState(null)
 
   // Load mock appointments
   useEffect(() => {
@@ -28,6 +31,24 @@ export function AppointmentsPage() {
     }))
     setAppointments(formatted)
   }, [])
+
+  const handleAppointmentClick = (appointment) => {
+    setSelectedAppointment(appointment)
+    setIsAppointmentDetailsOpen(true)
+  }
+
+  const handleDragStart = (e, appointment) => {
+    e.dataTransfer.setData("appointmentId", appointment.id)
+    setDraggingAppointment(appointment.id)
+  }
+
+  const handleDrop = (e, time, provider, date) => {
+    e.preventDefault()
+    const appointmentId = e.dataTransfer.getData("appointmentId")
+    if (!appointmentId) return
+
+    // update appointment logic goes here (next commit)
+  }
 
   // Filter appointments based on current view and provider
   const filteredAppointments = appointments.filter((appointment) => {
@@ -134,6 +155,8 @@ export function AppointmentsPage() {
                   key={`${provider.id}-${slot.time}`}
                   className="h-12 border-t border-gray-100 hover:bg-gray-50 cursor-pointer"
                   onClick={() => handleTimeSlotClick(slot.time, provider.id)}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => handleDrop(e, slot.time, provider.id, currentDate)}
                 />
               ))}
               {filteredAppointments
@@ -152,8 +175,11 @@ export function AppointmentsPage() {
                   return (
                     <div
                       key={appointment.id}
-                      className="absolute left-0 right-0 mx-1 rounded border-l-4 bg-gray-500 text-white p-1 text-xs overflow-hidden"
+                      className="absolute left-0 right-0 mx-1 rounded border-l-4 bg-gray-500 text-white p-1 text-xs overflow-hidden cursor-move"
                       style={{ top: `${topPosition}px`, height: `${height}px` }}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, appointment)}
+                      onClick={() => handleAppointmentClick(appointment)}
                     >
                       <div className="font-medium truncate">
                         {appointment.type === "Lunch" || appointment.type === "Block"
@@ -192,6 +218,7 @@ export function AppointmentsPage() {
                   key={`${day.toISOString()}-${slot.time}`}
                   className="h-12 border-t border-gray-100 hover:bg-gray-50 cursor-pointer"
                   onClick={() => handleTimeSlotClick(slot.time, selectedProvider, day)}
+                  onDragOver={(e) => e.preventDefault()}
                 />
               ))}
               {filteredAppointments
