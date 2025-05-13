@@ -108,6 +108,7 @@ const billingData = [
 export function BillingPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showFilters, setShowFilters] = useState(false)
+  const [patientSearchOpen, setPatientSearchOpen] = useState(false)
 
   const filteredBilling = billingData.filter(
     (bill) =>
@@ -141,6 +142,11 @@ export function BillingPage() {
                 Find Patient
               </Button>
             }
+            onSelect={(patient) => {
+              // Handle patient selection
+            }}
+            isOpen={patientSearchOpen}
+            onOpenChange={setPatientSearchOpen}
           />
           <NewBillingDialog />
         </div>
