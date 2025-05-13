@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Search, Filter, Plus, Clock, Eye, Glasses, Package } from "lucide-react"
+import { Search, Filter as FilterIcon, Plus, Clock, Eye, Glasses, Package } from "lucide-react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 import { LabOrderDetails } from "@/components/lab/lab-order-details"
@@ -223,7 +223,7 @@ export function LabManagementPage() {
                 <div className="w-[180px]">
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
                     <SelectTrigger className="ghibli-input">
-                      <Filter className="mr-2 h-4 w-4" />
+                      <FilterIcon className="mr-2 h-4 w-4" />
                       <span>Status</span>
                     </SelectTrigger>
                     <SelectContent>
