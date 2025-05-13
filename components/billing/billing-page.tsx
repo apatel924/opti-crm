@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Search, Filter, Download, DollarSign, FileText, CheckCircle, AlertCircle, Calendar, Eye } from "lucide-react"
+import { Search, Filter as FilterIcon, Download, DollarSign, FileText, CheckCircle, AlertCircle, Calendar, Eye } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -209,7 +209,7 @@ export function BillingPage() {
               />
             </form>
             <Button variant="outline" size="icon" onClick={() => setShowFilters(!showFilters)}>
-              <Filter className="h-4 w-4" />
+              <FilterIcon className="h-4 w-4" />
               <span className="sr-only">Filter</span>
             </Button>
             <Button variant="outline" size="icon">
