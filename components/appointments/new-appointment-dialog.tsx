@@ -1,18 +1,23 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 import { Plus, User } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { DatePicker } from "@/components/ui/date-picker"
 import { toast } from "@/components/ui/use-toast"
 
 export function NewAppointmentDialog() {
   const [open, setOpen] = useState(false)
-  const [patientName, setPatientName] = useState("")
+  const [selectedPatient, setSelectedPatient] = useState<{ id: string; name: string } | null>(null)
+  const [date, setDate] = useState<Date | undefined>(new Date())
   const [appointmentType, setAppointmentType] = useState("annual")
   const [doctor, setDoctor] = useState("dr-williams")
   const [duration, setDuration] = useState("30")
@@ -20,14 +25,15 @@ export function NewAppointmentDialog() {
   const [notes, setNotes] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [patientSearchOpen, setPatientSearchOpen] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!patientName) {
+    if (!selectedPatient || !date) {
       toast({
         title: "Missing information",
-        description: "Please enter a patient name.",
+        description: "Please select a patient and date.",
         variant: "destructive",
       })
       return
@@ -37,6 +43,21 @@ export function NewAppointmentDialog() {
     
     // Simplified submission logic
     try {
+      // Format date for submission
+      const formattedDate = date.toISOString().split("T")[0]
+
+      // Create appointment data
+      const appointmentData = {
+        patientId: selectedPatient.id,
+        patientName: selectedPatient.name,
+        date: formattedDate,
+        time,
+        appointmentType,
+        doctor,
+        duration,
+        notes,
+      }
+
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000))
       
@@ -45,18 +66,20 @@ export function NewAppointmentDialog() {
       // Reset form and close dialog after success
       setTimeout(() => {
         setIsSuccess(false)
-        setOpen(false)
-        setPatientName("")
+        setSelectedPatient(null)
+        setDate(new Date())
         setAppointmentType("annual")
         setDoctor("dr-williams")
         setDuration("30")
         setTime("09:00")
         setNotes("")
+        setOpen(false)
       }, 1500)
     } catch (error) {
+      console.error("Error scheduling appointment:", error)
       toast({
         title: "Error",
-        description: "Failed to schedule appointment",
+        description: "There was an error scheduling the appointment. Please try again.",
         variant: "destructive",
       })
     } finally {
@@ -102,13 +125,36 @@ export function NewAppointmentDialog() {
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="patient">Patient Name</Label>
-                <Input
-                  id="patient"
-                  value={patientName}
-                  onChange={(e) => setPatientName(e.target.value)}
-                  placeholder="Enter patient name"
-                />
+                <Label htmlFor="patient">Patient</Label>
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="patient"
+                    value={selectedPatient ? selectedPatient.name : ""}
+                    placeholder="Select a patient"
+                    readOnly
+                    className="flex-1"
+                  />
+                  <PatientSearchDialog
+                    trigger={
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="bg-primary text-primary-foreground hover:bg-primary/90"
+                      >
+                        <User className="mr-2 h-4 w-4" />
+                        Find
+                      </Button>
+                    }
+                    onSelect={(patient) => setSelectedPatient(patient)}
+                    isOpen={patientSearchOpen}
+                    onOpenChange={setPatientSearchOpen}
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <Label>Date</Label>
+                <DatePicker date={date} setDate={setDate} placeholder="Select appointment date" />
               </div>
 
               <div className="grid gap-2">
@@ -124,9 +170,10 @@ export function NewAppointmentDialog() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="annual">Annual Exam</SelectItem>
+                    <SelectItem value="contact">Contact Lens Fitting</SelectItem>
                     <SelectItem value="follow-up">Follow-up</SelectItem>
-                    <SelectItem value="emergency">Emergency</SelectItem>
                     <SelectItem value="comprehensive">Comprehensive Exam</SelectItem>
+                    <SelectItem value="emergency">Emergency</SelectItem>
                     <SelectItem value="kids">Kids Exam</SelectItem>
                   </SelectContent>
                 </Select>
@@ -157,6 +204,7 @@ export function NewAppointmentDialog() {
                     <SelectItem value="30">30 minutes</SelectItem>
                     <SelectItem value="45">45 minutes</SelectItem>
                     <SelectItem value="60">60 minutes</SelectItem>
+                    <SelectItem value="90">90 minutes</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -175,7 +223,7 @@ export function NewAppointmentDialog() {
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={!patientName || isSubmitting}>
+              <Button type="submit" disabled={!selectedPatient || !date || !time || isSubmitting}>
                 {isSubmitting ? "Scheduling..." : "Schedule"}
               </Button>
             </DialogFooter>
