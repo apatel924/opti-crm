@@ -3,32 +3,21 @@
 import { z } from "zod"
 import { revalidatePath } from "next/cache"
 
-// Add FormState interface
-interface FormState {
-  message: string
-  errors: Record<string, string[]>
-  success: boolean
-}
-
 // Define validation schema
 const PatientSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   dob: z.string().min(1, "Date of birth is required"),
-  gender: z.enum(["female", "male", "other"], {
-    required_error: "Gender is required",
-  }),
+  gender: z.string(),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(1, "Phone number is required"),
   address: z.string().min(1, "Address is required"),
-  insurance: z.enum(["blueCross", "aetna", "medicare", "unitedHealthcare", "cigna"], {
-    required_error: "Insurance is required",
-  }),
+  insurance: z.string(),
   policyNumber: z.string().optional(),
   medicalNotes: z.string().optional(),
 })
 
-export async function createPatient(state: FormState, formData: FormData) {
+export async function createPatient(prevState: any, formData: FormData) {
   // Convert FormData to object
   const rawFormData = Object.fromEntries(formData.entries())
 
@@ -68,4 +57,3 @@ export async function createPatient(state: FormState, formData: FormData) {
     }
   }
 }
-
