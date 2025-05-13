@@ -27,14 +27,6 @@ interface Appointment {
   isOptician?: boolean
 }
 
-// Define TimeSlot interface
-interface TimeSlot {
-  hour: number
-  minute: number
-  time: string
-  displayTime: string
-}
-
 export function AppointmentsPage() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [currentView, setCurrentView] = useState("day") // day, week, month
@@ -51,10 +43,8 @@ export function AppointmentsPage() {
   const dragStartProviderRef = useRef<string | null>(null)
   const dragStartDateRef = useRef<Date | null>(null)
 
-  // Update the timeSlots declaration
-  const timeSlots: TimeSlot[] = []
-
   // Generate time slots from 7 AM to 5 PM in 15-minute increments
+  const timeSlots = []
   for (let hour = 7; hour < 18; hour++) {
     for (let minute = 0; minute < 60; minute += 15) {
       timeSlots.push({
@@ -174,7 +164,7 @@ export function AppointmentsPage() {
   }
 
   // Handle time slot click
-  const handleTimeSlotClick = (time: string, provider: string, date: Date = currentDate) => {
+  const handleTimeSlotClick = (time: string, provider = null, date = currentDate) => {
     setSelectedSlot({
       date: date,
       startTime: time,
@@ -396,7 +386,7 @@ export function AppointmentsPage() {
                     const topPosition = (startFromDay / 15) * 12
                     const height = (durationMinutes / 15) * 12
 
-                    const typeStyle = (appointmentTypes as Record<string, { color: string; border: string; textColor: string; shortName?: string }>)[appointment.type] || {
+                    const typeStyle = appointmentTypes[appointment.type] || {
                       color: "bg-gray-500",
                       border: "border-gray-600",
                       textColor: "text-white",
@@ -433,9 +423,7 @@ export function AppointmentsPage() {
                         </div>
                         {appointment.type !== "Lunch" && appointment.type !== "Block" && (
                           <>
-                            <div className="truncate px-1 text-xs text-gray-700 bg-white/80">
-                              {(appointmentTypes as Record<string, { color: string; border: string; textColor: string; shortName?: string }>)[appointment.type]?.shortName || appointment.type}
-                            </div>
+                            <div className="truncate px-1 text-xs text-gray-700 bg-white/80">{appointment.type}</div>
                             {height > 40 && (
                               <div className="text-xs truncate px-1 text-gray-600 bg-white/70">
                                 Room: {appointment.room}
@@ -514,7 +502,7 @@ export function AppointmentsPage() {
                     const topPosition = (startFromDay / 15) * 12
                     const height = (durationMinutes / 15) * 12
 
-                    const typeStyle = (appointmentTypes as Record<string, { color: string; border: string; textColor: string; shortName?: string }>)[appointment.type] || {
+                    const typeStyle = appointmentTypes[appointment.type] || {
                       color: "bg-gray-500",
                       border: "border-gray-600",
                       textColor: "text-white",
@@ -551,7 +539,7 @@ export function AppointmentsPage() {
                         </div>
                         {height > 24 && appointment.type !== "Lunch" && appointment.type !== "Block" && (
                           <div className="truncate px-1 text-xs text-gray-700 bg-white/80">
-                            {(appointmentTypes as Record<string, { color: string; border: string; textColor: string; shortName?: string }>)[appointment.type]?.shortName || appointment.type}
+                            {appointmentTypes[appointment.type]?.shortName || appointment.type}
                           </div>
                         )}
                       </div>
@@ -612,7 +600,7 @@ export function AppointmentsPage() {
                     </div>
                     <div className="mt-1 space-y-1">
                       {dayAppointments.slice(0, 5).map((appointment) => {
-                        const typeStyle = (appointmentTypes as Record<string, { color: string; border: string; textColor: string; shortName?: string }>)[appointment.type] || {
+                        const typeStyle = appointmentTypes[appointment.type] || {
                           color: "bg-gray-500",
                           border: "border-gray-600",
                           textColor: "text-white",
