@@ -17,27 +17,24 @@ import { toast } from "@/components/ui/use-toast"
 interface AppointmentBookingModalProps {
   isOpen: boolean
   onClose: () => void
-  date: Date
-  time?: string
-  doctor: string
-  onBookAppointment: (appointmentData: any) => void
-  isOptician?: boolean
+  defaultDate?: string
+  defaultTime?: string
+  defaultDoctor?: string
 }
-
-export type { AppointmentBookingModalProps }
 
 export function AppointmentBookingModal({
   isOpen,
   onClose,
-  date,
-  time,
-  doctor,
-  onBookAppointment,
-  isOptician,
+  defaultDate,
+  defaultTime,
+  defaultDoctor,
 }: AppointmentBookingModalProps) {
   const [selectedPatient, setSelectedPatient] = useState<{ id: string; name: string } | null>(null)
   const [appointmentType, setAppointmentType] = useState("annual")
+  const [doctor, setDoctor] = useState(defaultDoctor || "dr-williams")
   const [duration, setDuration] = useState("30")
+  const [date, setDate] = useState(defaultDate || new Date().toISOString().split("T")[0])
+  const [time, setTime] = useState(defaultTime || "09:00")
   const [notes, setNotes] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
@@ -62,7 +59,7 @@ export function AppointmentBookingModal({
       const appointmentData = {
         patientId: selectedPatient.id,
         patientName: selectedPatient.name,
-        date: date.toISOString().split("T")[0],
+        date,
         time,
         appointmentType,
         doctor,
@@ -81,7 +78,9 @@ export function AppointmentBookingModal({
           setIsSuccess(false)
           setSelectedPatient(null)
           setAppointmentType("annual")
+          setDoctor(defaultDoctor || "dr-williams")
           setDuration("30")
+          setTime(defaultTime || "09:00")
           setNotes("")
           onClose()
         }, 1500)
@@ -159,6 +158,8 @@ export function AppointmentBookingModal({
                       </Button>
                     }
                     onSelect={(patient) => setSelectedPatient(patient)}
+                    isOpen={patientSearchOpen}
+                    onOpenChange={setPatientSearchOpen}
                   />
                 </div>
               </div>
@@ -187,13 +188,8 @@ export function AppointmentBookingModal({
                 <Input
                   id="date"
                   type="date"
-                  value={date.toISOString().split("T")[0]}
-                  onChange={(e) => {
-                    const newDate = new Date(e.target.value)
-                    if (!isNaN(newDate.getTime())) {
-                      setDate(newDate)
-                    }
-                  }}
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
                   className="w-full"
                 />
               </div>
