@@ -127,7 +127,7 @@ export function AppointmentsPage() {
         </div>
         <div className="grid" style={{ gridTemplateColumns: `repeat(${providersToShow.length}, 1fr)` }}>
           {providersToShow.map((provider) => (
-            <div key={provider.id}>
+            <div key={provider.id} className="relative">
               <div className="text-center">{provider.name}</div>
               {timeSlots.map((slot) => (
                 <div
@@ -136,6 +136,34 @@ export function AppointmentsPage() {
                   onClick={() => handleTimeSlotClick(slot.time, provider.id)}
                 />
               ))}
+              {filteredAppointments
+                .filter((appt) => appt.provider === provider.id)
+                .map((appointment) => {
+                  const [startHour, startMinute] = appointment.startTime.split(":").map(Number)
+                  const [endHour, endMinute] = appointment.endTime.split(":").map(Number)
+                  const startMinutes = startHour * 60 + startMinute
+                  const endMinutes = endHour * 60 + endMinute
+                  const startFromDay = startMinutes - 7 * 60
+                  const durationMinutes = endMinutes - startMinutes
+
+                  const topPosition = (startFromDay / 15) * 12
+                  const height = (durationMinutes / 15) * 12
+
+                  return (
+                    <div
+                      key={appointment.id}
+                      className="absolute left-0 right-0 mx-1 rounded border-l-4 bg-gray-500 text-white p-1 text-xs overflow-hidden"
+                      style={{ top: `${topPosition}px`, height: `${height}px` }}
+                    >
+                      <div className="font-medium truncate">
+                        {appointment.type === "Lunch" || appointment.type === "Block"
+                          ? appointment.type
+                          : appointment.patientName}
+                      </div>
+                      {height > 40 && <div className="truncate">{appointment.type}</div>}
+                    </div>
+                  )
+                })}
             </div>
           ))}
         </div>
@@ -157,7 +185,7 @@ export function AppointmentsPage() {
         </div>
         <div className="grid grid-cols-7">
           {days.map((day) => (
-            <div key={day.toISOString()} className="border-l">
+            <div key={day.toISOString()} className="border-l relative">
               <div className="text-center">{format(day, "EEE MMM d")}</div>
               {timeSlots.map((slot) => (
                 <div
@@ -166,6 +194,27 @@ export function AppointmentsPage() {
                   onClick={() => handleTimeSlotClick(slot.time, selectedProvider, day)}
                 />
               ))}
+              {filteredAppointments
+                .filter((appt) => isSameDay(appt.date, day))
+                .map((appointment) => {
+                  const [startHour, startMinute] = appointment.startTime.split(":").map(Number)
+                  const [endHour, endMinute] = appointment.endTime.split(":").map(Number)
+                  const startMinutes = startHour * 60 + startMinute
+                  const endMinutes = endHour * 60 + endMinute
+                  const startFromDay = startMinutes - 7 * 60
+                  const durationMinutes = endMinutes - startMinutes
+
+                  const topPosition = (startFromDay / 15) * 12
+                  const height = (durationMinutes / 15) * 12
+
+                  return (
+                    <div
+                      key={appointment.id}
+                      className="absolute left-0 right-0 mx-1 rounded border-l-4 bg-gray-500 text-white p-1 text-xs overflow-hidden"
+                      style={{ top: `${topPosition}px`, height: `${height}px` }}
+                    >
+                      <div className="font-medium truncate">
+                        {appointment.type === "Lunch" || appointment.type === "Block"
             </div>
           ))}
         </div>
