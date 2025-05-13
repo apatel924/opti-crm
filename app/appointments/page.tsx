@@ -1,3 +1,5 @@
-export default function AppointmentsPage() {
-    return <div>Appointments placeholder</div>
-  }
+import { AppointmentsPage } from "@/components/appointments/appointments-page"
+
+export default function AppointmentsRoute() {
+  return <AppointmentsPage />
+}
