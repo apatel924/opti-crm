@@ -11,15 +11,12 @@ import { AppointmentDetailsDialog } from "./appointment-details-dialog"
 import { Card } from "@/components/ui/card"
 import { providers, appointmentTypes, initialAppointments } from "@/lib/mock-data"
 
-// Add near other interfaces
-type AppointmentType = keyof typeof appointmentTypes;
-
 // Define appointment interface
 interface Appointment {
   id: string
   patientId: string
   patientName: string
-  type: AppointmentType
+  type: string
   date: Date
   startTime: string
   endTime: string
@@ -30,7 +27,7 @@ interface Appointment {
   isOptician?: boolean
 }
 
-// Add this interface near the top of the file with other interfaces
+// Define TimeSlot interface
 interface TimeSlot {
   hour: number
   minute: number
@@ -76,7 +73,7 @@ export function AppointmentsPage() {
       ...appt,
       date: new Date(appt.date),
     }))
-    setAppointments(formattedAppointments as Appointment[])
+    setAppointments(formattedAppointments)
   }, [])
 
   // Filter appointments based on selected provider and current view/date
@@ -177,7 +174,7 @@ export function AppointmentsPage() {
   }
 
   // Handle time slot click
-  const handleTimeSlotClick = (time: string, provider: string | null = null, date: Date = currentDate) => {
+  const handleTimeSlotClick = (time: string, provider: string, date: Date = currentDate) => {
     setSelectedSlot({
       date: date,
       startTime: time,
@@ -399,7 +396,7 @@ export function AppointmentsPage() {
                     const topPosition = (startFromDay / 15) * 12
                     const height = (durationMinutes / 15) * 12
 
-                    const typeStyle = appointmentTypes[appointment.type] || {
+                    const typeStyle = (appointmentTypes as Record<string, { color: string; border: string; textColor: string; shortName?: string }>)[appointment.type] || {
                       color: "bg-gray-500",
                       border: "border-gray-600",
                       textColor: "text-white",
@@ -418,25 +415,32 @@ export function AppointmentsPage() {
                     return (
                       <div
                         key={appointment.id}
-                        className={`absolute left-0 right-0 mx-1 rounded border-l-4 ${typeStyle.color} ${typeStyle.border} ${typeStyle.textColor} p-1 text-xs overflow-hidden cursor-pointer hover:brightness-95 active:brightness-90`}
+                        className={`absolute left-0 right-0 mx-1 rounded border-l-4 ${typeStyle.color} overflow-hidden cursor-pointer hover:brightness-95 active:brightness-90`}
                         style={{
                           top: `${topPosition}px`,
                           height: `${height}px`,
+                          minHeight: "24px", // Add minimum height to prevent tiny appointments
                         }}
                         draggable
                         onDragStart={(e) => handleDragStart(e, appointment)}
                         onClick={() => handleAppointmentClick(appointment)}
                       >
                         {statusIndicator}
-                        <div className="font-medium truncate">
+                        <div className={`font-medium truncate px-1 bg-white/90 text-gray-900`}>
                           {appointment.type === "Lunch" || appointment.type === "Block"
                             ? appointment.type
                             : appointment.patientName}
                         </div>
                         {appointment.type !== "Lunch" && appointment.type !== "Block" && (
                           <>
-                            <div className="truncate">{appointment.type}</div>
-                            {height > 40 && <div className="text-xs truncate">Room: {appointment.room}</div>}
+                            <div className="truncate px-1 text-xs text-gray-700 bg-white/80">
+                              {(appointmentTypes as Record<string, { color: string; border: string; textColor: string; shortName?: string }>)[appointment.type]?.shortName || appointment.type}
+                            </div>
+                            {height > 40 && (
+                              <div className="text-xs truncate px-1 text-gray-600 bg-white/70">
+                                Room: {appointment.room}
+                              </div>
+                            )}
                           </>
                         )}
                       </div>
@@ -510,7 +514,7 @@ export function AppointmentsPage() {
                     const topPosition = (startFromDay / 15) * 12
                     const height = (durationMinutes / 15) * 12
 
-                    const typeStyle = appointmentTypes[appointment.type] || {
+                    const typeStyle = (appointmentTypes as Record<string, { color: string; border: string; textColor: string; shortName?: string }>)[appointment.type] || {
                       color: "bg-gray-500",
                       border: "border-gray-600",
                       textColor: "text-white",
@@ -529,24 +533,25 @@ export function AppointmentsPage() {
                     return (
                       <div
                         key={appointment.id}
-                        className={`absolute left-0 right-0 mx-1 rounded border-l-4 ${typeStyle.color} ${typeStyle.border} ${typeStyle.textColor} p-1 text-xs overflow-hidden cursor-pointer hover:brightness-95 active:brightness-90`}
+                        className={`absolute left-0 right-0 mx-1 rounded border-l-4 ${typeStyle.color} overflow-hidden cursor-pointer hover:brightness-95 active:brightness-90`}
                         style={{
                           top: `${topPosition}px`,
                           height: `${height}px`,
+                          minHeight: "24px",
                         }}
                         draggable
                         onDragStart={(e) => handleDragStart(e, appointment)}
                         onClick={() => handleAppointmentClick(appointment)}
                       >
                         {statusIndicator}
-                        <div className="font-medium truncate">
+                        <div className="font-medium truncate px-1 bg-white/90 text-gray-900">
                           {appointment.type === "Lunch" || appointment.type === "Block"
                             ? appointment.type
                             : appointment.patientName}
                         </div>
                         {height > 24 && appointment.type !== "Lunch" && appointment.type !== "Block" && (
-                          <div className="truncate">
-                            {appointmentTypes[appointment.type]?.shortName || appointment.type}
+                          <div className="truncate px-1 text-xs text-gray-700 bg-white/80">
+                            {(appointmentTypes as Record<string, { color: string; border: string; textColor: string; shortName?: string }>)[appointment.type]?.shortName || appointment.type}
                           </div>
                         )}
                       </div>
@@ -607,7 +612,7 @@ export function AppointmentsPage() {
                     </div>
                     <div className="mt-1 space-y-1">
                       {dayAppointments.slice(0, 5).map((appointment) => {
-                        const typeStyle = appointmentTypes[appointment.type] || {
+                        const typeStyle = (appointmentTypes as Record<string, { color: string; border: string; textColor: string; shortName?: string }>)[appointment.type] || {
                           color: "bg-gray-500",
                           border: "border-gray-600",
                           textColor: "text-white",
@@ -616,7 +621,7 @@ export function AppointmentsPage() {
                         return (
                           <div
                             key={appointment.id}
-                            className={`truncate rounded px-1 text-xs ${typeStyle.color} ${typeStyle.textColor} cursor-pointer hover:brightness-95 active:brightness-90`}
+                            className={`truncate rounded px-1 text-xs ${typeStyle.color} cursor-pointer hover:brightness-95 active:brightness-90`}
                             draggable
                             onDragStart={(e) => handleDragStart(e, appointment)}
                             onClick={(e) => {
@@ -624,10 +629,12 @@ export function AppointmentsPage() {
                               handleAppointmentClick(appointment)
                             }}
                           >
-                            {appointment.startTime.substring(0, 5)}{" "}
-                            {appointment.type === "Lunch" || appointment.type === "Block"
-                              ? appointment.type
-                              : appointment.patientName}
+                            <span className="font-medium text-gray-900 bg-white/90 px-0.5 rounded-sm">
+                              {appointment.startTime.substring(0, 5)}{" "}
+                              {appointment.type === "Lunch" || appointment.type === "Block"
+                                ? appointment.type
+                                : appointment.patientName}
+                            </span>
                           </div>
                         )
                       })}
@@ -653,7 +660,7 @@ export function AppointmentsPage() {
           <p className="text-muted-foreground">Manage and schedule patient appointments</p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={handleNewAppointment}>
+          <Button onClick={handleNewAppointment} className="bg-blue-600 hover:bg-blue-700 text-white">
             <Plus className="mr-2 h-4 w-4" /> New Appointment
           </Button>
         </div>
@@ -661,13 +668,13 @@ export function AppointmentsPage() {
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={goToPrevious}>
+          <Button variant="outline" size="icon" onClick={goToPrevious} className="border-gray-300 text-gray-700">
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <Button variant="outline" onClick={goToToday}>
+          <Button variant="outline" onClick={goToToday} className="border-gray-300 text-gray-700">
             Today
           </Button>
-          <Button variant="outline" size="icon" onClick={goToNext}>
+          <Button variant="outline" size="icon" onClick={goToNext} className="border-gray-300 text-gray-700">
             <ChevronRight className="h-4 w-4" />
           </Button>
           <div className="ml-2 text-lg font-medium">{formattedDate()}</div>
@@ -689,7 +696,9 @@ export function AppointmentsPage() {
             <Button
               variant={currentView === "day" ? "default" : "ghost"}
               size="sm"
-              className="rounded-l-md rounded-r-none"
+              className={`rounded-l-md rounded-r-none ${
+                currentView === "day" ? "bg-blue-600 text-white" : "text-gray-700"
+              }`}
               onClick={() => setCurrentView("day")}
             >
               <Clock className="mr-2 h-4 w-4" />
@@ -698,7 +707,7 @@ export function AppointmentsPage() {
             <Button
               variant={currentView === "week" ? "default" : "ghost"}
               size="sm"
-              className="rounded-none border-x"
+              className={`rounded-none border-x ${currentView === "week" ? "bg-blue-600 text-white" : "text-gray-700"}`}
               onClick={() => setCurrentView("week")}
             >
               <Calendar className="mr-2 h-4 w-4" />
@@ -707,7 +716,9 @@ export function AppointmentsPage() {
             <Button
               variant={currentView === "month" ? "default" : "ghost"}
               size="sm"
-              className="rounded-l-none rounded-r-md"
+              className={`rounded-l-none rounded-r-md ${
+                currentView === "month" ? "bg-blue-600 text-white" : "text-gray-700"
+              }`}
               onClick={() => setCurrentView("month")}
             >
               <Calendar className="mr-2 h-4 w-4" />
