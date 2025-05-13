@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss"
 
 const config = {
-  darkMode: ["class", "media"],
+  darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -61,11 +61,27 @@ const config = {
           "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        ghibli: {
+          blue: "#4EA6DC",
+          "blue-light": "#A8D8F0",
+          green: "#7BB661",
+          "green-light": "#C5E0B4",
+          pink: "#F7B1C3",
+          "pink-light": "#FCDEE7",
+          yellow: "#FFDA7A",
+          "yellow-light": "#FFF1D0",
+          brown: "#A67C52",
+          "brown-light": "#D4BEA7",
+          cream: "#FFF9E3",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        xl: "1rem",
+        "2xl": "1.5rem",
+        "3xl": "2rem",
       },
       keyframes: {
         "accordion-down": {
@@ -76,10 +92,29 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
+        },
+        breathe: {
+          "0%, 100%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.03)" },
+        },
+        wiggle: {
+          "0%, 100%": { transform: "rotate(-1deg)" },
+          "50%": { transform: "rotate(1deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        float: "float 3s ease-in-out infinite",
+        breathe: "breathe 4s ease-in-out infinite",
+        wiggle: "wiggle 1s ease-in-out infinite",
+      },
+      backgroundImage: {
+        "ghibli-gradient": "linear-gradient(to bottom, #A8D8F0, #FFF9E3)",
+        "ghibli-texture": "url('/textures/paper-texture.png')",
       },
     },
   },
@@ -87,4 +122,3 @@ const config = {
 } satisfies Config
 
 export default config
-
