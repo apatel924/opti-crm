@@ -13,6 +13,9 @@ import {
   FileText,
   Clipboard,
   ClipboardCheck,
+  CheckCircle,
+  Circle,
+  Clock,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -29,7 +32,6 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ExaminationFilters } from "@/components/examinations/examination-filters"
-import { ExaminationWorkflow } from "@/components/examinations/examination-workflow"
 
 const examinations = [
   {
@@ -103,6 +105,17 @@ const examinations = [
     notes: "",
   },
 ]
+
+// Component for workflow status indicators
+function WorkflowStatus({ status }: { status: string }) {
+  if (status === "Completed") {
+    return <CheckCircle className="h-5 w-5 text-green-500" />
+  } else if (status === "In Progress") {
+    return <Clock className="h-5 w-5 text-blue-500" />
+  } else {
+    return <Circle className="h-5 w-5 text-gray-300" />
+  }
+}
 
 export function ExaminationsPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -185,12 +198,14 @@ export function ExaminationsPage() {
                   {filteredExaminations.map((exam) => (
                     <TableRow key={exam.id}>
                       <TableCell>
-                        <div className="flex items-center gap-3">
+                        <Link href={`/patients/${exam.patientId}`} className="group">
                           <div>
-                            <div className="font-medium">{exam.patientName}</div>
+                            <div className="font-medium text-blue-600 group-hover:text-primary group-hover:underline">
+                              {exam.patientName}
+                            </div>
                             <div className="text-xs text-muted-foreground">{exam.patientId}</div>
                           </div>
-                        </div>
+                        </Link>
                       </TableCell>
                       <TableCell>
                         <div className="font-medium">{exam.type}</div>
@@ -219,19 +234,36 @@ export function ExaminationsPage() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <ExaminationWorkflow exam={exam} />
+                        <div className="flex items-center gap-1">
+                          <div className="flex flex-col items-center">
+                            <WorkflowStatus status={exam.preTestingStatus} />
+                            <span className="text-xs">Pre-Test</span>
+                          </div>
+                          <div className="h-[2px] w-3 bg-gray-200" />
+                          <div className="flex flex-col items-center">
+                            <WorkflowStatus status={exam.examStatus} />
+                            <span className="text-xs">Exam</span>
+                          </div>
+                          <div className="h-[2px] w-3 bg-gray-200" />
+                          <div className="flex flex-col items-center">
+                            <WorkflowStatus
+                              status={exam.prescriptionStatus === "Issued" ? "Completed" : exam.prescriptionStatus}
+                            />
+                            <span className="text-xs">Rx</span>
+                          </div>
+                        </div>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
-                          <Button size="icon" variant="ghost" asChild>
+                          <Button size="sm" variant="outline" asChild className="hover:text-black">
                             <Link href={`/examinations/${exam.id}`}>
-                              <Eye className="h-4 w-4" />
-                              <span className="sr-only">View</span>
+                              <Eye className="mr-2 h-4 w-4" />
+                              View
                             </Link>
                           </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button size="icon" variant="ghost">
+                              <Button size="icon" variant="ghost" className="hover:text-black">
                                 <MoreHorizontal className="h-4 w-4" />
                                 <span className="sr-only">More</span>
                               </Button>
@@ -280,20 +312,22 @@ export function ExaminationsPage() {
                 .filter((exam) => exam.status === "Waiting")
                 .map((exam) => (
                   <div key={exam.id} className="mb-4 flex items-center justify-between rounded-lg border p-4">
-                    <div className="flex items-center gap-4">
+                    <Link href={`/patients/${exam.patientId}`} className="group">
                       <div>
-                        <div className="font-medium">{exam.patientName}</div>
+                        <div className="font-medium text-blue-600 group-hover:text-primary group-hover:underline">
+                          {exam.patientName}
+                        </div>
                         <div className="text-sm text-muted-foreground">
                           {exam.type} • {exam.time}
                         </div>
                       </div>
-                    </div>
+                    </Link>
                     <div className="flex items-center gap-2">
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="outline" className="hover:text-black">
                         <Clipboard className="mr-2 h-4 w-4" />
                         Start Pre-Testing
                       </Button>
-                      <Button size="sm">
+                      <Button size="sm" className="hover:bg-primary-dark">
                         <ClipboardCheck className="mr-2 h-4 w-4" />
                         Start Exam
                       </Button>
@@ -315,9 +349,11 @@ export function ExaminationsPage() {
                 .filter((exam) => exam.status === "In Progress")
                 .map((exam) => (
                   <div key={exam.id} className="mb-4 flex items-center justify-between rounded-lg border p-4">
-                    <div className="flex items-center gap-4">
+                    <Link href={`/patients/${exam.patientId}`} className="group">
                       <div>
-                        <div className="font-medium">{exam.patientName}</div>
+                        <div className="font-medium text-blue-600 group-hover:text-primary group-hover:underline">
+                          {exam.patientName}
+                        </div>
                         <div className="text-sm text-muted-foreground">
                           {exam.type} • {exam.time}
                         </div>
@@ -325,15 +361,15 @@ export function ExaminationsPage() {
                           <Badge variant="outline">{exam.doctor}</Badge>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                     <div className="flex items-center gap-2">
-                      <Button size="sm" variant="outline" asChild>
+                      <Button size="sm" variant="outline" asChild className="hover:text-black">
                         <Link href={`/examinations/${exam.id}`}>
                           <Eye className="mr-2 h-4 w-4" />
                           View Details
                         </Link>
                       </Button>
-                      <Button size="sm">
+                      <Button size="sm" className="hover:bg-primary-dark">
                         <FileText className="mr-2 h-4 w-4" />
                         Complete Exam
                       </Button>
@@ -364,12 +400,14 @@ export function ExaminationsPage() {
                     .map((exam) => (
                       <TableRow key={exam.id}>
                         <TableCell>
-                          <div className="flex items-center gap-3">
+                          <Link href={`/patients/${exam.patientId}`} className="group">
                             <div>
-                              <div className="font-medium">{exam.patientName}</div>
+                              <div className="font-medium text-blue-600 group-hover:text-primary group-hover:underline">
+                                {exam.patientName}
+                              </div>
                               <div className="text-xs text-muted-foreground">{exam.patientId}</div>
                             </div>
-                          </div>
+                          </Link>
                         </TableCell>
                         <TableCell>
                           <div className="font-medium">{exam.type}</div>
@@ -389,13 +427,13 @@ export function ExaminationsPage() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
-                            <Button size="sm" variant="outline" asChild>
+                            <Button size="sm" variant="outline" asChild className="hover:text-black">
                               <Link href={`/examinations/${exam.id}`}>
                                 <Eye className="mr-2 h-4 w-4" />
                                 View
                               </Link>
                             </Button>
-                            <Button size="sm">
+                            <Button size="sm" className="hover:bg-primary-dark">
                               <FileText className="mr-2 h-4 w-4" />
                               Print Report
                             </Button>
@@ -412,4 +450,3 @@ export function ExaminationsPage() {
     </div>
   )
 }
-
