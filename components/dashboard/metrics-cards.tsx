@@ -2,12 +2,14 @@
 
 import { Calendar, Clock, DollarSign, Eye, FileText, Users, AlertCircle, CheckCircle } from "lucide-react"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import Link from "next/link"
 
 interface MetricsCardsProps {
   role: string
 }
 
 export function MetricsCards({ role }: MetricsCardsProps) {
+  // Different metrics based on role
   const metrics = {
     "front-desk": [
       {
@@ -18,6 +20,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "+2 from yesterday",
         changeType: "positive",
         color: "blue",
+        link: "/appointments",
       },
       {
         title: "Waiting Patients",
@@ -27,6 +30,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "",
         changeType: "neutral",
         color: "yellow",
+        link: "/examinations?filter=waiting",
       },
       {
         title: "Orders Ready",
@@ -36,6 +40,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "+2 new today",
         changeType: "positive",
         color: "green",
+        link: "/lab",
       },
       {
         title: "Quick Billing",
@@ -45,6 +50,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "-2 from yesterday",
         changeType: "negative",
         color: "pink",
+        link: "/quick-billing",
       },
     ],
     optometrist: [
@@ -56,6 +62,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "",
         changeType: "neutral",
         color: "blue",
+        link: "/appointments",
       },
       {
         title: "Patients Seen",
@@ -65,6 +72,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "42% of schedule",
         changeType: "neutral",
         color: "green",
+        link: "/examinations?filter=completed",
       },
       {
         title: "Next Patient",
@@ -74,6 +82,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "Annual exam",
         changeType: "neutral",
         color: "yellow",
+        link: "/patients/P-10042",
       },
       {
         title: "Prescriptions",
@@ -83,6 +92,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "+3 from yesterday",
         changeType: "positive",
         color: "pink",
+        link: "/examinations?filter=completed",
       },
     ],
     "lab-tech": [
@@ -94,6 +104,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "+2 from yesterday",
         changeType: "negative",
         color: "yellow",
+        link: "/lab",
       },
       {
         title: "Orders Completed",
@@ -103,6 +114,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "35% of daily goal",
         changeType: "neutral",
         color: "green",
+        link: "/lab?filter=completed",
       },
       {
         title: "Quality Checks",
@@ -112,6 +124,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "",
         changeType: "neutral",
         color: "blue",
+        link: "/lab?filter=quality-check",
       },
       {
         title: "Low Stock Items",
@@ -121,6 +134,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "Critical: 1",
         changeType: "negative",
         color: "pink",
+        link: "/inventory?filter=low-stock",
       },
     ],
     admin: [
@@ -132,6 +146,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "+12% from yesterday",
         changeType: "positive",
         color: "green",
+        link: "/quick-billing",
       },
       {
         title: "Quick Billing",
@@ -141,6 +156,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "",
         changeType: "neutral",
         color: "blue",
+        link: "/quick-billing",
       },
       {
         title: "Patient Visits",
@@ -150,6 +166,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "85% show rate",
         changeType: "positive",
         color: "yellow",
+        link: "/patients",
       },
       {
         title: "Outstanding Balances",
@@ -159,6 +176,7 @@ export function MetricsCards({ role }: MetricsCardsProps) {
         change: "+$850 from last week",
         changeType: "negative",
         color: "pink",
+        link: "/quick-billing?filter=outstanding",
       },
     ],
   }
@@ -168,25 +186,39 @@ export function MetricsCards({ role }: MetricsCardsProps) {
   return (
     <>
       {currentMetrics.map((metric, index) => (
-        <Card key={index}>
-          <CardContent>
-            <div>
-              <h3>{metric.title}</h3>
-              <div>
-                <metric.icon />
+        <Link href={metric.link} key={index} className="block">
+          <Card
+            className={`shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 border-ghibli-${metric.color}-light bg-white/90`}
+          >
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <h3 className={`text-sm font-medium text-ghibli-${metric.color}`}>{metric.title}</h3>
+                <div className={`rounded-full p-2 bg-ghibli-${metric.color}-light`}>
+                  <metric.icon className={`h-4 w-4 text-ghibli-${metric.color}`} />
+                </div>
               </div>
-            </div>
-            <div>
-              <div>{metric.value}</div>
-              <p>{metric.description}</p>
-            </div>
-          </CardContent>
-          {metric.change && (
-            <CardFooter>
-              <p>{metric.change}</p>
-            </CardFooter>
-          )}
-        </Card>
+              <div className="mt-3">
+                <div className={`text-2xl font-bold text-ghibli-${metric.color}`}>{metric.value}</div>
+                <p className="text-xs text-muted-foreground">{metric.description}</p>
+              </div>
+            </CardContent>
+            {metric.change && (
+              <CardFooter className="p-2 px-6">
+                <p
+                  className={`text-xs ${
+                    metric.changeType === "positive"
+                      ? "text-ghibli-green"
+                      : metric.changeType === "negative"
+                        ? "text-ghibli-pink"
+                        : "text-muted-foreground"
+                  }`}
+                >
+                  {metric.change}
+                </p>
+              </CardFooter>
+            )}
+          </Card>
+        </Link>
       ))}
     </>
   )
