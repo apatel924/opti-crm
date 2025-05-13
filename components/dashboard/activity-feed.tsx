@@ -12,6 +12,7 @@ const activities = [
     timestamp: "10 minutes ago",
     icon: Calendar,
     user: "Sarah Johnson",
+    userAvatar: "/placeholder.svg?height=32&width=32",
     priority: "normal",
   },
   {
@@ -22,6 +23,7 @@ const activities = [
     timestamp: "25 minutes ago",
     icon: Package,
     user: "Michael Chen",
+    userAvatar: "/placeholder.svg?height=32&width=32",
     priority: "high",
   },
   {
@@ -32,6 +34,7 @@ const activities = [
     timestamp: "1 hour ago",
     icon: FileText,
     user: "Emily Wilson",
+    userAvatar: "/placeholder.svg?height=32&width=32",
     priority: "high",
   },
   {
@@ -42,6 +45,7 @@ const activities = [
     timestamp: "2 hours ago",
     icon: MessageSquare,
     user: "Robert Garcia",
+    userAvatar: "/placeholder.svg?height=32&width=32",
     priority: "normal",
   },
   {
@@ -52,6 +56,7 @@ const activities = [
     timestamp: "3 hours ago",
     icon: CheckCircle,
     user: "Jessica Martinez",
+    userAvatar: "/placeholder.svg?height=32&width=32",
     priority: "normal",
   },
 ]
@@ -66,24 +71,22 @@ export function ActivityFeed() {
         {activities.map((activity) => (
           <div
             key={activity.id}
-            className="flex items-start gap-4 rounded-lg border p-3"
+            className="flex items-start gap-4 rounded-lg border p-3 transition-colors hover:bg-muted/50"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100">
-              <activity.icon className="h-5 w-5" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+              <activity.icon className="h-5 w-5 text-primary" />
             </div>
             <div className="flex-1 space-y-1">
               <div className="flex items-center gap-2">
-                <p className="text-sm font-medium">{activity.title}</p>
-                {activity.priority === "high" && (
-                  <span className="h-2 w-2 rounded-full bg-red-500" />
-                )}
+                <p className="text-sm font-medium leading-none">{activity.title}</p>
+                {activity.priority === "high" && <span className="flex h-2 w-2 rounded-full bg-red-500" />}
               </div>
-              <p className="text-sm text-gray-600">{activity.description}</p>
+              <p className="text-sm text-muted-foreground">{activity.description}</p>
               <div className="flex items-center gap-2 pt-1">
-                <span className="text-xs text-gray-500">{activity.timestamp}</span>
+                <span className="text-xs text-muted-foreground">{activity.timestamp}</span>
               </div>
             </div>
-            <Button className="h-8 w-8">
+            <Button variant="ghost" size="icon" className="h-8 w-8">
               <FileText className="h-4 w-4" />
               <span className="sr-only">View details</span>
             </Button>
