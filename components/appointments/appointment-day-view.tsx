@@ -71,14 +71,14 @@ function normalizeTimeForComparison(time: string) {
 // Define appointment type
 interface Appointment {
   id: string
-  patientName: string
   patientId: string
+  patientName: string
   time: string
   duration: string | number
   type: string
-  doctor: string
   status: string
-  room?: string
+  doctor: string
+  room: string
   isOptician?: boolean
 }
 
@@ -92,8 +92,8 @@ const timeSlots = Array.from({ length: 41 }, (_, i) => {
 interface AppointmentDayViewProps {
   date: Date
   doctor: string
-  appointments: Appointment[]
-  onAppointmentUpdate: (appointments: Appointment[]) => void
+  appointments?: Appointment[]
+  onAppointmentUpdate?: (appointments: Appointment[]) => void
 }
 
 export function AppointmentDayView({ date, doctor, appointments = [], onAppointmentUpdate }: AppointmentDayViewProps) {
