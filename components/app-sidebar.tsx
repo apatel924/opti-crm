@@ -124,13 +124,27 @@ export function AppSidebar() {
                     tooltip={state === "collapsed" ? item.title : undefined}
                     className={`transition-all duration-300 hover:bg-white/20 active:scale-95 ${
                       pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href))
-                        ? "bg-white/20 font-medium text-white"
+                        ? "bg-white/30 font-medium text-black"
                         : "text-white"
                     }`}
                   >
                     <Link href={item.href}>
-                      <item.icon className="h-5 w-5 text-white" />
-                      <span className="text-white">{item.title}</span>
+                      <item.icon
+                        className={`h-5 w-5 ${
+                          pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href))
+                            ? "text-black"
+                            : "text-white"
+                        }`}
+                      />
+                      <span
+                        className={`${
+                          pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href))
+                            ? "text-black"
+                            : "text-white"
+                        }`}
+                      >
+                        {item.title}
+                      </span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -149,12 +163,12 @@ export function AppSidebar() {
                   isActive={pathname === "/settings"}
                   tooltip={state === "collapsed" ? "Settings" : undefined}
                   className={`transition-all duration-300 hover:bg-white/20 active:scale-95 ${
-                    pathname === "/settings" ? "bg-white/20 font-medium text-white" : "text-white"
+                    pathname === "/settings" ? "bg-white/30 font-medium text-black" : "text-white"
                   }`}
                 >
                   <Link href="/settings">
-                    <Settings className="h-5 w-5 text-white" />
-                    <span className="text-white">Settings</span>
+                    <Settings className={`h-5 w-5 ${pathname === "/settings" ? "text-black" : "text-white"}`} />
+                    <span className={`${pathname === "/settings" ? "text-black" : "text-white"}`}>Settings</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -164,12 +178,14 @@ export function AppSidebar() {
                   isActive={pathname === "/help"}
                   tooltip={state === "collapsed" ? "Help & Documentation" : undefined}
                   className={`transition-all duration-300 hover:bg-white/20 active:scale-95 ${
-                    pathname === "/help" ? "bg-white/20 font-medium text-white" : "text-white"
+                    pathname === "/help" ? "bg-white/30 font-medium text-black" : "text-white"
                   }`}
                 >
                   <Link href="/help">
-                    <FileText className="h-5 w-5 text-white" />
-                    <span className="text-white">Help & Documentation</span>
+                    <FileText className={`h-5 w-5 ${pathname === "/help" ? "text-black" : "text-white"}`} />
+                    <span className={`${pathname === "/help" ? "text-black" : "text-white"}`}>
+                      Help & Documentation
+                    </span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
