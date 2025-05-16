@@ -2,27 +2,17 @@
 
 import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import {
-  format,
-  addMonths,
-  subMonths,
-  startOfMonth,
-  endOfMonth,
-  eachDayOfInterval,
-  isSameMonth,
-  isSameDay,
-  isToday,
-} from "date-fns"
+import { format, addMonths, subMonths, isToday, isSameDay } from "date-fns"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
-export interface CalendarProps {
+export type CalendarProps = {
   mode?: "single" | "range" | "multiple"
   selected?: Date | Date[] | undefined
   onSelect?: (date: Date | undefined) => void
   disabled?: boolean
-  initialFocus?: boolean
   className?: string
+  initialFocus?: boolean
 }
 
 export function Calendar({
@@ -30,101 +20,111 @@ export function Calendar({
   selected,
   onSelect,
   disabled = false,
-  initialFocus = false,
   className,
+  initialFocus = false,
 }: CalendarProps) {
-  const [currentMonth, setCurrentMonth] = React.useState(selected instanceof Date ? selected : new Date())
+  const [viewDate, setViewDate] = React.useState(new Date())
 
-  const days = React.useMemo(() => {
-    const start = startOfMonth(currentMonth)
-    const end = endOfMonth(currentMonth)
-    return eachDayOfInterval({ start, end })
-  }, [currentMonth])
-
-  // Get day names for the header
-  const dayNames = React.useMemo(() => {
-    const date = new Date()
-    const dayNames = []
-    for (let i = 0; i < 7; i++) {
-      date.setDate(date.getDate() - date.getDay() + i)
-      dayNames.push(format(date, "EEE"))
-    }
-    return dayNames
-  }, [])
-
-  // Handle date selection
-  const handleDateSelect = (day: Date) => {
+  // Handle selection
+  const handleSelect = (day: number) => {
     if (disabled) return
-    onSelect?.(day)
+
+    const newDate = new Date(viewDate.getFullYear(), viewDate.getMonth(), day)
+    onSelect?.(newDate)
   }
 
-  // Check if a date is selected
-  const isDateSelected = (day: Date) => {
-    if (!selected) return false
-    if (selected instanceof Date) {
-      return isSameDay(day, selected)
+  // Navigate to previous month
+  const previousMonth = () => {
+    setViewDate(subMonths(viewDate, 1))
+  }
+
+  // Navigate to next month
+  const nextMonth = () => {
+    setViewDate(addMonths(viewDate, 1))
+  }
+
+  // Generate calendar grid
+  const generateCalendarGrid = () => {
+    const year = viewDate.getFullYear()
+    const month = viewDate.getMonth()
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate()
+    const firstDayOfMonth = new Date(year, month, 1).getDay()
+
+    // Generate days of the week
+    const weekdays = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
+
+    // Generate calendar grid
+    const days = []
+
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < firstDayOfMonth; i++) {
+      days.push(<div key={`empty-${i}`} className="h-9 w-9" />)
     }
-    return false
+
+    // Add days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day)
+      const isSelectedDate = selected instanceof Date && isSameDay(date, selected)
+
+      days.push(
+        <Button
+          key={`day-${day}`}
+          type="button"
+          onClick={() => handleSelect(day)}
+          className={cn(
+            "h-9 w-9 p-0 font-normal",
+            isToday(date) && "bg-accent text-accent-foreground",
+            isSelectedDate && "bg-primary text-primary-foreground",
+            !isToday(date) && !isSelectedDate && "hover:bg-accent hover:text-accent-foreground",
+          )}
+          disabled={disabled}
+        >
+          {day}
+        </Button>,
+      )
+    }
+
+    return (
+      <>
+        <div className="grid grid-cols-7 gap-1 text-center text-sm">
+          {weekdays.map((day) => (
+            <div key={day} className="h-9 w-9 text-xs font-medium text-muted-foreground">
+              {day}
+            </div>
+          ))}
+          {days}
+        </div>
+      </>
+    )
   }
 
   return (
     <div className={cn("p-3", className)}>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between">
         <Button
+          type="button"
+          onClick={previousMonth}
           variant="outline"
-          size="icon"
-          onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+          className="h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100"
           disabled={disabled}
         >
           <ChevronLeft className="h-4 w-4" />
+          <span className="sr-only">Previous month</span>
         </Button>
-        <div className="font-medium">{format(currentMonth, "MMMM yyyy")}</div>
+        <div className="font-medium">{format(viewDate, "MMMM yyyy")}</div>
         <Button
+          type="button"
+          onClick={nextMonth}
           variant="outline"
-          size="icon"
-          onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+          className="h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100"
           disabled={disabled}
         >
           <ChevronRight className="h-4 w-4" />
+          <span className="sr-only">Next month</span>
         </Button>
       </div>
-      <div className="grid grid-cols-7 gap-1 text-center text-sm mb-2">
-        {dayNames.map((day) => (
-          <div key={day} className="text-muted-foreground">
-            {day}
-          </div>
-        ))}
-      </div>
-      <div className="grid grid-cols-7 gap-1">
-        {Array.from({ length: new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay() }).map(
-          (_, i) => (
-            <div key={`empty-${i}`} className="h-9" />
-          ),
-        )}
-        {days.map((day) => {
-          const isSelected = isDateSelected(day)
-          const isCurrentMonth = isSameMonth(day, currentMonth)
-          const isCurrentDay = isToday(day)
-
-          return (
-            <Button
-              key={day.toString()}
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "h-9 w-9 p-0 font-normal",
-                isSelected && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
-                !isSelected && isCurrentDay && "border border-primary",
-                !isCurrentMonth && "text-muted-foreground opacity-50",
-              )}
-              disabled={disabled || !isCurrentMonth}
-              onClick={() => handleDateSelect(day)}
-            >
-              {format(day, "d")}
-            </Button>
-          )
-        })}
-      </div>
+      <div className="mt-4">{generateCalendarGrid()}</div>
     </div>
   )
 }
