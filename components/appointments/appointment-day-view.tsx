@@ -544,9 +544,9 @@ export function AppointmentDayView({ date, doctor, appointments = [], onAppointm
           setIsBookingModalOpen(false)
           setSelectedTimeSlot(undefined)
         }}
-        date={date}
-        time={selectedTimeSlot}
-        doctor={isOpticianBooking ? "optician" : doctor === "all" ? "dr-williams" : doctor}
+        defaultDate={date}
+        defaultTime={selectedTimeSlot}
+        defaultDoctor={isOpticianBooking ? "optician" : doctor === "all" ? "dr-williams" : doctor}
         onBookAppointment={handleBookAppointment}
         isOptician={isOpticianBooking}
       />
