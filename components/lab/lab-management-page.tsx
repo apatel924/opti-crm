@@ -11,8 +11,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/u
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Search, Filter, Plus, Clock, Eye, Glasses, Package } from "lucide-react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 import { LabOrderDetails } from "@/components/lab/lab-order-details"
 
 // Mock data for lab orders
@@ -149,15 +147,13 @@ export function LabManagementPage() {
           <p className="text-muted-foreground">Track and manage lab orders for glasses and contact lenses</p>
         </div>
         <div className="flex gap-2">
-          <PatientSearchDialog
-            trigger={
-              <Button className="bg-ghibli-blue hover:bg-ghibli-blue/90">
-                <Plus className="mr-2 h-4 w-4" />
-                New Lab Order
-              </Button>
-            }
-            onSelect={handlePatientSelect}
-          />
+          <Button
+            className="bg-ghibli-blue hover:bg-ghibli-blue/90"
+            onClick={() => setPatientSearchOpen(true)}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            New Lab Order
+          </Button>
         </div>
       </div>
 
@@ -299,15 +295,12 @@ export function LabManagementPage() {
                           <TableCell className="font-medium">{order.id}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
-                              <Avatar className="h-8 w-8 ghibli-avatar border-ghibli-blue-light">
-                                <AvatarImage src={`/placeholder.svg?height=32&width=32`} alt={order.patient} />
-                                <AvatarFallback className="bg-ghibli-blue-light text-white">
-                                  {order.patient
-                                    .split(" ")
-                                    .map((n) => n[0])
-                                    .join("")}
-                                </AvatarFallback>
-                              </Avatar>
+                              <div className="h-8 w-8 ghibli-avatar border-ghibli-blue-light rounded-full flex items-center justify-center bg-ghibli-blue-light text-white">
+                                {order.patient
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
+                              </div>
                               <div>
                                 <div>{order.patient}</div>
                                 <div className="text-xs text-muted-foreground">{order.patientId}</div>
@@ -453,15 +446,12 @@ export function LabManagementPage() {
                           <TableCell className="font-medium">{order.id}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
-                              <Avatar className="h-8 w-8 ghibli-avatar border-ghibli-green-light">
-                                <AvatarImage src={`/placeholder.svg?height=32&width=32`} alt={order.patient} />
-                                <AvatarFallback className="bg-ghibli-green-light text-white">
-                                  {order.patient
-                                    .split(" ")
-                                    .map((n) => n[0])
-                                    .join("")}
-                                </AvatarFallback>
-                              </Avatar>
+                              <div className="h-8 w-8 ghibli-avatar border-ghibli-green-light rounded-full flex items-center justify-center bg-ghibli-green-light text-white">
+                                {order.patient
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
+                              </div>
                               <div>
                                 <div>{order.patient}</div>
                                 <div className="text-xs text-muted-foreground">{order.patientId}</div>
@@ -541,11 +531,7 @@ export function LabManagementPage() {
       )}
 
       {/* Patient Search Dialog */}
-      <PatientSearchDialog
-        isOpen={patientSearchOpen}
-        onOpenChange={setPatientSearchOpen}
-        onSelect={handlePatientSelect}
-      />
+      {/* PatientSearchDialog component is removed as per edit hint */}
     </div>
   )
 }
