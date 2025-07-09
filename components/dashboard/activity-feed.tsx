@@ -1,5 +1,6 @@
 "use client"
 import { Calendar, FileText, MessageSquare, Package, CheckCircle } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
@@ -83,6 +84,15 @@ export function ActivityFeed() {
               </div>
               <p className="text-sm text-muted-foreground">{activity.description}</p>
               <div className="flex items-center gap-2 pt-1">
+                <Avatar className="h-6 w-6">
+                  <AvatarImage src={activity.userAvatar} alt={activity.user} />
+                  <AvatarFallback>
+                    {activity.user
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
                 <span className="text-xs text-muted-foreground">{activity.timestamp}</span>
               </div>
             </div>
