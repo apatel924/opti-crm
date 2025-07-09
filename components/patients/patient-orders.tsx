@@ -31,14 +31,13 @@ export function PatientOrders({ patient }: PatientOrdersProps) {
                 </div>
                 <Badge
                   variant={
-                    order.status === "Dispensed"
-                      ? "success"
-                      : order.status === "Ready for Pickup"
-                        ? "success"
-                        : order.status === "In Progress"
-                          ? "default"
-                          : "secondary"
+                    order.status === "Completed"
+                      ? "default"
+                      : order.status === "In Progress"
+                        ? "secondary"
+                        : "outline"
                   }
+                  className="text-xs"
                 >
                   {order.status}
                 </Badge>
