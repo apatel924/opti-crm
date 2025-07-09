@@ -15,7 +15,7 @@ import { PatientSearchDialog } from "@/components/patient-search/patient-search-
 
 export function NewBillingDialog() {
   const [open, setOpen] = useState(false)
-  const [selectedPatient, setSelectedPatient] = useState<string | null>(null)
+  const [selectedPatient, setSelectedPatient] = useState<{ id: string; name: string } | null>(null)
   const [selectedExam, setSelectedExam] = useState<string | null>(null)
   const [selectedLabOrder, setSelectedLabOrder] = useState<string | null>(null)
 
@@ -67,11 +67,15 @@ export function NewBillingDialog() {
                 </Select>
                 <PatientSearchDialog
                   trigger={
-                    <Button variant="outline" type="button">
+                    <Button type="button" variant="outline" className="w-full">
                       <Search className="mr-2 h-4 w-4" />
-                      Find
+                      Search Patient
                     </Button>
                   }
+                  onSelect={(patient) => {
+                    setSelectedPatient(patient)
+                    // Handle patient selection
+                  }}
                 />
               </div>
             </div>
