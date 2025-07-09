@@ -9,7 +9,7 @@
 ## 🚀 Live Demo
 
 Deployed on Netlify:  
-**https://your-optivue-site.netlify.app**  
+**https://optivue.netlify.app/dashboard**  
 _(No public demo yet—contact the team for a walkthrough.)_
 
 ---
