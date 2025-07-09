@@ -2,16 +2,18 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Search, Filter as FilterIcon, Download, DollarSign, FileText, CheckCircle, AlertCircle, Calendar, Eye } from "lucide-react"
+import { Search, Filter, Download, DollarSign, FileText, CheckCircle, AlertCircle, Calendar, Eye } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 import { NewBillingDialog } from "@/components/billing/new-billing-dialog"
 
+// Sample billing data
 const billingData = [
   {
     id: "B-10042",
@@ -108,7 +110,6 @@ const billingData = [
 export function BillingPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [showFilters, setShowFilters] = useState(false)
-  const [patientSearchOpen, setPatientSearchOpen] = useState(false)
 
   const filteredBilling = billingData.filter(
     (bill) =>
@@ -142,11 +143,6 @@ export function BillingPage() {
                 Find Patient
               </Button>
             }
-            onSelect={(patient) => {
-              // Handle patient selection
-            }}
-            isOpen={patientSearchOpen}
-            onOpenChange={setPatientSearchOpen}
           />
           <NewBillingDialog />
         </div>
@@ -209,7 +205,7 @@ export function BillingPage() {
               />
             </form>
             <Button variant="outline" size="icon" onClick={() => setShowFilters(!showFilters)}>
-              <FilterIcon className="h-4 w-4" />
+              <Filter className="h-4 w-4" />
               <span className="sr-only">Filter</span>
             </Button>
             <Button variant="outline" size="icon">
@@ -241,9 +237,20 @@ export function BillingPage() {
                     <TableRow key={bill.id}>
                       <TableCell className="font-medium">{bill.id}</TableCell>
                       <TableCell>
-                        <div>
-                          <div className="font-medium">{bill.patientName}</div>
-                          <div className="text-xs text-muted-foreground">{bill.patientId}</div>
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={`/placeholder.svg?height=32&width=32`} alt={bill.patientName} />
+                            <AvatarFallback>
+                              {bill.patientName
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="font-medium">{bill.patientName}</div>
+                            <div className="text-xs text-muted-foreground">{bill.patientId}</div>
+                          </div>
                         </div>
                       </TableCell>
                       <TableCell>
