@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 
+// Mock patient data
 const mockPatients = [
   { id: "P10042", name: "Sarah Johnson", dob: "1985-06-15", phone: "(555) 123-4567" },
   { id: "P10043", name: "Michael Smith", dob: "1978-11-22", phone: "(555) 234-5678" },
@@ -52,13 +53,11 @@ export function PatientSearchDialog() {
           Find Patient
         </Button>
       </DialogTrigger>
-
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Find Patient</DialogTitle>
           <DialogDescription>Search for a patient by name, ID, or phone number</DialogDescription>
         </DialogHeader>
-
         <div className="space-y-4 py-4">
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
