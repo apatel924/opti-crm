@@ -42,6 +42,7 @@ export function PatientFilters() {
               </Button>
             )}
           </div>
+
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             <div className="space-y-2">
               <Label htmlFor="insurance">Insurance</Label>
@@ -58,6 +59,7 @@ export function PatientFilters() {
                 </SelectContent>
               </Select>
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="doctor">Doctor</Label>
               <Select onValueChange={(value) => addFilter(`Doctor: ${value}`)}>
@@ -71,6 +73,7 @@ export function PatientFilters() {
                 </SelectContent>
               </Select>
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="balance">Balance</Label>
               <Select onValueChange={(value) => addFilter(`Balance: ${value}`)}>
@@ -84,6 +87,7 @@ export function PatientFilters() {
                 </SelectContent>
               </Select>
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="lastVisit">Last Visit</Label>
               <Select onValueChange={(value) => addFilter(`Last Visit: ${value}`)}>
@@ -99,6 +103,7 @@ export function PatientFilters() {
               </Select>
             </div>
           </div>
+
           <div className="space-y-2">
             <Label>Medical Conditions</Label>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
@@ -164,6 +169,7 @@ export function PatientFilters() {
               </div>
             </div>
           </div>
+
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => setSelectedFilters([])}>
               Reset
