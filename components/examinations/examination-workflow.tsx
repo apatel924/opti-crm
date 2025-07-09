@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Filter as FilterIcon } from "lucide-react"
+import { Search, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CheckCircle, Circle, Clock } from "lucide-react"
 
+// Sample examination data
 const examinations = [
   {
     id: "E-10042",
@@ -190,7 +191,7 @@ export function ExaminationWorkflow() {
           />
         </div>
         <Button variant="outline" className="sm:w-auto border-gray-300 text-gray-700">
-          <FilterIcon className="mr-2 h-4 w-4" />
+          <Filter className="mr-2 h-4 w-4" />
           Filters
         </Button>
       </div>
