@@ -10,7 +10,7 @@ import { TopNavigation } from "@/components/top-navigation"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "OptiCRM - Optometry Practice Management",
+  title: "OptiVue - Optometry Practice Management",
   description: "Comprehensive optometry practice management system",
   generator: "v0.dev",
 }
