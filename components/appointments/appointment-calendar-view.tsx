@@ -25,14 +25,14 @@ interface AppointmentCalendarViewProps {
 
 interface Appointment {
   id: string
-  patientName: string
   patientId: string
+  patientName: string
   time: string
   duration: string | number
   type: string
-  doctor: string
   status: string
-  room?: string
+  doctor: string
+  room: string
   isOptician?: boolean
 }
 
@@ -628,9 +628,9 @@ export function AppointmentCalendarView({ date, view, onViewPatient, selectedDoc
             setIsBookingModalOpen(false)
             setSelectedDate(null)
           }}
-          date={selectedDate}
-          time={selectedTime}
-          doctor={selectedDoctors.includes("all") ? "dr-williams" : selectedDoctors[0]}
+          defaultDate={selectedDate}
+          defaultTime={selectedTime}
+          defaultDoctor={selectedDoctors.includes("all") ? "dr-williams" : selectedDoctors[0]}
           onBookAppointment={handleBookAppointment}
         />
       )}
