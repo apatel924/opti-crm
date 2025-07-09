@@ -28,6 +28,7 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -99,6 +100,7 @@ export function AppSidebar() {
       variant="sidebar"
       collapsible="icon"
       className="bg-gradient-to-b from-ghibli-blue to-ghibli-cream border-r border-ghibli-blue-light"
+      triggerClassName={sidebarTriggerStyles}
     >
       <SidebarHeader className="border-b border-white/20">
         <div className="flex items-center gap-2 px-2">
@@ -106,7 +108,7 @@ export function AppSidebar() {
             <Eye className="h-6 w-6 text-ghibli-blue" />
           </div>
           <div className="flex flex-col">
-            <span className="text-lg font-semibold text-white">OptiCRM</span>
+            <span className="text-lg font-semibold text-white">OptiVue</span>
             <span className="text-xs text-white/80">Optometry Management</span>
           </div>
         </div>
@@ -198,6 +200,10 @@ export function AppSidebar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 rounded-full p-0 hover:bg-white/20">
+                <Avatar className="h-8 w-8 border-2 border-white">
+                  <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
+                  <AvatarFallback className="bg-ghibli-blue text-white">OP</AvatarFallback>
+                </Avatar>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56 rounded-xl">
