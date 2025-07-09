@@ -15,7 +15,7 @@ export function DashboardPage() {
   const [selectedRole, setSelectedRole] = useState("optometrist")
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
+    <>
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-ghibli-blue">Dashboard</h1>
@@ -185,6 +185,6 @@ export function DashboardPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </>
   )
 }
