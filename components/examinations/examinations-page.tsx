@@ -222,11 +222,11 @@ export function ExaminationsPage() {
                         <Badge
                           variant={
                             exam.status === "Completed"
-                              ? "success"
+                              ? "default"
                               : exam.status === "In Progress"
                                 ? "default"
                                 : exam.status === "Waiting"
-                                  ? "warning"
+                                  ? "default"
                                   : "secondary"
                           }
                         >
@@ -421,7 +421,7 @@ export function ExaminationsPage() {
                           <div className="font-medium">{exam.doctor}</div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant={exam.prescriptionStatus === "Issued" ? "success" : "secondary"}>
+                          <Badge variant={exam.prescriptionStatus === "Issued" ? "default" : "secondary"}>
                             {exam.prescriptionStatus}
                           </Badge>
                         </TableCell>
