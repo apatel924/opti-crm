@@ -24,7 +24,7 @@ export function AppointmentForm({ patientId }: { patientId?: string }) {
   )
   const [formData, setFormData] = useState({
     appointmentType: "annual",
-    date: "",
+    date: new Date(),
     time: "",
     duration: "30",
     doctor: "dr-williams",
@@ -34,7 +34,7 @@ export function AppointmentForm({ patientId }: { patientId?: string }) {
   const [patientSearchOpen, setPatientSearchOpen] = useState(false)
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | { target: { name: string; value: string } },
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | { target: { name: string; value: string | Date } },
   ) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -71,6 +71,7 @@ export function AppointmentForm({ patientId }: { patientId?: string }) {
         patientId: selectedPatient?.id || "",
         patientName: selectedPatient?.name || "",
         ...formData,
+        date: formData.date instanceof Date ? formData.date.toISOString().split("T")[0] : formData.date,
       }
 
       const result = await createAppointment(appointmentData)
@@ -151,9 +152,8 @@ export function AppointmentForm({ patientId }: { patientId?: string }) {
             <div className="space-y-2">
               <Label htmlFor="date">Date</Label>
               <DatePicker
-                date={formData.date}
-                setDate={(date) => handleChange({ target: { name: "date", value: date || "" } })}
-                placeholder="Select appointment date"
+                date={formData.date instanceof Date ? formData.date : new Date()}
+                setDate={(date) => handleChange({ target: { name: "date", value: date || new Date() } })}
               />
               {errors.date && <p className="text-sm text-red-500">{errors.date}</p>}
             </div>
