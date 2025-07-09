@@ -9,8 +9,9 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Search, Filter as FilterIcon, Plus, Clock, Eye, Glasses, Package } from "lucide-react"
+import { Search, Filter, Plus, Clock, Eye, Glasses, Package } from "lucide-react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 import { LabOrderDetails } from "@/components/lab/lab-order-details"
 
@@ -223,7 +224,7 @@ export function LabManagementPage() {
                 <div className="w-[180px]">
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
                     <SelectTrigger className="ghibli-input">
-                      <FilterIcon className="mr-2 h-4 w-4" />
+                      <Filter className="mr-2 h-4 w-4" />
                       <span>Status</span>
                     </SelectTrigger>
                     <SelectContent>
@@ -298,6 +299,15 @@ export function LabManagementPage() {
                           <TableCell className="font-medium">{order.id}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
+                              <Avatar className="h-8 w-8 ghibli-avatar border-ghibli-blue-light">
+                                <AvatarImage src={`/placeholder.svg?height=32&width=32`} alt={order.patient} />
+                                <AvatarFallback className="bg-ghibli-blue-light text-white">
+                                  {order.patient
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")}
+                                </AvatarFallback>
+                              </Avatar>
                               <div>
                                 <div>{order.patient}</div>
                                 <div className="text-xs text-muted-foreground">{order.patientId}</div>
@@ -443,6 +453,15 @@ export function LabManagementPage() {
                           <TableCell className="font-medium">{order.id}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
+                              <Avatar className="h-8 w-8 ghibli-avatar border-ghibli-green-light">
+                                <AvatarImage src={`/placeholder.svg?height=32&width=32`} alt={order.patient} />
+                                <AvatarFallback className="bg-ghibli-green-light text-white">
+                                  {order.patient
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")}
+                                </AvatarFallback>
+                              </Avatar>
                               <div>
                                 <div>{order.patient}</div>
                                 <div className="text-xs text-muted-foreground">{order.patientId}</div>
@@ -516,10 +535,7 @@ export function LabManagementPage() {
       {selectedOrder && (
         <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-            <LabOrderDetails 
-              order={selectedOrder}
-              onClose={() => setDetailsOpen(false)} 
-            />
+            <LabOrderDetails order={selectedOrder} onClose={() => setDetailsOpen(false)} />
           </DialogContent>
         </Dialog>
       )}
