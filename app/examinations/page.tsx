@@ -1,5 +1,5 @@
 import { ExaminationsPage } from "@/components/examinations/examinations-page"
 
-export default function ExaminationsRoute() {
+export default function ExaminationsPageRoute() {
   return <ExaminationsPage />
 }
