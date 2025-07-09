@@ -27,7 +27,7 @@ export function PatientNotes({ patient }: PatientNotesProps) {
       date: new Date().toLocaleDateString(),
       title: newNoteTitle,
       content: newNoteContent,
-      author: "Current User", 
+      author: "Current User", // In a real app, this would be the logged-in user
     }
 
     setNotes([newNote, ...notes])
