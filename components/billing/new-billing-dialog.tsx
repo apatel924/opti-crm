@@ -18,7 +18,6 @@ export function NewBillingDialog() {
   const [selectedPatient, setSelectedPatient] = useState<string | null>(null)
   const [selectedExam, setSelectedExam] = useState<string | null>(null)
   const [selectedLabOrder, setSelectedLabOrder] = useState<string | null>(null)
-  const [patientSearchOpen, setPatientSearchOpen] = useState(false)
 
   // Sample data
   const exams = [
@@ -73,9 +72,6 @@ export function NewBillingDialog() {
                       Find
                     </Button>
                   }
-                  onSelect={(patient) => setSelectedPatient(patient.id)}
-                  isOpen={patientSearchOpen}
-                  onOpenChange={setPatientSearchOpen}
                 />
               </div>
             </div>
