@@ -31,6 +31,7 @@ export function PatientCommunication({ patient }: PatientCommunicationProps) {
           </Button>
         </div>
       </div>
+
       <Card>
         <CardHeader>
           <CardTitle>New Message</CardTitle>
@@ -114,4 +115,3 @@ export function PatientCommunication({ patient }: PatientCommunicationProps) {
     </div>
   )
 }
-
