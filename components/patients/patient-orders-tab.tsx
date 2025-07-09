@@ -1,24 +1,12 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Package, Eye, FileText, DollarSign, Glasses, Clipboard, MoreHorizontal } from "lucide-react"
+import { Package, Eye, FileText, DollarSign, Glasses, Clipboard, MoreHorizontal, Plus } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,60 +22,104 @@ interface PatientOrdersTabProps {
 
 export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
   const [activeTab, setActiveTab] = useState("all")
+  const router = useRouter()
+
+  const handleNewOrder = (type: string) => {
+    // In a real app, this would navigate to a new order form with the patient pre-selected
+    router.push(`/lab/new?patientId=${patient.id}&type=${type}`)
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-medium">Orders & Purchases</h3>
+        <h3 className="text-lg font-medium text-ghibli-blue">Orders & Purchases</h3>
         <div className="flex gap-2">
-          <NewGlassesOrderDialog patient={patient} />
-          <NewContactLensOrderDialog patient={patient} />
+          <Button
+            variant="outline"
+            className="border-ghibli-blue text-ghibli-blue hover:bg-ghibli-blue-light/20"
+            onClick={() => handleNewOrder("glasses")}
+          >
+            <Glasses className="mr-2 h-4 w-4" />
+            New Glasses Order
+          </Button>
+          <Button className="bg-ghibli-blue hover:bg-ghibli-blue/90" onClick={() => handleNewOrder("contacts")}>
+            <Package className="mr-2 h-4 w-4" />
+            New Contact Lens Order
+          </Button>
         </div>
       </div>
 
       <Tabs defaultValue="all" onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="all">All Orders</TabsTrigger>
-          <TabsTrigger value="glasses">Glasses</TabsTrigger>
-          <TabsTrigger value="contacts">Contact Lenses</TabsTrigger>
-          <TabsTrigger value="accessories">Accessories</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4 rounded-xl bg-ghibli-cream">
+          <TabsTrigger
+            value="all"
+            className="rounded-lg data-[state=active]:bg-ghibli-blue data-[state=active]:text-white"
+          >
+            All Orders
+          </TabsTrigger>
+          <TabsTrigger
+            value="glasses"
+            className="rounded-lg data-[state=active]:bg-ghibli-blue data-[state=active]:text-white"
+          >
+            Glasses
+          </TabsTrigger>
+          <TabsTrigger
+            value="contacts"
+            className="rounded-lg data-[state=active]:bg-ghibli-blue data-[state=active]:text-white"
+          >
+            Contact Lenses
+          </TabsTrigger>
+          <TabsTrigger
+            value="accessories"
+            className="rounded-lg data-[state=active]:bg-ghibli-blue data-[state=active]:text-white"
+          >
+            Accessories
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="space-y-4">
           <div className="space-y-4">
-            {patient.orders.map((order: any) => (
-              <OrderCard key={order.id} order={order} />
-            ))}
+            {patient.orders.length > 0 ? (
+              patient.orders.map((order: any) => <OrderCard key={order.id} order={order} />)
+            ) : (
+              <EmptyOrderState type="all" onNewOrder={handleNewOrder} />
+            )}
           </div>
         </TabsContent>
 
         <TabsContent value="glasses" className="space-y-4">
           <div className="space-y-4">
-            {patient.orders
-              .filter((order: any) => order.type.includes("Glasses"))
-              .map((order: any) => (
-                <OrderCard key={order.id} order={order} />
-              ))}
+            {patient.orders.filter((order: any) => order.type.includes("Glasses")).length > 0 ? (
+              patient.orders
+                .filter((order: any) => order.type.includes("Glasses"))
+                .map((order: any) => <OrderCard key={order.id} order={order} />)
+            ) : (
+              <EmptyOrderState type="glasses" onNewOrder={handleNewOrder} />
+            )}
           </div>
         </TabsContent>
 
         <TabsContent value="contacts" className="space-y-4">
           <div className="space-y-4">
-            {patient.orders
-              .filter((order: any) => order.type.includes("Contact"))
-              .map((order: any) => (
-                <OrderCard key={order.id} order={order} />
-              ))}
+            {patient.orders.filter((order: any) => order.type.includes("Contact")).length > 0 ? (
+              patient.orders
+                .filter((order: any) => order.type.includes("Contact"))
+                .map((order: any) => <OrderCard key={order.id} order={order} />)
+            ) : (
+              <EmptyOrderState type="contacts" onNewOrder={handleNewOrder} />
+            )}
           </div>
         </TabsContent>
 
         <TabsContent value="accessories" className="space-y-4">
           <div className="space-y-4">
-            {patient.orders
-              .filter((order: any) => order.type.includes("Accessory"))
-              .map((order: any) => (
-                <OrderCard key={order.id} order={order} />
-              ))}
+            {patient.orders.filter((order: any) => order.type.includes("Accessory")).length > 0 ? (
+              patient.orders
+                .filter((order: any) => order.type.includes("Accessory"))
+                .map((order: any) => <OrderCard key={order.id} order={order} />)
+            ) : (
+              <EmptyOrderState type="accessories" onNewOrder={() => {}} />
+            )}
           </div>
         </TabsContent>
       </Tabs>
@@ -97,30 +129,40 @@ export function PatientOrdersTab({ patient }: PatientOrdersTabProps) {
 
 function OrderCard({ order }: { order: any }) {
   return (
-    <Card key={order.id}>
-      <CardHeader>
+    <Card key={order.id} className="ghibli-card border-ghibli-blue-light overflow-hidden">
+      <CardHeader className="bg-ghibli-blue-light/10 pb-3">
         <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>{order.type}</CardTitle>
-            <CardDescription>{order.date}</CardDescription>
+          <div className="flex items-center gap-2">
+            <div className="rounded-full bg-ghibli-blue-light/20 p-1.5">
+              {order.type.includes("Glasses") ? (
+                <Glasses className="h-4 w-4 text-ghibli-blue" />
+              ) : (
+                <Package className="h-4 w-4 text-ghibli-blue" />
+              )}
+            </div>
+            <div>
+              <CardTitle className="text-base text-ghibli-blue">{order.type}</CardTitle>
+              <CardDescription>{order.date}</CardDescription>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <Badge
-              variant={
+              variant="outline"
+              className={
                 order.status === "Dispensed"
-                  ? "success"
+                  ? "border-green-500 bg-green-100 text-green-800"
                   : order.status === "Ready for Pickup"
-                    ? "success"
+                    ? "border-amber-500 bg-amber-100 text-amber-800"
                     : order.status === "In Progress"
-                      ? "default"
-                      : "secondary"
+                      ? "border-ghibli-blue bg-ghibli-blue-light/20 text-ghibli-blue"
+                      : "border-gray-500 bg-gray-100 text-gray-800"
               }
             >
               {order.status}
             </Badge>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="rounded-full hover:bg-ghibli-blue-light/20">
                   <MoreHorizontal className="h-4 w-4" />
                   <span className="sr-only">More options</span>
                 </Button>
@@ -146,46 +188,50 @@ function OrderCard({ order }: { order: any }) {
           </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-4">
         <div className="space-y-4">
           <div>
-            <h4 className="mb-2 text-sm font-medium">Order Details</h4>
+            <h4 className="mb-2 text-sm font-medium text-ghibli-blue">Order Details</h4>
             <p className="text-sm">{order.details}</p>
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <h4 className="text-sm font-medium">Price</h4>
+              <h4 className="text-sm font-medium text-ghibli-blue">Price</h4>
               <p className="text-sm">{order.price}</p>
             </div>
             <div>
-              <h4 className="text-sm font-medium">Insurance</h4>
+              <h4 className="text-sm font-medium text-ghibli-blue">Insurance</h4>
               <p className="text-sm">{order.insurance}</p>
             </div>
             <div>
-              <h4 className="text-sm font-medium">Balance</h4>
-              <p className={`text-sm ${Number(order.balance.replace("$", "")) > 0 ? "text-red-500 font-medium" : ""}`}>
+              <h4 className="text-sm font-medium text-ghibli-blue">Balance</h4>
+              <p className={`text-sm ${Number(order.balance.replace("$", "")) > 0 ? "text-rose-500 font-medium" : ""}`}>
                 {order.balance}
               </p>
             </div>
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex justify-between bg-ghibli-cream/30 border-t border-ghibli-blue-light/20">
         <div className="text-sm">
           <span className="font-medium">Order ID:</span> {order.id}
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-ghibli-blue text-ghibli-blue hover:bg-ghibli-blue-light/20"
+          >
             <Eye className="mr-2 h-4 w-4" />
             View Details
           </Button>
           {Number(order.balance.replace("$", "")) > 0 ? (
-            <Button size="sm">
+            <Button size="sm" className="bg-ghibli-blue hover:bg-ghibli-blue/90">
               <DollarSign className="mr-2 h-4 w-4" />
               Pay Balance
             </Button>
           ) : (
-            <Button size="sm">
+            <Button size="sm" className="bg-ghibli-green hover:bg-ghibli-green/90">
               <FileText className="mr-2 h-4 w-4" />
               View Receipt
             </Button>
@@ -196,464 +242,58 @@ function OrderCard({ order }: { order: any }) {
   )
 }
 
-function NewGlassesOrderDialog({ patient }: { patient: any }) {
+function EmptyOrderState({ type, onNewOrder }: { type: string; onNewOrder: (type: string) => void }) {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">
-          <Glasses className="mr-2 h-4 w-4" />
-          New Glasses Order
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[750px]">
-        <DialogHeader>
-          <DialogTitle>New Glasses Order</DialogTitle>
-          <DialogDescription>
-            Create a new glasses order for {patient.name} ({patient.id})
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="grid gap-6 py-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <Label htmlFor="orderType">Order Type</Label>
-              <Select defaultValue="single">
-                <SelectTrigger id="orderType">
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="single">Single Vision</SelectItem>
-                  <SelectItem value="bifocal">Bifocal</SelectItem>
-                  <SelectItem value="progressive">Progressive</SelectItem>
-                  <SelectItem value="reading">Reading Glasses</SelectItem>
-                  <SelectItem value="sunglasses">Sunglasses</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="priority">Priority</Label>
-              <Select defaultValue="normal">
-                <SelectTrigger id="priority">
-                  <SelectValue placeholder="Select priority" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="rush">Rush</SelectItem>
-                  <SelectItem value="high">High Priority</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="rounded-md border p-4">
-            <h4 className="mb-4 font-medium">Frame Information</h4>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <Label htmlFor="frameManufacturer">Manufacturer</Label>
-                <Input id="frameManufacturer" placeholder="e.g., Ray-Ban, Oakley" />
-              </div>
-              <div>
-                <Label htmlFor="frameModel">Model</Label>
-                <Input id="frameModel" placeholder="e.g., RB5154, OX8046" />
-              </div>
-              <div>
-                <Label htmlFor="frameColor">Color</Label>
-                <Input id="frameColor" placeholder="e.g., Black, Tortoise" />
-              </div>
-              <div>
-                <Label htmlFor="frameSize">Size</Label>
-                <Input id="frameSize" placeholder="e.g., 52-18-140" />
-              </div>
-              <div>
-                <Label htmlFor="frameSource">Frame Source</Label>
-                <Select defaultValue="stock">
-                  <SelectTrigger id="frameSource">
-                    <SelectValue placeholder="Select source" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="stock">Stock</SelectItem>
-                    <SelectItem value="order">Order from Manufacturer</SelectItem>
-                    <SelectItem value="patient">Patient's Own Frame</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="frameCost">Frame Cost</Label>
-                <Input id="frameCost" placeholder="Enter cost" type="number" step="0.01" />
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-md border p-4">
-            <h4 className="mb-4 font-medium">Lens Information</h4>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <Label htmlFor="lensType">Lens Type</Label>
-                <Select defaultValue="cr39">
-                  <SelectTrigger id="lensType">
-                    <SelectValue placeholder="Select lens type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="cr39">CR-39 Plastic</SelectItem>
-                    <SelectItem value="polycarbonate">Polycarbonate</SelectItem>
-                    <SelectItem value="hiIndex">High-Index 1.67</SelectItem>
-                    <SelectItem value="trivex">Trivex</SelectItem>
-                    <SelectItem value="glass">Glass</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="lensCoating">Lens Coatings</Label>
-                <Select>
-                  <SelectTrigger id="lensCoating">
-                    <SelectValue placeholder="Select coatings" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ar">Anti-Reflective</SelectItem>
-                    <SelectItem value="scratch">Scratch Resistance</SelectItem>
-                    <SelectItem value="uv">UV Protection</SelectItem>
-                    <SelectItem value="blue">Blue Light Filter</SelectItem>
-                    <SelectItem value="photochromic">Photochromic</SelectItem>
-                    <SelectItem value="polarized">Polarized</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="lensBrand">Lens Brand</Label>
-                <Select defaultValue="essilor">
-                  <SelectTrigger id="lensBrand">
-                    <SelectValue placeholder="Select brand" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="essilor">Essilor</SelectItem>
-                    <SelectItem value="zeiss">Zeiss</SelectItem>
-                    <SelectItem value="hoya">Hoya</SelectItem>
-                    <SelectItem value="shamir">Shamir</SelectItem>
-                    <SelectItem value="varilux">Varilux</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="lensCost">Lens Cost</Label>
-                <Input id="lensCost" placeholder="Enter cost" type="number" step="0.01" />
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-md border p-4">
-            <h4 className="mb-4 font-medium">Prescription Information</h4>
-            <div className="grid gap-4">
-              <div className="grid gap-2">
-                <Label>Right Eye (OD)</Label>
-                <div className="grid grid-cols-4 gap-2">
-                  <div>
-                    <Label htmlFor="odSphere" className="text-xs">
-                      Sphere
-                    </Label>
-                    <Input id="odSphere" defaultValue={patient.visionHistory?.currentRx?.rightEye?.sphere || ""} />
-                  </div>
-                  <div>
-                    <Label htmlFor="odCylinder" className="text-xs">
-                      Cylinder
-                    </Label>
-                    <Input id="odCylinder" defaultValue={patient.visionHistory?.currentRx?.rightEye?.cylinder || ""} />
-                  </div>
-                  <div>
-                    <Label htmlFor="odAxis" className="text-xs">
-                      Axis
-                    </Label>
-                    <Input id="odAxis" defaultValue={patient.visionHistory?.currentRx?.rightEye?.axis || ""} />
-                  </div>
-                  <div>
-                    <Label htmlFor="odAdd" className="text-xs">
-                      Add
-                    </Label>
-                    <Input id="odAdd" defaultValue={patient.visionHistory?.currentRx?.rightEye?.add || ""} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid gap-2">
-                <Label>Left Eye (OS)</Label>
-                <div className="grid grid-cols-4 gap-2">
-                  <div>
-                    <Label htmlFor="osSphere" className="text-xs">
-                      Sphere
-                    </Label>
-                    <Input id="osSphere" defaultValue={patient.visionHistory?.currentRx?.leftEye?.sphere || ""} />
-                  </div>
-                  <div>
-                    <Label htmlFor="osCylinder" className="text-xs">
-                      Cylinder
-                    </Label>
-                    <Input id="osCylinder" defaultValue={patient.visionHistory?.currentRx?.leftEye?.cylinder || ""} />
-                  </div>
-                  <div>
-                    <Label htmlFor="osAxis" className="text-xs">
-                      Axis
-                    </Label>
-                    <Input id="osAxis" defaultValue={patient.visionHistory?.currentRx?.leftEye?.axis || ""} />
-                  </div>
-                  <div>
-                    <Label htmlFor="osAdd" className="text-xs">
-                      Add
-                    </Label>
-                    <Input id="osAdd" defaultValue={patient.visionHistory?.currentRx?.leftEye?.add || ""} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="pd">PD (mm)</Label>
-                  <Input id="pd" defaultValue={patient.visionHistory?.currentRx?.pd || ""} />
-                </div>
-                <div>
-                  <Label htmlFor="segHeight">Seg Height (mm)</Label>
-                  <Input id="segHeight" placeholder="Enter seg height" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-md border p-4">
-            <h4 className="mb-4 font-medium">Measurements</h4>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <Label htmlFor="monoRE">Mono PD - Right Eye</Label>
-                <Input id="monoRE" placeholder="Enter in mm" />
-              </div>
-              <div>
-                <Label htmlFor="monoLE">Mono PD - Left Eye</Label>
-                <Input id="monoLE" placeholder="Enter in mm" />
-              </div>
-              <div>
-                <Label htmlFor="vertexDistance">Vertex Distance</Label>
-                <Input id="vertexDistance" placeholder="Enter in mm" />
-              </div>
-              <div>
-                <Label htmlFor="pantoscopicTilt">Pantoscopic Tilt</Label>
-                <Input id="pantoscopicTilt" placeholder="Enter in degrees" />
-              </div>
-              <div>
-                <Label htmlFor="wrapAngle">Wrap Angle</Label>
-                <Input id="wrapAngle" placeholder="Enter in degrees" />
-              </div>
-              <div>
-                <Label htmlFor="backVertexPower">Back Vertex Power</Label>
-                <Input id="backVertexPower" placeholder="Enter value" />
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-md border p-4">
-            <h4 className="mb-4 font-medium">Pricing & Insurance</h4>
-            <div className="grid gap-4 md:grid-cols-3">
-              <div>
-                <Label htmlFor="retailPrice">Retail Price</Label>
-                <Input id="retailPrice" placeholder="Enter retail price" type="number" step="0.01" />
-              </div>
-              <div>
-                <Label htmlFor="insuranceCoverage">Insurance Coverage</Label>
-                <Input id="insuranceCoverage" placeholder="Enter coverage amount" type="number" step="0.01" />
-              </div>
-              <div>
-                <Label htmlFor="patientResponsibility">Patient Responsibility</Label>
-                <Input id="patientResponsibility" placeholder="Enter amount" type="number" step="0.01" />
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="notes">Additional Notes</Label>
-            <Textarea id="notes" placeholder="Enter any special instructions or notes for this order" />
-          </div>
+    <Card className="ghibli-card border-dashed border-ghibli-blue-light">
+      <CardContent className="flex flex-col items-center justify-center py-10">
+        <div className="rounded-full bg-ghibli-blue-light/20 p-3 mb-4">
+          {type === "glasses" ? (
+            <Glasses className="h-8 w-8 text-ghibli-blue" />
+          ) : type === "contacts" ? (
+            <Package className="h-8 w-8 text-ghibli-blue" />
+          ) : (
+            <Package className="h-8 w-8 text-ghibli-blue" />
+          )}
         </div>
-
-        <DialogFooter>
-          <Button variant="outline">Cancel</Button>
-          <Button>Create Order</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        <h3 className="text-lg font-medium text-ghibli-blue mb-2">No {type} orders yet</h3>
+        <p className="text-muted-foreground text-center mb-6">
+          {type === "all"
+            ? "This patient doesn't have any orders yet."
+            : type === "glasses"
+              ? "No glasses orders found for this patient."
+              : type === "contacts"
+                ? "No contact lens orders found for this patient."
+                : "No accessories found for this patient."}
+        </p>
+        {type === "glasses" && (
+          <Button className="bg-ghibli-blue hover:bg-ghibli-blue/90" onClick={() => onNewOrder("glasses")}>
+            <Plus className="mr-2 h-4 w-4" />
+            New Glasses Order
+          </Button>
+        )}
+        {type === "contacts" && (
+          <Button className="bg-ghibli-blue hover:bg-ghibli-blue/90" onClick={() => onNewOrder("contacts")}>
+            <Plus className="mr-2 h-4 w-4" />
+            New Contact Lens Order
+          </Button>
+        )}
+        {type === "all" && (
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="border-ghibli-blue text-ghibli-blue hover:bg-ghibli-blue-light/20"
+              onClick={() => onNewOrder("glasses")}
+            >
+              <Glasses className="mr-2 h-4 w-4" />
+              New Glasses Order
+            </Button>
+            <Button className="bg-ghibli-blue hover:bg-ghibli-blue/90" onClick={() => onNewOrder("contacts")}>
+              <Package className="mr-2 h-4 w-4" />
+              New Contact Lens Order
+            </Button>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }
-function NewContactLensOrderDialog({ patient }: { patient: any }) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button>
-          <Package className="mr-2 h-4 w-4" />
-          New Contact Lens Order
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>New Contact Lens Order</DialogTitle>
-          <DialogDescription>
-            Create a new contact lens order for {patient.name} ({patient.id})
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-6 py-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <Label htmlFor="orderType">Order Type</Label>
-              <Select defaultValue="disposable">
-                <SelectTrigger id="orderType">
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="disposable">Disposable</SelectItem>
-                  <SelectItem value="daily">Daily Disposable</SelectItem>
-                  <SelectItem value="biweekly">Bi-weekly</SelectItem>
-                  <SelectItem value="monthly">Monthly</SelectItem>
-                  <SelectItem value="rgp">Rigid Gas Permeable</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="supplyDuration">Supply Duration</Label>
-              <Select defaultValue="6month">
-                <SelectTrigger id="supplyDuration">
-                  <SelectValue placeholder="Select duration" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="3month">3 Months</SelectItem>
-                  <SelectItem value="6month">6 Months</SelectItem>
-                  <SelectItem value="12month">12 Months (Annual)</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <div className="rounded-md border p-4">
-            <h4 className="mb-4 font-medium">Right Eye (OD)</h4>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <Label htmlFor="odBrand">Brand</Label>
-                <Select defaultValue="acuvue">
-                  <SelectTrigger id="odBrand">
-                    <SelectValue placeholder="Select brand" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="acuvue">Acuvue</SelectItem>
-                    <SelectItem value="biofinity">Biofinity</SelectItem>
-                    <SelectItem value="airoptix">Air Optix</SelectItem>
-                    <SelectItem value="dailies">Dailies</SelectItem>
-                    <SelectItem value="oasys">Acuvue Oasys</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="odProduct">Product Name</Label>
-                <Input id="odProduct" placeholder="e.g., Oasys for Astigmatism" />
-              </div>
-              <div>
-                <Label htmlFor="odPower">Power</Label>
-                <Input id="odPower" placeholder="e.g., -3.00" />
-              </div>
-              <div>
-                <Label htmlFor="odBC">Base Curve</Label>
-                <Input id="odBC" placeholder="e.g., 8.4" />
-              </div>
-              <div>
-                <Label htmlFor="odDIA">Diameter</Label>
-                <Input id="odDIA" placeholder="e.g., 14.0" />
-              </div>
-              <div>
-                <Label htmlFor="odCYL">Cylinder (if applicable)</Label>
-                <Input id="odCYL" placeholder="e.g., -1.25" />
-              </div>
-              <div>
-                <Label htmlFor="odAXIS">Axis (if applicable)</Label>
-                <Input id="odAXIS" placeholder="e.g., 180" />
-              </div>
-              <div>
-                <Label htmlFor="odQuantity">Quantity</Label>
-                <Input id="odQuantity" placeholder="e.g., 6" type="number" />
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-md border p-4">
-            <h4 className="mb-4 font-medium">Left Eye (OS)</h4>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <Label htmlFor="osBrand">Brand</Label>
-                <Select defaultValue="acuvue">
-                  <SelectTrigger id="osBrand">
-                    <SelectValue placeholder="Select brand" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="acuvue">Acuvue</SelectItem>
-                    <SelectItem value="biofinity">Biofinity</SelectItem>
-                    <SelectItem value="airoptix">Air Optix</SelectItem>
-                    <SelectItem value="dailies">Dailies</SelectItem>
-                    <SelectItem value="oasys">Acuvue Oasys</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="osProduct">Product Name</Label>
-                <Input id="osProduct" placeholder="e.g., Oasys for Astigmatism" />
-              </div>
-              <div>
-                <Label htmlFor="osPower">Power</Label>
-                <Input id="osPower" placeholder="e.g., -2.75" />
-              </div>
-              <div>
-                <Label htmlFor="osBC">Base Curve</Label>
-                <Input id="osBC" placeholder="e.g., 8.4" />
-              </div>
-              <div>
-                <Label htmlFor="osDIA">Diameter</Label>
-                <Input id="osDIA" placeholder="e.g., 14.0" />
-              </div>
-              <div>
-                <Label htmlFor="osCYL">Cylinder (if applicable)</Label>
-                <Input id="osCYL" placeholder="e.g., -0.75" />
-              </div>
-              <div>
-                <Label htmlFor="osAXIS">Axis (if applicable)</Label>
-                <Input id="osAXIS" placeholder="e.g., 175" />
-              </div>
-              <div>
-                <Label htmlFor="osQuantity">Quantity</Label>
-                <Input id="osQuantity" placeholder="e.g., 6" type="number" />
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-md border p-4">
-            <h4 className="mb-4 font-medium">Pricing & Insurance</h4>
-            <div className="grid gap-4 md:grid-cols-3">
-              <div>
-                <Label htmlFor="clRetailPrice">Retail Price</Label>
-                <Input id="clRetailPrice" placeholder="Enter retail price" type="number" step="0.01" />
-              </div>
-              <div>
-                <Label htmlFor="clInsuranceCoverage">Insurance Coverage</Label>
-                <Input id="clInsuranceCoverage" placeholder="Enter coverage amount" type="number" step="0.01" />
-              </div>
-              <div>
-                <Label htmlFor="clPatientResponsibility">Patient Responsibility</Label>
-                <Input id="clPatientResponsibility" placeholder="Enter amount" type="number" step="0.01" />
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <Label htmlFor="clNotes">Additional Notes</Label>
-            <Textarea id="clNotes" placeholder="Enter any special instructions or notes for this order" />
-          </div>
-        </div>
-
-        <DialogFooter>
-          <Button variant="outline">Cancel</Button>
-          <Button>Create Order</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
