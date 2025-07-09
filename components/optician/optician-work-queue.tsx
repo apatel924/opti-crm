@@ -1,13 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Filter as FilterIcon, ArrowUpDown, CheckCircle, Clock, Package, AlertCircle, Eye } from "lucide-react"
+import { Search, Filter, ArrowUpDown, CheckCircle, Clock, Package, AlertCircle, Eye } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 // Sample data for optician work queue
@@ -207,7 +208,7 @@ export function OpticianWorkQueue() {
               />
             </form>
             <Button variant="outline" size="icon" onClick={() => setShowFilters(!showFilters)}>
-              <FilterIcon className="h-4 w-4" />
+              <Filter className="h-4 w-4" />
               <span className="sr-only">Filter</span>
             </Button>
           </div>
@@ -300,6 +301,15 @@ export function OpticianWorkQueue() {
                       <TableCell className="font-medium">{item.id}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-3">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={`/placeholder.svg?height=32&width=32`} alt={item.patientName} />
+                            <AvatarFallback>
+                              {item.patientName
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
+                            </AvatarFallback>
+                          </Avatar>
                           <div>
                             <div className="font-medium">{item.patientName}</div>
                             <div className="text-xs text-muted-foreground">
