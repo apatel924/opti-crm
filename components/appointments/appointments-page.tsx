@@ -44,7 +44,12 @@ export function AppointmentsPage() {
   const dragStartDateRef = useRef<Date | null>(null)
 
   // Generate time slots from 7 AM to 5 PM in 15-minute increments
-  const timeSlots = []
+  const timeSlots: Array<{
+    hour: number
+    minute: number
+    time: string
+    displayTime: string
+  }> = []
   for (let hour = 7; hour < 18; hour++) {
     for (let minute = 0; minute < 60; minute += 15) {
       timeSlots.push({
@@ -164,7 +169,7 @@ export function AppointmentsPage() {
   }
 
   // Handle time slot click
-  const handleTimeSlotClick = (time: string, provider = null, date = currentDate) => {
+  const handleTimeSlotClick = (time: string, provider: string | null = null, date: Date = currentDate) => {
     setSelectedSlot({
       date: date,
       startTime: time,
@@ -386,7 +391,7 @@ export function AppointmentsPage() {
                     const topPosition = (startFromDay / 15) * 12
                     const height = (durationMinutes / 15) * 12
 
-                    const typeStyle = appointmentTypes[appointment.type] || {
+                    const typeStyle = appointmentTypes[appointment.type as keyof typeof appointmentTypes] || {
                       color: "bg-gray-500",
                       border: "border-gray-600",
                       textColor: "text-white",
@@ -502,7 +507,7 @@ export function AppointmentsPage() {
                     const topPosition = (startFromDay / 15) * 12
                     const height = (durationMinutes / 15) * 12
 
-                    const typeStyle = appointmentTypes[appointment.type] || {
+                    const typeStyle = appointmentTypes[appointment.type as keyof typeof appointmentTypes] || {
                       color: "bg-gray-500",
                       border: "border-gray-600",
                       textColor: "text-white",
@@ -539,7 +544,7 @@ export function AppointmentsPage() {
                         </div>
                         {height > 24 && appointment.type !== "Lunch" && appointment.type !== "Block" && (
                           <div className="truncate px-1 text-xs text-gray-700 bg-white/80">
-                            {appointmentTypes[appointment.type]?.shortName || appointment.type}
+                            {appointmentTypes[appointment.type as keyof typeof appointmentTypes]?.shortName || appointment.type}
                           </div>
                         )}
                       </div>
@@ -600,7 +605,7 @@ export function AppointmentsPage() {
                     </div>
                     <div className="mt-1 space-y-1">
                       {dayAppointments.slice(0, 5).map((appointment) => {
-                        const typeStyle = appointmentTypes[appointment.type] || {
+                        const typeStyle = appointmentTypes[appointment.type as keyof typeof appointmentTypes] || {
                           color: "bg-gray-500",
                           border: "border-gray-600",
                           textColor: "text-white",
@@ -730,9 +735,9 @@ export function AppointmentsPage() {
             setIsBookingModalOpen(false)
             setSelectedSlot(null)
           }}
-          date={selectedSlot?.date || new Date()}
-          time={selectedSlot?.startTime || "09:00"}
-          doctor={selectedSlot?.provider || "dr-williams"}
+          defaultDate={selectedSlot?.date || new Date()}
+          defaultTime={selectedSlot?.startTime || "09:00"}
+          defaultDoctor={selectedSlot?.provider || "dr-williams"}
           onBookAppointment={handleBookAppointment}
           isOptician={selectedSlot?.provider === "optician"}
         />
