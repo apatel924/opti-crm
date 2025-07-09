@@ -163,7 +163,7 @@ export function NewAppointmentDialog() {
 
               <div className="grid gap-2">
                 <Label>Date</Label>
-                <DatePicker date={date} setDate={setDate} placeholder="Select appointment date" />
+                <DatePicker date={date} setDate={setDate} />
               </div>
 
               <div className="grid gap-2">
