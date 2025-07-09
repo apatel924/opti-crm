@@ -1,6 +1,6 @@
 # 👁️ OptiVue – Optometry Management System
 
-![OptiVue Hero](./screenshots/hero.png)
+![OptiVue Hero](./src/dashboard.png)
 
 **OptiVue** is a modern, full-stack clinic management system for optometrists and clinic staff. It streamlines patient workflows—appointments, exams, lab orders, billing, and communications—all in a single Next.js + TypeScript + Tailwind CSS app.
 
@@ -16,21 +16,21 @@ _(No public demo yet—contact the team for a walkthrough.)_
 
 ## 📸 Screenshots
 
-|                 Dashboard                 |                  Patient List                   |                Patient Profile                |          Appointment Calendar           |
-| :---------------------------------------: | :---------------------------------------------: | :-------------------------------------------: | :-------------------------------------: |
-| ![Dashboard](./screenshots/dashboard.png) | ![Patient List](./screenshots/patient-list.png) | ![Profile](./screenshots/patient-profile.png) | ![Calendar](./screenshots/calendar.png) |
+|             Dashboard             |              Patient List               |            Patient Profile            |             Appointment Calendar             |
+| :-------------------------------: | :-------------------------------------: | :-----------------------------------: | :------------------------------------------: |
+| ![Dashboard](./src/dashboard.png) | ![Patient List](./src/patient-list.png) | ![Profile](./src/patient-profile.png) | ![Appointments](./src/appointments-page.png) |
 
-|           Examinations            |        Lab Management         |                Billing                |                 Communication Log                 |
-| :-------------------------------: | :---------------------------: | :-----------------------------------: | :-----------------------------------------------: |
-| ![Exams](./screenshots/exams.png) | ![Lab](./screenshots/lab.png) | ![Billing](./screenshots/billing.png) | ![Communication](./screenshots/communication.png) |
+|             Examinations             |          Lab Management          |                Billing                |                 Communication Log                 |
+| :----------------------------------: | :------------------------------: | :-----------------------------------: | :-----------------------------------------------: |
+| ![Exams](./src/examination-page.png) | ![Lab](./src/lab-management.png) | ![Billing](./src/patient-billing.png) | ![Communication](./src/patient-communication.png) |
 
-|            Staff Roles            |                Reports                |                 Inventory                 |                Settings                 |
-| :-------------------------------: | :-----------------------------------: | :---------------------------------------: | :-------------------------------------: |
-| ![Roles](./screenshots/roles.png) | ![Reports](./screenshots/reports.png) | ![Inventory](./screenshots/inventory.png) | ![Settings](./screenshots/settings.png) |
+| Staff Roles (AI Assistant)  |                 Reports                  |       Inventory (Lab Order Detail)       |
+| :-------------------------: | :--------------------------------------: | :--------------------------------------: |
+| ![Roles](./src/ai-chat.png) | ![Reports](./src/dashboard-extended.png) | ![Inventory](./src/lab-order-detail.png) |
 
-|      Mobile View (Coming Soon)      |                       …and more!                        |
-| :---------------------------------: | :-----------------------------------------------------: |
-| ![Mobile](./screenshots/mobile.png) | Additional modules and screens under active development |
+|              New Patient              |           Patient Orders            |                   Quick Billing                   |                 Mobile View (Coming Soon)                 |
+| :-----------------------------------: | :---------------------------------: | :-----------------------------------------------: | :-------------------------------------------------------: |
+| ![New Patient](./src/new-patient.png) | ![Orders](./src/patient-orders.png) | ![Quick Billing](./src/invoice-quick-billing.png) | _Additional modules and screens under active development_ |
 
 ---
 
