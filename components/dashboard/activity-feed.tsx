@@ -1,8 +1,8 @@
 "use client"
-import { Calendar, FileText, MessageSquare, Package, CheckCircle } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Calendar, Clock, User, Eye, FileText, DollarSign } from "lucide-react"
 
 const activities = [
   {
@@ -22,7 +22,7 @@ const activities = [
     title: "Order ready for pickup",
     description: "Michael Chen's contact lenses are ready for pickup",
     timestamp: "25 minutes ago",
-    icon: Package,
+    icon: FileText,
     user: "Michael Chen",
     userAvatar: "/placeholder.svg?height=32&width=32",
     priority: "high",
@@ -44,7 +44,7 @@ const activities = [
     title: "New message received",
     description: "Robert Garcia sent a message about his upcoming appointment",
     timestamp: "2 hours ago",
-    icon: MessageSquare,
+    icon: FileText,
     user: "Robert Garcia",
     userAvatar: "/placeholder.svg?height=32&width=32",
     priority: "normal",
@@ -55,7 +55,7 @@ const activities = [
     title: "Exam completed",
     description: "Dr. Williams completed comprehensive exam for Jessica Martinez",
     timestamp: "3 hours ago",
-    icon: CheckCircle,
+    icon: FileText,
     user: "Jessica Martinez",
     userAvatar: "/placeholder.svg?height=32&width=32",
     priority: "normal",
@@ -84,22 +84,18 @@ export function ActivityFeed() {
               </div>
               <p className="text-sm text-muted-foreground">{activity.description}</p>
               <div className="flex items-center gap-2 pt-1">
-                <Avatar className="h-6 w-6">
-                  <AvatarImage src={activity.userAvatar} alt={activity.user} />
-                  <AvatarFallback>
-                    {activity.user
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="flex items-center gap-2">
+                  <div className="h-6 w-6 rounded-full bg-primary/10 p-1">
+                    <User className="h-4 w-4 text-primary" />
+                  </div>
+                  <span className="text-xs text-muted-foreground">{activity.user}</span>
+                </div>
                 <span className="text-xs text-muted-foreground">{activity.timestamp}</span>
               </div>
             </div>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <FileText className="h-4 w-4" />
-              <span className="sr-only">View details</span>
-            </Button>
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
+              <FileText className="h-4 w-4 text-primary" />
+            </div>
           </div>
         ))}
       </CardContent>
