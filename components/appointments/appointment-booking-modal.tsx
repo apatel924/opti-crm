@@ -18,9 +18,11 @@ import { DatePicker } from "@/components/ui/date-picker"
 interface AppointmentBookingModalProps {
   isOpen: boolean
   onClose: () => void
-  defaultDate?: string
+  defaultDate?: Date
   defaultTime?: string
   defaultDoctor?: string
+  onBookAppointment?: (appointmentData: any) => void
+  isOptician?: boolean
 }
 
 export function AppointmentBookingModal({
@@ -29,12 +31,14 @@ export function AppointmentBookingModal({
   defaultDate,
   defaultTime,
   defaultDoctor,
+  onBookAppointment,
+  isOptician = false,
 }: AppointmentBookingModalProps) {
   const [selectedPatient, setSelectedPatient] = useState<{ id: string; name: string } | null>(null)
   const [appointmentType, setAppointmentType] = useState("annual")
   const [doctor, setDoctor] = useState(defaultDoctor || "dr-williams")
   const [duration, setDuration] = useState("30")
-  const [date, setDate] = useState(defaultDate || new Date().toISOString().split("T")[0])
+  const [date, setDate] = useState<Date | undefined>(defaultDate || new Date())
   const [time, setTime] = useState(defaultTime || "09:00")
   const [notes, setNotes] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -60,12 +64,13 @@ export function AppointmentBookingModal({
       const appointmentData = {
         patientId: selectedPatient.id,
         patientName: selectedPatient.name,
-        date,
+        date: date ? date.toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
         time,
         appointmentType,
         doctor,
         duration,
         notes,
+        isOptician,
       }
 
       // Submit to server action
@@ -73,6 +78,11 @@ export function AppointmentBookingModal({
 
       if (result.success) {
         setIsSuccess(true)
+
+        // Call the callback if provided
+        if (onBookAppointment) {
+          onBookAppointment(appointmentData)
+        }
 
         // Reset form and close dialog after success
         setTimeout(() => {
@@ -83,6 +93,7 @@ export function AppointmentBookingModal({
           setDuration("30")
           setTime(defaultTime || "09:00")
           setNotes("")
+          setDate(defaultDate || new Date())
           onClose()
         }, 1500)
       } else {
@@ -186,7 +197,7 @@ export function AppointmentBookingModal({
 
               <div className="grid gap-2">
                 <Label htmlFor="date">Date</Label>
-                <DatePicker date={date} setDate={setDate} placeholder="Select date" />
+                <DatePicker date={date} setDate={setDate} />
               </div>
 
               <div className="grid gap-2">
