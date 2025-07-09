@@ -29,6 +29,7 @@ export function QuickBillingPage() {
   const [invoicePatient, setInvoicePatient] = useState<{ id: string; name: string } | null>(null)
 
   const handleProcessPayment = () => {
+    // In a real app, this would call an API to process the payment
     setPaymentProcessed(true)
     setReceiptNumber(`R-${Math.floor(Math.random() * 100000)}`)
   }
