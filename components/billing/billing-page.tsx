@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Search, Filter, Download, DollarSign, FileText, CheckCircle, AlertCircle, Calendar, Eye } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -9,7 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 import { NewBillingDialog } from "@/components/billing/new-billing-dialog"
 
@@ -138,11 +137,15 @@ export function BillingPage() {
         <div className="flex items-center gap-2">
           <PatientSearchDialog
             trigger={
-              <Button variant="outline">
+              <Button variant="outline" className="w-full">
                 <Search className="mr-2 h-4 w-4" />
-                Find Patient
+                Search Patient
               </Button>
             }
+            onSelect={(patient) => {
+              // setSelectedPatient(patient) // This line was removed from the new_code, so it's removed here.
+              // Handle patient selection
+            }}
           />
           <NewBillingDialog />
         </div>
@@ -238,15 +241,7 @@ export function BillingPage() {
                       <TableCell className="font-medium">{bill.id}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage src={`/placeholder.svg?height=32&width=32`} alt={bill.patientName} />
-                            <AvatarFallback>
-                              {bill.patientName
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
+                          {/* Avatar component was removed, so this section is simplified */}
                           <div>
                             <div className="font-medium">{bill.patientName}</div>
                             <div className="text-xs text-muted-foreground">{bill.patientId}</div>
@@ -265,7 +260,7 @@ export function BillingPage() {
                       <TableCell>{bill.patient}</TableCell>
                       <TableCell>
                         <Badge
-                          variant={bill.status === "Paid" ? "success" : "destructive"}
+                          variant={bill.status === "Paid" ? "default" : "destructive"}
                           className="flex w-16 items-center justify-center gap-1"
                         >
                           {bill.status === "Paid" ? (
@@ -369,7 +364,7 @@ export function BillingPage() {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-medium">{bill.id}</span>
-                          <Badge variant="success">Paid</Badge>
+                          <Badge variant="default">Paid</Badge>
                         </div>
                         <div className="mt-1 text-sm">
                           {bill.patientName} • {bill.description}
@@ -414,8 +409,8 @@ export function BillingPage() {
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{bill.id}</span>
-                        <Badge variant={bill.status === "Paid" ? "success" : "secondary"}>
-                          {bill.status === "Paid" ? "Processed" : "Pending"}
+                        <Badge variant={bill.status === "Paid" ? "default" : "secondary"}>
+                          {bill.status}
                         </Badge>
                       </div>
                       <div className="mt-1 text-sm">
