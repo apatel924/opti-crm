@@ -7,7 +7,7 @@ import { Bot, Send, User, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Avatar } from "@/components/ui/avatar"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 type Message = {
   id: string
@@ -102,9 +102,9 @@ export function AiAssistant({ onClose }: AiAssistantProps) {
               className={`flex items-start gap-3 ${message.role === "assistant" ? "justify-start" : "justify-end"}`}
             >
               {message.role === "assistant" && (
-                <Avatar className="h-8 w-8 bg-ghibli-blue">
+                <div className="h-8 w-8 bg-ghibli-blue rounded-full flex items-center justify-center">
                   <Bot className="h-5 w-5 text-white" />
-                </Avatar>
+                </div>
               )}
               <div
                 className={`rounded-lg px-4 py-2 max-w-[80%] ${
@@ -116,17 +116,17 @@ export function AiAssistant({ onClose }: AiAssistantProps) {
                 <p className="text-sm whitespace-pre-wrap">{message.content}</p>
               </div>
               {message.role === "user" && (
-                <Avatar className="h-8 w-8 bg-ghibli-green">
+                <div className="h-8 w-8 bg-ghibli-green rounded-full flex items-center justify-center">
                   <User className="h-5 w-5 text-white" />
-                </Avatar>
+                </div>
               )}
             </div>
           ))}
           {isLoading && (
             <div className="flex items-start gap-3">
-              <Avatar className="h-8 w-8 bg-ghibli-blue">
+              <div className="h-8 w-8 bg-ghibli-blue rounded-full flex items-center justify-center">
                 <Bot className="h-5 w-5 text-white" />
-              </Avatar>
+              </div>
               <div className="rounded-lg px-4 py-2 bg-ghibli-blue-light">
                 <Loader2 className="h-5 w-5 animate-spin text-gray-800" />
               </div>
