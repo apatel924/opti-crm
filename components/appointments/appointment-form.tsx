@@ -14,6 +14,7 @@ import { createAppointment } from "@/lib/actions/appointment-actions"
 import { toast } from "@/components/ui/use-toast"
 import { PatientSearchDialog } from "@/components/patient-search/patient-search-dialog"
 import { User } from "lucide-react"
+import { DatePicker } from "@/components/ui/date-picker"
 
 export function AppointmentForm({ patientId }: { patientId?: string }) {
   const router = useRouter()
@@ -149,7 +150,11 @@ export function AppointmentForm({ patientId }: { patientId?: string }) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="date">Date</Label>
-              <Input id="date" name="date" type="date" value={formData.date} onChange={handleChange} required />
+              <DatePicker
+                date={formData.date}
+                setDate={(date) => handleChange({ target: { name: "date", value: date || "" } })}
+                placeholder="Select appointment date"
+              />
               {errors.date && <p className="text-sm text-red-500">{errors.date}</p>}
             </div>
             <div className="space-y-2">
