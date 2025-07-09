@@ -65,6 +65,7 @@ export function PatientDocuments({ patient }: PatientDocumentsProps) {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filteredDocuments.map((document: any) => {
           const DocIcon = getDocumentIcon(document.type)
