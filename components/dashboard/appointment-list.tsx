@@ -1,7 +1,8 @@
 "use client"
 
+import { useState } from "react"
 import { Clock, MoreHorizontal } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -93,14 +94,12 @@ export function AppointmentList() {
                     <Badge
                       variant={
                         appointment.status === "Checked In"
-                          ? "warning"
-                          : appointment.status === "In Progress"
+                          ? "secondary"
+                          : appointment.status === "Completed"
                             ? "default"
-                            : appointment.status === "Completed"
-                              ? "success"
-                              : "secondary"
+                            : "outline"
                       }
-                      className="ghibli-badge"
+                      className="text-xs"
                     >
                       {appointment.status}
                     </Badge>
@@ -137,15 +136,12 @@ export function AppointmentList() {
               </CardHeader>
               <CardContent className="pb-2">
                 <div className="flex items-center gap-4">
-                  <Avatar className="h-9 w-9 ghibli-avatar animate-on-hover">
-                    <AvatarImage src={`/placeholder.svg?height=36&width=36`} alt={appointment.patientName} />
-                    <AvatarFallback>
-                      {appointment.patientName
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">
+                    {appointment.patientName
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </div>
                   <div>
                     <div className="text-sm">
                       <span className="font-medium text-ghibli-blue">{appointment.doctor}</span>
@@ -163,25 +159,15 @@ export function AppointmentList() {
                     View Chart
                   </Button>
                   <Button
-                    size="sm"
-                    className="ghibli-button"
                     variant={
-                      appointment.status === "Scheduled"
-                        ? "default"
-                        : appointment.status === "Checked In"
-                          ? "green"
-                          : appointment.status === "In Progress"
-                            ? "secondary"
-                            : "default"
+                      appointment.status === "Checked In"
+                        ? "secondary"
+                        : "default"
                     }
+                    size="sm"
+                    className="text-xs"
                   >
-                    {appointment.status === "Scheduled"
-                      ? "Check In"
-                      : appointment.status === "Checked In"
-                        ? "Start Exam"
-                        : appointment.status === "In Progress"
-                          ? "Complete"
-                          : "View Summary"}
+                    {appointment.status === "Checked In" ? "View" : "Check In"}
                   </Button>
                 </div>
               </CardFooter>
