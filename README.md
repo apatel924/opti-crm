@@ -1,108 +1,115 @@
-# 👁️ OptiVue - Optometry Management System
+# 👁️ OptiVue – Optometry Management System
 
-**OptiVue** is a modern, full-stack clinic management system built for optometrists and clinic staff. It is designed to streamline and digitize patient workflows, reduce operational friction, and centralize data across appointments, lab work, examinations, billing, and communications.
+![OptiVue Hero](./screenshots/hero.png)
 
-This project is being built from the ground up using **Next.js + TypeScript + Tailwind CSS**, with a backend to be developed alongside it. Each feature and component is modular, scalable, and version-controlled with atomic GitHub commits.
-
-OptiVue embraces continuous improvement — the app will be upgraded progressively to **React 19** standards and best practices as they are adopted.
+**OptiVue** is a modern, full-stack clinic management system for optometrists and clinic staff. It streamlines patient workflows—appointments, exams, lab orders, billing, and communications—all in a single Next.js + TypeScript + Tailwind CSS app.
 
 ---
 
-## 🧠 What is OptiVue?
+## 🚀 Live Demo
 
-**OptiVue** is designed for:
-
-- **Optometrists** to view and complete exams efficiently
-- **Front desk staff** to manage appointments, check-ins, and patient details
-- **Clinic managers** to monitor performance, orders, inventory, and billing
-- **Patients** (via future portal) to view reports, communications, and invoices
+Deployed on Netlify:  
+**https://your-optivue-site.netlify.app**  
+_(No public demo yet—contact the team for a walkthrough.)_
 
 ---
 
-## 🚀 Core Features
+## 📸 Screenshots
 
-### 📊 Dashboard
+|                 Dashboard                 |                  Patient List                   |                Patient Profile                |          Appointment Calendar           |
+| :---------------------------------------: | :---------------------------------------------: | :-------------------------------------------: | :-------------------------------------: |
+| ![Dashboard](./screenshots/dashboard.png) | ![Patient List](./screenshots/patient-list.png) | ![Profile](./screenshots/patient-profile.png) | ![Calendar](./screenshots/calendar.png) |
 
-- Real-time metrics for today’s appointments, orders ready, and billing
-- Filters by day or staff role
-- Tabs for Today’s Appointments, Recent Patients, and Activity Feed
+|           Examinations            |        Lab Management         |                Billing                |                 Communication Log                 |
+| :-------------------------------: | :---------------------------: | :-----------------------------------: | :-----------------------------------------------: |
+| ![Exams](./screenshots/exams.png) | ![Lab](./screenshots/lab.png) | ![Billing](./screenshots/billing.png) | ![Communication](./screenshots/communication.png) |
 
-### 👥 Patient Management
+|            Staff Roles            |                Reports                |                 Inventory                 |                Settings                 |
+| :-------------------------------: | :-----------------------------------: | :---------------------------------------: | :-------------------------------------: |
+| ![Roles](./screenshots/roles.png) | ![Reports](./screenshots/reports.png) | ![Inventory](./screenshots/inventory.png) | ![Settings](./screenshots/settings.png) |
 
-- Patient list, advanced search, and filtering
-- Profile view with visit history, medical history, documents, insurance, and orders
-- Communication log with staff annotations
-
-### 📅 Appointments Module
-
-- Daily/Calendar view of appointments
-- Patient check-in/check-out workflow
-- Status tracking: Scheduled → Checked In → In Progress → Complete
-
-### 🧪 Examinations & Lab Management
-
-- Assign, filter, and complete exams
-- Lab orders with progress tracking and management tools
-
-### 💵 Billing & Inventory (Planned)
-
-- Quick billing summaries
-- Assign fees to appointments or patient accounts
-- Track inventory usage and restock alerts
-
-### 🔐 Role-based Access (Planned)
-
-- Front desk, doctors, and admin dashboards
-- Each role sees only what they need
-
-### 📈 Reporting (Planned)
-
-- Reports on patient visits, completed exams, revenue, staff activity, and more
+|      Mobile View (Coming Soon)      |                       …and more!                        |
+| :---------------------------------: | :-----------------------------------------------------: |
+| ![Mobile](./screenshots/mobile.png) | Additional modules and screens under active development |
 
 ---
 
-## 🔧 Built With
+## ✨ Features
 
-- **TypeScript**
-- **Tailwind CSS**
-- **ShadCN UI components**
-- **PostgreSQL or MongoDB (Planned)**
-- **React 19 compatibility being integrated as development progresses**
-
----
-
-## 🛠️ Getting Started
-
-### 1. Clone the Repo
-
-```bash
-git clone https://github.com/YOUR_USERNAME/optivue.git
-cd optivue
-```
-
-### 2. Install Dependencies
-
-```bash
-npm install
-```
-
-### 3. Run the Development Server
-
-```bash
-npm run dev
-```
-
-### 4. Access the App
-
-Open your browser and navigate to `http://localhost:3000`
+- **📊 Dashboard:** Real-time metrics for appointments, lab orders, and billing
+- **👥 Patient Management:** Advanced search, medical & visit history, profile view
+- **📅 Appointments:** Day/calendar view, check-in/out workflow, status tracking
+- **🧪 Exams & Lab:** Assign, filter, and complete exams & lab orders
+- **💵 Billing:** Quick billing, invoice generation, payment tracking
+- **🔐 Role-Based Access:** Custom dashboards for front-desk, optometrists, admins
+- **📈 Reporting:** Patient visits, revenue analytics, staff performance
+- **⚙️ Settings:** Clinic info, user management, notifications, and more
+- **💾 Auto-Save:** Data stored locally as you work, ready for backend sync
+- **🛠️ Modular Architecture:** Decoupled components, ready for API/database integration
 
 ---
 
-🚧 Upcoming Upgrades
-✅ Layout & sidebar shell
-🟡 Backend integration with Node.js API and DB
-🟡 Authentication system
-🟡 WebSocket or polling-based real-time updates
+## 🛠️ Tech Stack
 
-📌 License
-MIT — use it, modify it, or fork it for your own projects.
+- **Next.js 15** (App Router)
+- **React 19** & **TypeScript**
+- **Tailwind CSS** & **ShadCN UI**
+- **NextAuth.js** (planned)
+- **PostgreSQL** or **MongoDB** (backend TBD)
+- **class-variance-authority**, **clsx**, **tailwind-merge**
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js ≥ 18
+- npm or yarn
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/optivue.git
+   cd optivue
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. **Create a `.env.local` file**  
+   (You can skip this for local demo, but for API/backend integration you'll need it.)
+
+   ```
+   NEXT_PUBLIC_API_URL=https://api.optivue.app
+   DATABASE_URL=your_database_url_here
+   NEXTAUTH_URL=https://your-optivue-site.netlify.app
+   ```
+
+4. **Start the development server**
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+   Then open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+#### 🔧 Available Scripts
+
+- `npm run dev` – Start development server
+- `npm run build` – Build for production
+- `npm run start` – Run production build locally
+- `npm run lint` – Run ESLint
+
+---
+
+#### 📂 Project Structure
