@@ -113,3 +113,18 @@ _(No public demo yet—contact the team for a walkthrough.)_
 ---
 
 #### 📂 Project Structure
+
+.
+├── app/
+│ ├── api/ # Future backend endpoints
+│ ├── layout.tsx # Server layout
+│ └── page.tsx # Landing or dashboard entry
+├── components/ # React UI components & modules
+├── contexts/ # React Context (Auth, Data)
+├── lib/ # Utilities & helpers
+├── public/screenshots/ # .png assets for README
+├── styles/globals.css # Tailwind base & customizations
+├── tailwind.config.ts
+├── netlify.toml # Netlify build config
+├── package.json
+└── README.md
