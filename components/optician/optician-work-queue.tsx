@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 // Sample data for optician work queue
@@ -218,9 +218,9 @@ export function OpticianWorkQueue() {
           <Card className="p-4">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <div>
-                <label className="text-sm font-medium">Status</label>
+                <Label htmlFor="status">Status</Label>
                 <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                  <SelectTrigger>
+                  <SelectTrigger id="status">
                     <SelectValue placeholder="Filter by status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -232,9 +232,9 @@ export function OpticianWorkQueue() {
                 </Select>
               </div>
               <div>
-                <label className="text-sm font-medium">Priority</label>
+                <Label htmlFor="priority">Priority</Label>
                 <Select value={selectedPriority} onValueChange={setSelectedPriority}>
-                  <SelectTrigger>
+                  <SelectTrigger id="priority">
                     <SelectValue placeholder="Filter by priority" />
                   </SelectTrigger>
                   <SelectContent>
@@ -247,9 +247,9 @@ export function OpticianWorkQueue() {
                 </Select>
               </div>
               <div>
-                <label className="text-sm font-medium">Assigned To</label>
+                <Label htmlFor="assignee">Assigned To</Label>
                 <Select value={selectedAssignee} onValueChange={setSelectedAssignee}>
-                  <SelectTrigger>
+                  <SelectTrigger id="assignee">
                     <SelectValue placeholder="Filter by assignee" />
                   </SelectTrigger>
                   <SelectContent>
@@ -301,15 +301,12 @@ export function OpticianWorkQueue() {
                       <TableCell className="font-medium">{item.id}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage src={`/placeholder.svg?height=32&width=32`} alt={item.patientName} />
-                            <AvatarFallback>
-                              {item.patientName
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
+                          <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium">
+                            {item.patientName
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </div>
                           <div>
                             <div className="font-medium">{item.patientName}</div>
                             <div className="text-xs text-muted-foreground">
@@ -337,12 +334,13 @@ export function OpticianWorkQueue() {
                       <TableCell>
                         <Badge
                           variant={
-                            item.status === "Ready"
-                              ? "success"
-                              : item.status === "In Progress"
+                            item.status === "In Progress"
+                              ? "secondary"
+                              : item.status === "Completed"
                                 ? "default"
-                                : "secondary"
+                                : "outline"
                           }
+                          className="text-xs"
                         >
                           {item.status}
                         </Badge>
@@ -544,7 +542,7 @@ export function OpticianWorkQueue() {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-medium">{item.id}</span>
-                          <Badge variant="success">{item.status}</Badge>
+                          <Badge variant="default">{item.status}</Badge>
                           {item.priority !== "Normal" && (
                             <Badge variant={item.priority === "Rush" ? "destructive" : "default"}>
                               {item.priority}
