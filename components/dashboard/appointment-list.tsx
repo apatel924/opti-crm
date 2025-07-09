@@ -1,6 +1,7 @@
 "use client"
 
 import { Clock, MoreHorizontal } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -136,6 +137,15 @@ export function AppointmentList() {
               </CardHeader>
               <CardContent className="pb-2">
                 <div className="flex items-center gap-4">
+                  <Avatar className="h-9 w-9 ghibli-avatar animate-on-hover">
+                    <AvatarImage src={`/placeholder.svg?height=36&width=36`} alt={appointment.patientName} />
+                    <AvatarFallback>
+                      {appointment.patientName
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
                   <div>
                     <div className="text-sm">
                       <span className="font-medium text-ghibli-blue">{appointment.doctor}</span>
