@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -123,6 +124,15 @@ export function LabOrderDetails({ order, onClose }: LabOrderDetailsProps) {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
+                  <Avatar className="h-10 w-10 ghibli-avatar border-ghibli-blue-light">
+                    <AvatarImage src={`/placeholder.svg?height=40&width=40`} alt={order.patient} />
+                    <AvatarFallback className="bg-ghibli-blue-light text-white">
+                      {order.patient
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
                   <div>
                     <div className="font-medium">{order.patient}</div>
                     <div className="text-sm text-muted-foreground">{order.patientId}</div>
