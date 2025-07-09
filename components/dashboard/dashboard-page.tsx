@@ -61,7 +61,7 @@ export function DashboardPage() {
           <CardContent>
             <div className="text-3xl font-bold text-ghibli-green">5</div>
             <p className="text-sm text-muted-foreground">Today</p>
-            <Progress value={42} className="h-2 mt-2" indicatorClassName="bg-ghibli-green" />
+            <Progress value={42} className="h-2 mt-2" />
             <p className="text-xs text-muted-foreground mt-1">42% of schedule</p>
           </CardContent>
         </Card>
