@@ -14,6 +14,7 @@ import { DatePicker } from "@/components/ui/date-picker"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
+// Mock patient data - in a real app, this would come from an API
 const patients = [
   {
     id: "P-10042",
@@ -29,6 +30,7 @@ const patients = [
     nextVisit: "05/01/2024",
     doctor: "Dr. Williams",
     insurance: "Blue Cross",
+    healthcareNumber: "HC123456789",
     balance: "$0.00",
     alerts: ["Diabetes", "Allergies"],
   },
@@ -46,6 +48,7 @@ const patients = [
     nextVisit: "10/15/2023",
     doctor: "Dr. Williams",
     insurance: "Aetna",
+    healthcareNumber: "HC987654321",
     balance: "$75.00",
     alerts: [],
   },
@@ -63,6 +66,7 @@ const patients = [
     nextVisit: "05/30/2023",
     doctor: "Dr. Smith",
     insurance: "Medicare",
+    healthcareNumber: "HC456789123",
     balance: "$0.00",
     alerts: ["Post-LASIK"],
   },
@@ -80,6 +84,7 @@ const patients = [
     nextVisit: "04/28/2024",
     doctor: "Dr. Williams",
     insurance: "United Healthcare",
+    healthcareNumber: "HC789123456",
     balance: "$25.00",
     alerts: ["Glaucoma"],
   },
@@ -97,6 +102,7 @@ const patients = [
     nextVisit: "10/20/2023",
     doctor: "Dr. Smith",
     insurance: "Cigna",
+    healthcareNumber: "HC234567891",
     balance: "$0.00",
     alerts: [],
   },
@@ -114,6 +120,7 @@ const patients = [
     nextVisit: "04/10/2024",
     doctor: "Dr. Williams",
     insurance: "Blue Shield",
+    healthcareNumber: "HC345678912",
     balance: "$150.00",
     alerts: ["High Blood Pressure"],
   },
@@ -131,6 +138,7 @@ const patients = [
     nextVisit: "09/15/2023",
     doctor: "Dr. Smith",
     insurance: "Kaiser",
+    healthcareNumber: "HC567891234",
     balance: "$0.00",
     alerts: [],
   },
@@ -150,6 +158,7 @@ export function PatientSearchPage() {
   const [selectedDoctor, setSelectedDoctor] = useState<string | undefined>(undefined)
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>(undefined)
   const [hasBalance, setHasBalance] = useState<boolean | undefined>(undefined)
+  const [healthcareNumber, setHealthcareNumber] = useState<string>("")
 
   const handlePatientClick = (patientId: string) => {
     router.push(`/patients/${patientId}`)
@@ -176,7 +185,9 @@ export function PatientSearchPage() {
           patient.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
           patient.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
           patient.phone.includes(searchQuery) ||
-          patient.address.toLowerCase().includes(searchQuery.toLowerCase()),
+          patient.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          patient.healthcareNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          patient.dob.includes(searchQuery),
       )
     }
 
@@ -203,6 +214,12 @@ export function PatientSearchPage() {
           const balance = Number.parseFloat(patient.balance.replace("$", ""))
           return hasBalance ? balance > 0 : balance === 0
         })
+      }
+
+      if (healthcareNumber) {
+        filtered = filtered.filter((patient) =>
+          patient.healthcareNumber.toLowerCase().includes(healthcareNumber.toLowerCase()),
+        )
       }
 
       // Date of birth filtering
@@ -233,7 +250,7 @@ export function PatientSearchPage() {
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Patient Search</h1>
-          <p className="text-muted-foreground">Search for patients by name, ID, phone, or email</p>
+          <p className="text-muted-foreground">Search for patients by name, ID, phone, DOB, or healthcare number</p>
         </div>
         <div className="flex items-center gap-2">
           <Button asChild>
@@ -261,7 +278,7 @@ export function PatientSearchPage() {
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
-                  placeholder="Search by name, ID, phone, or email..."
+                  placeholder="Search by name, ID, phone, DOB, healthcare number, or address..."
                   className="pl-8"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -369,6 +386,21 @@ export function PatientSearchPage() {
                   </div>
 
                   <div className="space-y-2">
+                    <Label htmlFor="healthcareNumber">Healthcare Number</Label>
+                    <Input
+                      id="healthcareNumber"
+                      placeholder="Enter healthcare number"
+                      value={healthcareNumber}
+                      onChange={(e) => {
+                        setHealthcareNumber(e.target.value)
+                        if (e.target.value) {
+                          addFilter(`Healthcare #: ${e.target.value}`)
+                        }
+                      }}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
                     <Label>Birth Date Range</Label>
                     <div className="grid grid-cols-2 gap-2">
                       <DatePicker
@@ -444,6 +476,7 @@ export function PatientSearchPage() {
                       setHasBalance(undefined)
                       setDobFrom(undefined)
                       setDobTo(undefined)
+                      setHealthcareNumber("")
                     }}
                   >
                     Reset Filters
@@ -479,7 +512,7 @@ export function PatientSearchPage() {
                 onClick={() => handlePatientClick(patient.id)}
               >
                 <CardContent className="p-6">
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col gap-2">
                     <div>
                       <h3 className="font-medium">{patient.name}</h3>
                       <div className="flex items-center gap-2">
@@ -501,54 +534,54 @@ export function PatientSearchPage() {
                         )}
                       </div>
                     </div>
-                  </div>
-                  <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
-                    <div>
-                      <p className="text-muted-foreground">DOB</p>
-                      <p>
-                        {patient.dob} ({patient.age}y)
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Phone</p>
-                      <p>{patient.phone}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Last Visit</p>
-                      <p>{patient.lastVisit}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Balance</p>
-                      <p className={Number(patient.balance.replace("$", "")) > 0 ? "text-red-500 font-medium" : ""}>
-                        {patient.balance}
-                      </p>
-                    </div>
-                  </div>
-                  {patient.alerts.length > 0 && (
-                    <div className="mt-4">
-                      <p className="text-xs font-medium text-muted-foreground">ALERTS</p>
-                      <div className="mt-1 flex flex-wrap gap-1">
-                        {patient.alerts.map((alert) => (
-                          <Badge key={alert} variant="destructive" className="text-xs">
-                            {alert}
-                          </Badge>
-                        ))}
+                    <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <p className="text-muted-foreground">DOB</p>
+                        <p>
+                          {patient.dob} ({patient.age}y)
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Phone</p>
+                        <p>{patient.phone}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Last Visit</p>
+                        <p>{patient.lastVisit}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Balance</p>
+                        <p className={Number(patient.balance.replace("$", "")) > 0 ? "text-red-500 font-medium" : ""}>
+                          {patient.balance}
+                        </p>
                       </div>
                     </div>
-                  )}
-                  <div className="mt-4 flex justify-between gap-2">
-                    <Button size="sm" variant="outline" asChild>
-                      <Link href={`/patients/${patient.id}`}>
-                        <User className="mr-2 h-4 w-4" />
-                        Profile
-                      </Link>
-                    </Button>
-                    <Button size="sm" variant="outline" asChild>
-                      <Link href={`/appointments/new?patient=${patient.id}`}>
-                        <Calendar className="mr-2 h-4 w-4" />
-                        Schedule
-                      </Link>
-                    </Button>
+                    {patient.alerts.length > 0 && (
+                      <div className="mt-2">
+                        <p className="text-xs font-medium text-muted-foreground">ALERTS</p>
+                        <div className="mt-1 flex flex-wrap gap-1">
+                          {patient.alerts.map((alert) => (
+                            <Badge key={alert} variant="destructive" className="text-xs">
+                              {alert}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    <div className="mt-4 flex justify-between gap-2">
+                      <Button size="sm" variant="outline" asChild>
+                        <Link href={`/patients/${patient.id}`}>
+                          <User className="mr-2 h-4 w-4" />
+                          Profile
+                        </Link>
+                      </Button>
+                      <Button size="sm" variant="outline" asChild>
+                        <Link href={`/appointments/new?patient=${patient.id}`}>
+                          <Calendar className="mr-2 h-4 w-4" />
+                          Schedule
+                        </Link>
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -636,4 +669,3 @@ export function PatientSearchPage() {
     </div>
   )
 }
-
