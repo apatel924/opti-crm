@@ -67,7 +67,7 @@ export function PatientBilling({ patient }: PatientBillingProps) {
                       <TableCell>{bill.patient}</TableCell>
                       <TableCell>
                         <Badge
-                          variant={bill.status === "Paid" ? "success" : "destructive"}
+                          variant={bill.status === "Paid" ? "default" : "destructive"}
                           className="flex w-16 items-center justify-center gap-1"
                         >
                           {bill.status === "Paid" ? (
@@ -168,7 +168,7 @@ export function PatientBilling({ patient }: PatientBillingProps) {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-medium">{bill.id}</span>
-                          <Badge variant="success">Paid</Badge>
+                          <Badge variant="default">Paid</Badge>
                         </div>
                         <div className="mt-1 text-sm">{bill.description}</div>
                         <div className="mt-2 text-sm">
