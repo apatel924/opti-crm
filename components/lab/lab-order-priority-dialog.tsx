@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { ArrowUpDown, ArrowUp, ArrowDown, AlertCircle } from "lucide-react"
 
+// Sample lab orders data for priority management
 const priorityOrders = [
   {
     id: "L-10047",
@@ -144,11 +145,11 @@ export function LabOrderPriorityDialog() {
                     <Badge
                       variant={
                         order.status === "Ready for Pickup"
-                          ? "success"
+                          ? "default"
                           : order.status === "In Progress"
                             ? "default"
                             : order.status === "Waiting for Materials"
-                              ? "warning"
+                              ? "default"
                               : order.status === "Quality Check"
                                 ? "outline"
                                 : "secondary"
