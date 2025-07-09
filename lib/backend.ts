@@ -1,4 +1,5 @@
-// mock back end and routes for future implementation
+// This file serves as a mock backend for the OptiCRM application
+// In a real application, this would connect to a database
 
 import type { Patient, Appointment, Examination, Order, BillingRecord } from "./db"
 
@@ -260,7 +261,7 @@ export const createOrder = async (orderData: Partial<Order>): Promise<Order> => 
   billingRecords.push(newBilling)
 
   // Also add to the patient's orders and billing
-  const patientIndex = patients.findIndex((p) => p.patientId === orderData.patientId)
+  const patientIndex = patients.findIndex((p) => p.id === orderData.patientId)
   if (patientIndex !== -1) {
     patients[patientIndex].orders.push(newOrder)
     patients[patientIndex].billing.push(newBilling)
