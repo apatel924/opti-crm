@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { createAppointment } from "@/lib/actions/appointment-actions"
 import { toast } from "@/components/ui/use-toast"
+import { DatePicker } from "@/components/ui/date-picker"
 
 interface AppointmentBookingModalProps {
   isOpen: boolean
@@ -185,13 +186,7 @@ export function AppointmentBookingModal({
 
               <div className="grid gap-2">
                 <Label htmlFor="date">Date</Label>
-                <Input
-                  id="date"
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="w-full"
-                />
+                <DatePicker date={date} setDate={setDate} placeholder="Select date" />
               </div>
 
               <div className="grid gap-2">
