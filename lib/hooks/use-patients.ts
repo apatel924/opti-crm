@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 
+// Sample patients data - in a real app, this would come from an API
 const patientsData = [
   {
     id: "P-10042",
