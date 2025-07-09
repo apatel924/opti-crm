@@ -1,19 +1,12 @@
 "use client"
+import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import {
-  Calendar,
-  Eye,
-  FileText,
-  LayoutDashboard,
-  MessageSquare,
-  Settings,
-  ShoppingBag,
-  Users,
-  DollarSign,
-  FlaskRoundIcon as Flask,
-  Globe,
-} from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Menu, X, Home, Calendar, Users, FileText, CreditCard, Settings, HelpCircle, Eye, FlaskConical, UserCheck } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -28,8 +21,7 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,7 +38,7 @@ const sidebarTriggerStyles = "bg-white/20 text-white hover:bg-white/30 rounded-m
 const mainNavItems = [
   {
     title: "Dashboard",
-    icon: LayoutDashboard,
+    icon: Home,
     href: "/",
   },
   {
@@ -66,27 +58,27 @@ const mainNavItems = [
   },
   {
     title: "Lab Management",
-    icon: Flask,
+    icon: FlaskConical,
     href: "/lab",
   },
   {
     title: "Quick Billing",
-    icon: DollarSign,
+    icon: CreditCard,
     href: "/quick-billing",
   },
   {
     title: "Inventory",
-    icon: ShoppingBag,
+    icon: UserCheck,
     href: "/inventory",
   },
   {
     title: "Communications",
-    icon: MessageSquare,
+    icon: HelpCircle,
     href: "/communications",
   },
   {
     title: "Portal & Integrations",
-    icon: Globe,
+    icon: UserCheck, // Placeholder for Globe icon
     href: "/portal",
   },
 ]
@@ -100,7 +92,6 @@ export function AppSidebar() {
       variant="sidebar"
       collapsible="icon"
       className="bg-gradient-to-b from-ghibli-blue to-ghibli-cream border-r border-ghibli-blue-light"
-      triggerClassName={sidebarTriggerStyles}
     >
       <SidebarHeader className="border-b border-white/20">
         <div className="flex items-center gap-2 px-2">
@@ -200,10 +191,9 @@ export function AppSidebar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 rounded-full p-0 hover:bg-white/20">
-                <Avatar className="h-8 w-8 border-2 border-white">
-                  <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
-                  <AvatarFallback className="bg-ghibli-blue text-white">OP</AvatarFallback>
-                </Avatar>
+                <div className="h-8 w-8 border-2 border-white rounded-full bg-ghibli-blue text-white flex items-center justify-center text-xs font-medium">
+                  OP
+                </div>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56 rounded-xl">
